@@ -1,0 +1,16 @@
+﻿@inherits LayoutComponentBase
+@using MyJournalProject.Components.Shared
+
+<div class="app-container">
+    <Sidebar />
+    
+    <div class="main-content">
+        <Header />
+        
+        <main class="content-area">
+            @Body
+        </main>
+        
+        <Footer />
+    </div>
+</div>

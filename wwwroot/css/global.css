@@ -1,0 +1,36 @@
+﻿/* Import Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Global Styles */
+html, body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f7f8;
+    min-height: 100vh;
+}
+
+/* Image defaults */
+img {
+    display: block;
+    max-width: 100%;
+}
+
+/* Heading and paragraph defaults */
+h1, h2, h3, p {
+    margin: 0;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}

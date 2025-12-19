@@ -1,0 +1,111 @@
+﻿@page "/dashboard"
+@inherits LayoutComponentBase
+
+<div class="dashboard">
+    <div class="dashboard-content">
+        <!-- Hero Section -->
+        <div class="dashboard-hero">
+            <h1 class="page-title">Dashboard Overview</h1>
+            <p class="page-subtitle">Welcome back, Nissan. Here is your activity summary.</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <!-- Card 1 -->
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-label">CURRENT STREAK</span>
+                    <div class="stat-value-group">
+                        <span class="stat-number">20</span>
+                        <span class="stat-unit">Days</span>
+                    </div>
+                </div>
+                <img src="images/fire-icon.svg" alt="Fire Icon" class="stat-icon">
+            </div>
+
+            <!-- Card 2 -->
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-label">LONGEST STREAK</span>
+                    <div class="stat-value-group">
+                        <span class="stat-number">40</span>
+                        <span class="stat-unit">Days</span>
+                    </div>
+                </div>
+                <img src="images/trophy-icon.svg" alt="Trophy Icon" class="stat-icon">
+            </div>
+
+            <!-- Card 3 -->
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-label">MISSED DAYS</span>
+                    <div class="stat-value-group">
+                        <span class="stat-number">3</span>
+                        <span class="stat-unit">This Month</span>
+                    </div>
+                </div>
+                <img src="images/calendar-icon.svg" alt="Calendar Icon" class="stat-icon">
+            </div>
+
+            <!-- Card 4 -->
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-label">CURRENT MOOD</span>
+                    <div class="mood-badge">
+                        <div class="mood-icon-wrapper">
+                            <img src="images/happy-icon.svg" alt="Happy" class="mood-icon">
+                        </div>
+                        <span class="mood-text">Happy</span>
+                    </div>
+                </div>
+                <img src="images/smiley.png" alt="Smiley" class="stat-icon smiley-icon">
+            </div>
+        </div>
+
+        <!-- Widgets Grid -->
+        <div class="widgets-grid">
+            <!-- Most Used Tags -->
+            <div class="widget-card tags-widget">
+                <h3 class="widget-title">Most Used Tags</h3>
+                <div class="tags-list">
+                    <div class="tag-item">
+                        <div class="tag-info">
+                            <span class="tag-name">#Research</span>
+                            <span class="tag-count">12 entries</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="tag-item">
+                        <div class="tag-info">
+                            <span class="tag-name">#Personal</span>
+                            <span class="tag-count">8 entries</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 66%;"></div>
+                        </div>
+                    </div>
+                    <div class="tag-item">
+                        <div class="tag-info">
+                            <span class="tag-name">#Ideas</span>
+                            <span class="tag-count">5 entries</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 41%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Keep it up -->
+            <div class="widget-card motivation-widget">
+                <div class="motivation-content">
+                    <img src="images/write-icon.png" alt="Write Icon" class="motivation-icon">
+                    <h3 class="motivation-title">Keep it up!</h3>
+                    <p class="motivation-text">Be consistent. Keep posting daily. Break your own streak record</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

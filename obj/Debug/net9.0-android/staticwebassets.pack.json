@@ -1,0 +1,149 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\app.css",
+      "PackagePath": "staticwebassets\\css\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\dashboard.css",
+      "PackagePath": "staticwebassets\\css\\components\\dashboard.css"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\footer.css",
+      "PackagePath": "staticwebassets\\css\\components\\footer.css"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\header.css",
+      "PackagePath": "staticwebassets\\css\\components\\header.css"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\navmenu.css",
+      "PackagePath": "staticwebassets\\css\\components\\navmenu.css"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\sidebar.css",
+      "PackagePath": "staticwebassets\\css\\components\\sidebar.css"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\global.css",
+      "PackagePath": "staticwebassets\\css\\global.css"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\analytics-icon.svg",
+      "PackagePath": "staticwebassets\\images\\analytics-icon.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\avatar.jpg",
+      "PackagePath": "staticwebassets\\images\\avatar.jpg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\calendar-icon.svg",
+      "PackagePath": "staticwebassets\\images\\calendar-icon.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\calendar-nav-icon.svg",
+      "PackagePath": "staticwebassets\\images\\calendar-nav-icon.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\copyright-icon.svg",
+      "PackagePath": "staticwebassets\\images\\copyright-icon.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\dashboard-icon.svg",
+      "PackagePath": "staticwebassets\\images\\dashboard-icon.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\export-icon.svg.svg",
+      "PackagePath": "staticwebassets\\images\\export-icon.svg.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\facebook-icon.png",
+      "PackagePath": "staticwebassets\\images\\facebook-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\fire-icon.svg",
+      "PackagePath": "staticwebassets\\images\\fire-icon.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\happy-icon.svg",
+      "PackagePath": "staticwebassets\\images\\happy-icon.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\instagram-icon.svg",
+      "PackagePath": "staticwebassets\\images\\instagram-icon.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\journal-icon.svg",
+      "PackagePath": "staticwebassets\\images\\journal-icon.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\linkedin-icon.png",
+      "PackagePath": "staticwebassets\\images\\linkedin-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\logo.png",
+      "PackagePath": "staticwebassets\\images\\logo.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\notifications-icon.svg",
+      "PackagePath": "staticwebassets\\images\\notifications-icon.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\smiley.png",
+      "PackagePath": "staticwebassets\\images\\smiley.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\theme-icon.svg",
+      "PackagePath": "staticwebassets\\images\\theme-icon.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\trophy-icon.svg",
+      "PackagePath": "staticwebassets\\images\\trophy-icon.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\twitter-icon.png",
+      "PackagePath": "staticwebassets\\images\\twitter-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\write-icon.png",
+      "PackagePath": "staticwebassets\\images\\write-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\youtube-icon.png",
+      "PackagePath": "staticwebassets\\images\\youtube-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-android\\staticwebassets\\msbuild.MyJournalProject.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-android\\staticwebassets\\msbuild.MyJournalProject.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-android\\staticwebassets\\msbuild.build.MyJournalProject.props",
+      "PackagePath": "build\\MyJournalProject.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-android\\staticwebassets\\msbuild.buildMultiTargeting.MyJournalProject.props",
+      "PackagePath": "buildMultiTargeting\\MyJournalProject.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0-android\\staticwebassets\\msbuild.buildTransitive.MyJournalProject.props",
+      "PackagePath": "buildTransitive\\MyJournalProject.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

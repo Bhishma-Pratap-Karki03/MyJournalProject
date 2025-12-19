@@ -1,0 +1,109 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\components\\shared\\footer.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:components\\shared\\footer.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\components\\pages\\dashboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:components\\pages\\dashboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\components\\shared\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:components\\shared\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\components\\shared\\header.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:components\\shared\\header.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\components\\shared\\sidebar.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:components\\shared\\sidebar.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Footer.razor",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Components\\Shared\\Footer.razor",
+              "RelativeDocumentMoniker": "Components\\Shared\\Footer.razor",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Components\\Shared\\Footer.razor",
+              "RelativeToolTip": "Components\\Shared\\Footer.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-19T07:46:36.069Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Sidebar.razor",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Components\\Shared\\Sidebar.razor",
+              "RelativeDocumentMoniker": "Components\\Shared\\Sidebar.razor",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Components\\Shared\\Sidebar.razor",
+              "RelativeToolTip": "Components\\Shared\\Sidebar.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-19T07:44:18.045Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Dashboard.razor",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Components\\Pages\\Dashboard.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\Dashboard.razor",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Components\\Pages\\Dashboard.razor",
+              "RelativeToolTip": "Components\\Pages\\Dashboard.razor",
+              "ViewState": "AgIAAGYAAAAAAAAAAAAAAGcAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-19T07:38:26.427Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Header.razor",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Components\\Shared\\Header.razor",
+              "RelativeDocumentMoniker": "Components\\Shared\\Header.razor",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Components\\Shared\\Header.razor",
+              "RelativeToolTip": "Components\\Shared\\Header.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-19T07:34:05.956Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "NavMenu.razor",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Components\\Shared\\NavMenu.razor",
+              "RelativeDocumentMoniker": "Components\\Shared\\NavMenu.razor",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Components\\Shared\\NavMenu.razor",
+              "RelativeToolTip": "Components\\Shared\\NavMenu.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-19T07:28:47.65Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
