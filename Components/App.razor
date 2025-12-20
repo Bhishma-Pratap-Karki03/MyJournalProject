@@ -2,15 +2,16 @@
 @using MyJournalProject.Components.Shared
 
 <div class="app-container">
-    <Sidebar />
-    
+    <div class="sidebar-fixed">
+        <Sidebar />
+    </div>
     <div class="main-content">
-        <Header />
-        
+        <div class="header-fixed">
+            <Header />
+        </div>
         <main class="content-area">
             @Body
         </main>
-        
         <Footer />
     </div>
 </div>

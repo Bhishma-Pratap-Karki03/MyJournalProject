@@ -1,6 +1,4 @@
-﻿/* Header Styles */
-.header {
-    grid-row: 1;
+﻿.header {
     background-color: #ffffff;
     border-bottom: 1px solid #c9d5e0;
     height: 92px;
@@ -8,6 +6,9 @@
     align-items: center;
     justify-content: flex-end;
     padding: 0 40px;
+    position: sticky;
+    top: 0;
+    z-index: 900;
 }
 
 .top-header {
@@ -32,7 +33,12 @@
     width: 24px;
     height: 24px;
     cursor: pointer;
+    transition: opacity 0.2s;
 }
+
+    .icon-btn:hover {
+        opacity: 0.8;
+    }
 
 .divider {
     width: 1px;
@@ -50,6 +56,7 @@
     width: 52px;
     height: 52px;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .user-name {
@@ -71,5 +78,15 @@
 
     .user-name {
         display: none;
+    }
+
+    .avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    .icon-btn {
+        width: 20px;
+        height: 20px;
     }
 }

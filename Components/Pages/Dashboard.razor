@@ -1,5 +1,6 @@
 ﻿@page "/dashboard"
 @inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
 
 <div class="dashboard">
     <div class="dashboard-content">
@@ -62,6 +63,43 @@
             </div>
         </div>
 
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+            <!-- Mood Distribution Chart Card -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Mood Distribution</h3>
+                    <div class="chart-dropdown">
+                        <select id="moodPeriod" @onchange="UpdateMoodChart">
+                            <option value="7">Last 7 Days</option>
+                            <option value="30" selected>Last Month</option>
+                            <option value="120">Last 4 Months</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="moodChart" width="400" height="400"></canvas>
+                </div>
+            </div>
+
+            <!-- Word Count Trend Chart Card -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Word Count Trend</h3>
+                    <div class="chart-dropdown">
+                        <select id="wordCountPeriod" @onchange="UpdateWordCountChart">
+                            <option value="7" selected>Last 7 Days</option>
+                            <option value="30">Last Month</option>
+                            <option value="120">Last 4 Months</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="wordCountChart" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+
         <!-- Widgets Grid -->
         <div class="widgets-grid">
             <!-- Most Used Tags -->
@@ -109,3 +147,101 @@
         </div>
     </div>
 </div>
+
+@code {
+    private bool isInitialized = false;
+    private IJSObjectReference? chartModule;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !isInitialized)
+        {
+            await InitializeCharts();
+            isInitialized = true;
+        }
+    }
+
+    private async Task InitializeCharts()
+    {
+        // Import Chart.js module
+        chartModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/charts.js");
+
+        // Initialize both charts
+        await InitializeMoodChart();
+        await InitializeWordCountChart();
+    }
+
+    private async Task InitializeMoodChart()
+    {
+        if (chartModule != null)
+        {
+            await chartModule.InvokeVoidAsync("createMoodChart",
+                new
+                {
+                    positive = 60,
+                    neutral = 30,
+                    negative = 10
+                });
+        }
+    }
+
+    private async Task InitializeWordCountChart()
+    {
+        if (chartModule != null)
+        {
+            // Static data for last 7 days
+            var days = new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+            var wordCounts = new[] { 450, 325, 280, 500, 420, 380, 550 };
+
+            await chartModule.InvokeVoidAsync("createWordCountChart",
+                new
+                {
+                    labels = days,
+                    data = wordCounts
+                });
+        }
+    }
+
+    private async Task UpdateMoodChart(ChangeEventArgs e)
+    {
+        if (chartModule != null)
+        {
+            var period = e.Value?.ToString();
+
+            // Static data based on period
+            var moodData = period switch
+            {
+                "7" => new { positive = 65, neutral = 25, negative = 10 }, // Last 7 days
+                "30" => new { positive = 60, neutral = 30, negative = 10 }, // Last month
+                "120" => new { positive = 55, neutral = 35, negative = 10 }, // Last 4 months
+                _ => new { positive = 60, neutral = 30, negative = 10 }
+            };
+
+            await chartModule.InvokeVoidAsync("updateMoodChart", moodData);
+        }
+    }
+
+    private async Task UpdateWordCountChart(ChangeEventArgs e)
+    {
+        if (chartModule != null)
+        {
+            var period = e.Value?.ToString();
+
+            // Static data based on period
+            var (labels, data) = period switch
+            {
+                "7" => (new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" },
+                        new[] { 450, 325, 280, 500, 420, 380, 550 }),
+                "30" => (new[] { "Week 1", "Week 2", "Week 3", "Week 4" },
+                         new[] { 1850, 2100, 1950, 2200 }),
+                "120" => (new[] { "Month 1", "Month 2", "Month 3", "Month 4" },
+                          new[] { 8500, 9200, 8800, 9500 }),
+                _ => (new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" },
+                      new[] { 450, 325, 280, 500, 420, 380, 550 })
+            };
+
+            await chartModule.InvokeVoidAsync("updateWordCountChart",
+                new { labels, data });
+        }
+    }
+}

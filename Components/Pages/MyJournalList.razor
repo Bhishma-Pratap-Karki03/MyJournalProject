@@ -1,0 +1,259 @@
+﻿@page "/myjournallist"
+@inherits LayoutComponentBase
+
+<div class="journal-list-page">
+    <!-- Filters Section -->
+    <section class="filters-section">
+        <div class="container">
+            <div class="filter-card">
+                <!-- Top Row: Search and Date -->
+                <div class="filter-top">
+                    <div class="search-bar">
+                        <img src="images/search-icon.png" alt="Search" class="icon-search" />
+                        <input type="text" placeholder="Search journals by title or content" class="search-input" />
+                    </div>
+
+                    <div class="date-actions-group">
+                        <div class="date-range">
+                            <div class="date-input">
+                                <span class="label">From</span>
+                                <div class="date-value">
+                                    <img src="images/from-calendar-icon.png" alt="Calendar" />
+                                    <span>12/01/2025</span>
+                                </div>
+                            </div>
+                            <div class="separator">
+                                <img src="images/date-separator.png" alt="Separator" />
+                            </div>
+                            <div class="date-input">
+                                <span class="label">To</span>
+                                <div class="date-value">
+                                    <img src="images/to-calendar-icon.png" alt="Calendar" />
+                                    <span class="date-text-green">12/19/2025</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn-apply">Apply</button>
+                            <button class="btn-cancel">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Row: Filter Dropdowns -->
+                <div class="filter-bottom">
+                    <span class="filter-label">FILTERS</span>
+                    <div class="filter-options">
+                        <div class="dropdown">
+                            <span>Primary Mood</span>
+                            <img src="images/arrow-down.png" alt="Arrow" />
+                        </div>
+                        <div class="dropdown">
+                            <span>Secondary Mood</span>
+                            <img src="images/arrow-down.png" alt="Arrow" />
+                        </div>
+                        <div class="dropdown">
+                            <span>Tags</span>
+                            <img src="images/arrow-down.png" alt="Arrow" />
+                        </div>
+                        <div class="dropdown">
+                            <span>Category</span>
+                            <img src="images/arrow-down.png" alt="Arrow" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sort Section -->
+    <section class="sort-section">
+        <div class="container">
+            <div class="sort-container">
+                <span class="sort-label">SORT BY:</span>
+                <div class="sort-dropdown">
+                    <span>Newest to Oldest</span>
+                    <img src="images/arrow-down.png" alt="Arrow" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Journal List Section -->
+    <section class="journal-list-section">
+        <div class="container">
+            <div class="journal-list">
+
+                <!-- Card 1: Featured/Active -->
+                <article class="journal-card featured">
+                    <div class="card-date">
+                        <span class="day">24</span>
+                        <span class="month">OCT</span>
+                        <span class="year">2025</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-header">
+                            <div class="title-group">
+                                <h2>Reflections on the Semester Project</h2>
+                                <span class="badge badge-gray">ACADEMIC</span>
+                            </div>
+                            <div class="status-group">
+                                <div class="status-tag blue-bg">
+                                    <span>FOCUSED</span>
+                                </div>
+                                <div class="status-tag gray-bg">
+                                    <span>Tired</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-description">
+                            This semester project enhanced my technical skills and deepened my understanding of applying theoretical concepts to real-world problems. It also improved my problem-solving, time management, and independent learning abilities.
+                        </p>
+                        <div class="card-footer">
+                            <div class="meta-info">
+                                <div class="meta-item">
+                                    <img src="images/word-count-icon.png" alt="Words" />
+                                    <span>250 words</span>
+                                </div>
+                                <div class="meta-item">
+                                    <img src="images/clock-icon.png" alt="Clock" />
+                                    <span>Updated 1 hours ago</span>
+                                </div>
+                                <div class="tags">
+                                    <span>#coding</span>
+                                    <span>#csharp</span>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button class="btn-icon">
+                                    <img src="images/edit-icon.png" alt="Edit" />
+                                </button>
+                                <button class="btn-icon">
+                                    <img src="images/delete-icon.png" alt="Delete" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 2 -->
+                <article class="journal-card">
+                    <div class="card-date">
+                        <span class="day">19</span>
+                        <span class="month">OCT</span>
+                        <span class="year">2025</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-header">
+                            <div class="title-group">
+                                <h2>Meeting with Advisor</h2>
+                                <span class="badge badge-gray">PERSONAL</span>
+                            </div>
+                            <div class="status-group">
+                                <div class="status-tag green-bg">
+                                    <span>Happy</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-description">
+                            The meeting with my advisor was highly productive and provided clear guidance on the project's direction, scope, and expectations. Through constructive feedback and discussion, I was able to identify areas for improvement, clarify doubts, and gain confidence in my approach.
+                        </p>
+                        <div class="card-footer">
+                            <div class="meta-info">
+                                <div class="meta-item">
+                                    <img src="images/word-count-icon.png" alt="Words" />
+                                    <span>210 words</span>
+                                </div>
+                                <div class="meta-item">
+                                    <img src="images/clock-icon.png" alt="Clock" />
+                                    <span>Updated 1 days ago</span>
+                                </div>
+                                <div class="tags">
+                                    <span>#coding</span>
+                                    <span>#csharp</span>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button class="btn-icon">
+                                    <img src="images/edit-icon.png" alt="Edit" />
+                                </button>
+                                <button class="btn-icon">
+                                    <img src="images/delete-icon.png" alt="Delete" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 3 -->
+                <article class="journal-card">
+                    <div class="card-date">
+                        <span class="day">01</span>
+                        <span class="month">OCT</span>
+                        <span class="year">2025</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-header">
+                            <div class="title-group">
+                                <h2>Late Night Thoughts</h2>
+                                <span class="badge badge-gray">GENERAL</span>
+                            </div>
+                            <div class="status-group">
+                                <div class="status-tag gray-bg">
+                                    <span>Sleepy</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-description">
+                            Late night thoughts often bring clarity, self-reflection, and ideas that remain unheard during the day. Late night thoughts often bring clarity, self-reflection, and ideas that remain unheard during the day.
+                        </p>
+                        <div class="card-footer">
+                            <div class="meta-info">
+                                <div class="meta-item">
+                                    <img src="images/word-count-icon.png" alt="Words" />
+                                    <span>250 words</span>
+                                </div>
+                                <div class="meta-item">
+                                    <img src="images/clock-icon.png" alt="Clock" />
+                                    <span>Updated 2 days ago</span>
+                                </div>
+                                <div class="tags">
+                                    <span>#coding</span>
+                                    <span>#csharp</span>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button class="btn-icon">
+                                    <img src="images/edit-icon.png" alt="Edit" />
+                                </button>
+                                <button class="btn-icon">
+                                    <img src="images/delete-icon.png" alt="Delete" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+
+            <!-- Pagination Section -->
+            <div class="pagination-section">
+                <div class="pagination-bar">
+                    <span class="showing-text">Showing 1 to 3 of 12 entries</span>
+                    <div class="pagination-controls">
+                        <button class="page-btn arrow">
+                            <img src="images/prev-arrow-icon.png" alt="Prev" />
+                        </button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn arrow">
+                            <img src="images/next-arrow-icon.png" alt="Next" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

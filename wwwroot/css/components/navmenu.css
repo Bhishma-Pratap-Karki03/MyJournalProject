@@ -1,5 +1,4 @@
-﻿/* NavMenu Styles */
-.sidebar-nav {
+﻿.sidebar-nav {
     display: flex;
     flex-direction: column;
     gap: 20px;

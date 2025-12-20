@@ -1,0 +1,276 @@
+﻿@page "/calendar"
+@inherits LayoutComponentBase
+
+<div class="calendar-page">
+    <!-- Header Section -->
+    <section class="calendar-header-section">
+        <div class="container">
+            <!-- Top Bar -->
+            <div class="header-top">
+                <div class="header-left">
+                    <h1 class="month-title">December 2025</h1>
+                    <div class="nav-controls">
+                        <div class="nav-arrow">
+                            <img src="images/prev-arrow-icon.png" alt="Previous Month" />
+                        </div>
+                        <div class="nav-today">
+                            <span>Today</span>
+                        </div>
+                        <div class="nav-arrow">
+                            <img src="images/next-arrow-icon.png" alt="Next Month" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <div class="view-switcher">
+                        <div class="view-option">Month</div>
+                        <div class="view-option active">Week</div>
+                        <div class="view-option">Yearly</div>
+                    </div>
+                    <div class="divider"></div>
+                    <button class="btn-new-entry">
+                        <img src="images/NewEntry-icon.png" alt="New Entry" />
+                        <span>New Entry</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <span class="filter-label">FILTER VIEW</span>
+                <div class="filter-chips">
+                    <div class="chip chip--positive">
+                        <img src="images/chip-positive.png" alt="Positive" />
+                        <span>Positive</span>
+                    </div>
+                    <div class="chip chip--negative">
+                        <img src="images/chip-negative.png" alt="Negative" />
+                        <span>Negative</span>
+                    </div>
+                    <div class="chip chip--neutral">
+                        <img src="images/chip-neutral.png" alt="Neutral" />
+                        <span>Neutral</span>
+                    </div>
+                    <div class="chip chip--has-entry">
+                        <img src="images/chip-has-entry.png" alt="Has Entry" />
+                        <span>Has Entry</span>
+                    </div>
+                    <div class="chip chip--missed">
+                        <img src="images/chip-has-missed.png" alt="Missed" />
+                        <span>Missed Days</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendar Section -->
+    <section class="calendar-section">
+        <div class="container">
+            <div class="calendar-wrapper">
+                <!-- Calendar Header -->
+                <div class="calendar-days-header">
+                    <div class="day-name">SUN</div>
+                    <div class="day-name">MON</div>
+                    <div class="day-name">TUE</div>
+                    <div class="day-name">WED</div>
+                    <div class="day-name">THU</div>
+                    <div class="day-name">FRI</div>
+                    <div class="day-name">SAT</div>
+                </div>
+
+                <!-- Calendar Grid -->
+                <div class="calendar-grid">
+                    <!-- Row 1 -->
+                    <div class="day-cell prev-month">
+                        <span class="date-number">29</span>
+                    </div>
+                    <div class="day-cell prev-month">
+                        <span class="date-number">30</span>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">1</span>
+                        <div class="event-card event-positive">
+                            <div class="event-bar"></div>
+                            <div class="event-content">
+                                <div class="event-title">Project Kickoff</div>
+                                <div class="event-detail"><div class="dot dot-green"></div>Excited</div>
+                                <div class="event-detail"><div class="dot dot-green"></div>450 Words</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">2</span>
+                        <div class="event-card event-neutral">
+                            <div class="event-bar"></div>
+                            <div class="event-content">
+                                <div class="event-title">Routine Work</div>
+                                <div class="event-detail"><div class="dot dot-grey"></div>Normal Day</div>
+                                <div class="event-detail"><div class="dot dot-grey"></div>325 Words</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">3</span>
+                        <div class="missed-pill">
+                            <img src="images/chip-has-missed.png" alt="Missed" />
+                            <span>Missed Day</span>
+                        </div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">4</span>
+                        <div class="event-card event-negative">
+                            <div class="event-bar"></div>
+                            <div class="event-content">
+                                <div class="event-title">Difficult Meeting</div>
+                                <div class="event-detail"><div class="dot dot-red"></div>Stressed</div>
+                                <div class="event-detail"><div class="dot dot-red"></div>150 Words</div>
+                            </div>
+                        </div>
+                        <div class="event-card event-positive" style="margin-top: 12px;">
+                            <div class="event-bar"></div>
+                            <div class="event-content">
+                                <div class="event-title">Family Meet</div>
+                                <div class="event-detail"><div class="dot dot-green"></div>Happy</div>
+                                <div class="event-detail"><div class="dot dot-green"></div>320 Words</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">5</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+
+                    <!-- Row 2 -->
+                    <div class="day-cell">
+                        <span class="date-number">6</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">7</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">8</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">9</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">10</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell selected-day">
+                        <div class="selected-header">
+                            <img src="images/ViewDetails.png" alt="View Details" class="view-icon" />
+                            <span class="date-number">11</span>
+                        </div>
+                        <div class="event-card event-positive">
+                            <div class="event-bar"></div>
+                            <div class="event-content">
+                                <div class="event-title">Project Kickoff</div>
+                                <div class="event-detail"><div class="dot dot-green"></div>Excited</div>
+                                <div class="event-detail"><div class="dot dot-green"></div>450 Words</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">12</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+
+                    <!-- Row 3 -->
+                    <div class="day-cell">
+                        <span class="date-number">13</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">14</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">15</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">16</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">17</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">18</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">19</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+
+                    <!-- Row 4 -->
+                    <div class="day-cell">
+                        <span class="date-number">20</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">21</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">22</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">23</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">24</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">25</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">26</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+
+                    <!-- Row 5 -->
+                    <div class="day-cell">
+                        <span class="date-number">27</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">28</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">29</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">30</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell">
+                        <span class="date-number">31</span>
+                        <div class="no-events">No entries</div>
+                    </div>
+                    <div class="day-cell prev-month">
+                        <span class="date-number">1</span>
+                    </div>
+                    <div class="day-cell prev-month">
+                        <span class="date-number">2</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

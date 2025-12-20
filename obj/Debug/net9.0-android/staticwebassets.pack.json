@@ -13,8 +13,16 @@
       "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
     },
     {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\calendar.css",
+      "PackagePath": "staticwebassets\\css\\components\\calendar.css"
+    },
+    {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\dashboard.css",
       "PackagePath": "staticwebassets\\css\\components\\dashboard.css"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\export.css",
+      "PackagePath": "staticwebassets\\css\\components\\export.css"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\footer.css",
@@ -23,6 +31,14 @@
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\header.css",
       "PackagePath": "staticwebassets\\css\\components\\header.css"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\journal-list.css",
+      "PackagePath": "staticwebassets\\css\\components\\journal-list.css"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\journal.css",
+      "PackagePath": "staticwebassets\\css\\components\\journal.css"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\navmenu.css",
@@ -37,12 +53,52 @@
       "PackagePath": "staticwebassets\\css\\global.css"
     },
     {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\Categorization-icon.png",
+      "PackagePath": "staticwebassets\\images\\Categorization-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\Export-content-options-icons.png",
+      "PackagePath": "staticwebassets\\images\\Export-content-options-icons.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\Filter-Options.png",
+      "PackagePath": "staticwebassets\\images\\Filter-Options.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\Journal-List-icon.png",
+      "PackagePath": "staticwebassets\\images\\Journal-List-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\NewEntry-icon.png",
+      "PackagePath": "staticwebassets\\images\\NewEntry-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\ViewDetails.png",
+      "PackagePath": "staticwebassets\\images\\ViewDetails.png"
+    },
+    {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\analytics-icon.svg",
       "PackagePath": "staticwebassets\\images\\analytics-icon.svg"
     },
     {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\arrow-down.png",
+      "PackagePath": "staticwebassets\\images\\arrow-down.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\attach-icon.png",
+      "PackagePath": "staticwebassets\\images\\attach-icon.png"
+    },
+    {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\avatar.jpg",
       "PackagePath": "staticwebassets\\images\\avatar.jpg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\bold-icon.png",
+      "PackagePath": "staticwebassets\\images\\bold-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\calendar-icon-export.png",
+      "PackagePath": "staticwebassets\\images\\calendar-icon-export.png"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\calendar-icon.svg",
@@ -53,16 +109,68 @@
       "PackagePath": "staticwebassets\\images\\calendar-nav-icon.svg"
     },
     {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\check-icon.png",
+      "PackagePath": "staticwebassets\\images\\check-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\chip-has-entry.png",
+      "PackagePath": "staticwebassets\\images\\chip-has-entry.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\chip-has-missed.png",
+      "PackagePath": "staticwebassets\\images\\chip-has-missed.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\chip-negative.png",
+      "PackagePath": "staticwebassets\\images\\chip-negative.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\chip-neutral.png",
+      "PackagePath": "staticwebassets\\images\\chip-neutral.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\chip-positive.png",
+      "PackagePath": "staticwebassets\\images\\chip-positive.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\clock-icon.png",
+      "PackagePath": "staticwebassets\\images\\clock-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\close-icon.png",
+      "PackagePath": "staticwebassets\\images\\close-icon.png"
+    },
+    {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\copyright-icon.svg",
       "PackagePath": "staticwebassets\\images\\copyright-icon.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\dashboard-icon.png",
+      "PackagePath": "staticwebassets\\images\\dashboard-icon.png"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\dashboard-icon.svg",
       "PackagePath": "staticwebassets\\images\\dashboard-icon.svg"
     },
     {
-      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\export-icon.svg.svg",
-      "PackagePath": "staticwebassets\\images\\export-icon.svg.svg"
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\date-separator.png",
+      "PackagePath": "staticwebassets\\images\\date-separator.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\delete-icon.png",
+      "PackagePath": "staticwebassets\\images\\delete-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\edit-icon.png",
+      "PackagePath": "staticwebassets\\images\\edit-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\export-icon.svg",
+      "PackagePath": "staticwebassets\\images\\export-icon.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\export-to-pdf.png",
+      "PackagePath": "staticwebassets\\images\\export-to-pdf.png"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\facebook-icon.png",
@@ -73,12 +181,32 @@
       "PackagePath": "staticwebassets\\images\\fire-icon.svg"
     },
     {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\from-calendar-icon.png",
+      "PackagePath": "staticwebassets\\images\\from-calendar-icon.png"
+    },
+    {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\happy-icon.svg",
       "PackagePath": "staticwebassets\\images\\happy-icon.svg"
     },
     {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\image-icon.png",
+      "PackagePath": "staticwebassets\\images\\image-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\information-export-icon.png",
+      "PackagePath": "staticwebassets\\images\\information-export-icon.png"
+    },
+    {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\instagram-icon.svg",
       "PackagePath": "staticwebassets\\images\\instagram-icon.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\italic-icon.png",
+      "PackagePath": "staticwebassets\\images\\italic-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\journal-calender.png",
+      "PackagePath": "staticwebassets\\images\\journal-calender.png"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\journal-icon.svg",
@@ -93,8 +221,48 @@
       "PackagePath": "staticwebassets\\images\\logo.png"
     },
     {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\mood-icon.png",
+      "PackagePath": "staticwebassets\\images\\mood-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\negative-mood-filter.png",
+      "PackagePath": "staticwebassets\\images\\negative-mood-filter.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\neutral-mood-filter.png",
+      "PackagePath": "staticwebassets\\images\\neutral-mood-filter.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\next-arrow-icon.png",
+      "PackagePath": "staticwebassets\\images\\next-arrow-icon.png"
+    },
+    {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\notifications-icon.svg",
       "PackagePath": "staticwebassets\\images\\notifications-icon.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\orderlist.png",
+      "PackagePath": "staticwebassets\\images\\orderlist.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\pdf-icon.png",
+      "PackagePath": "staticwebassets\\images\\pdf-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\postive-mood-filter.png",
+      "PackagePath": "staticwebassets\\images\\postive-mood-filter.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\prev-arrow-icon.png",
+      "PackagePath": "staticwebassets\\images\\prev-arrow-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\save-icon.png",
+      "PackagePath": "staticwebassets\\images\\save-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\search-icon.png",
+      "PackagePath": "staticwebassets\\images\\search-icon.png"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\smiley.png",
@@ -105,12 +273,28 @@
       "PackagePath": "staticwebassets\\images\\theme-icon.svg"
     },
     {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\to-calendar-icon.png",
+      "PackagePath": "staticwebassets\\images\\to-calendar-icon.png"
+    },
+    {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\trophy-icon.svg",
       "PackagePath": "staticwebassets\\images\\trophy-icon.svg"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\twitter-icon.png",
       "PackagePath": "staticwebassets\\images\\twitter-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\underline-icon.png",
+      "PackagePath": "staticwebassets\\images\\underline-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\unordered-list.png",
+      "PackagePath": "staticwebassets\\images\\unordered-list.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\word-count-icon.png",
+      "PackagePath": "staticwebassets\\images\\word-count-icon.png"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\write-icon.png",
@@ -123,6 +307,10 @@
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\index.html",
       "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\js\\charts.js",
+      "PackagePath": "staticwebassets\\js\\charts.js"
     },
     {
       "Id": "obj\\Debug\\net9.0-android\\staticwebassets\\msbuild.MyJournalProject.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",

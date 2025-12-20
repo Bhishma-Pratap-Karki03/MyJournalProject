@@ -1,5 +1,4 @@
-﻿/* Footer Styles */
-.footer {
+﻿.footer {
     grid-row: 3;
     padding: 0 40px 40px 40px;
     background-color: #f5f7f8;
@@ -59,7 +58,6 @@
         opacity: 1;
     }
 
-/* Responsive */
 @media (max-width: 900px) {
     .footer-content {
         flex-direction: column;

@@ -1,5 +1,4 @@
-﻿/* Sidebar Styles */
-.sidebar {
+﻿.sidebar {
     grid-row: 1 / -1;
     grid-column: 1;
     background-color: #ffffff;

@@ -1,0 +1,224 @@
+﻿@page "/journal"
+@inherits LayoutComponentBase
+
+<div class="journal-page">
+    <!-- Header Section -->
+    <section class="journal-header">
+        <div class="journal-header-content">
+            <div class="title-block">
+                <h1 class="page-title">Journal Entry</h1>
+                <div class="meta-info">
+                    <img src="images/journal-calender.png" alt="Calendar Icon" class="icon-calendar" />
+                    <span class="date-text">Journal Entry for 21 December 2025</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="journal-main">
+        <div class="workspace-grid">
+            <!-- Left Column: Editor -->
+            <div class="editor-column">
+                <div class="editor-card">
+                    <!-- Editor Header -->
+                    <div class="editor-header">
+                        <div class="title-input-group">
+                            <input type="text"
+                                   class="headline-input"
+                                   placeholder="Give your day a headline..."
+                                   value="Give your day a headline..." />
+                            <div class="progress-badge">
+                                <span class="progress-text">0/100</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Toolbar -->
+                    <div class="toolbar">
+                        <div class="toolbar-group text-styles">
+                            <button class="tool-btn">H1</button>
+                            <button class="tool-btn">H2</button>
+                            <button class="tool-btn">H3</button>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="toolbar-group formatting">
+                            <button class="tool-icon-btn">
+                                <img src="images/bold-icon.png" alt="Bold" />
+                            </button>
+                            <button class="tool-icon-btn">
+                                <img src="images/italic-icon.png" alt="Italic" />
+                            </button>
+                            <button class="tool-icon-btn">
+                                <img src="images/underline-icon.png" alt="Underline" />
+                            </button>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="toolbar-group lists">
+                            <button class="tool-icon-btn">
+                                <img src="images/unordered-list.png" alt="Unordered List" />
+                            </button>
+                            <button class="tool-icon-btn">
+                                <img src="images/orderlist.png" alt="Ordered List" />
+                            </button>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="toolbar-group attachments">
+                            <button class="tool-icon-btn large">
+                                <img src="images/attach-icon.png" alt="Attach" />
+                            </button>
+                            <button class="tool-icon-btn">
+                                <img src="images/image-icon.png" alt="Add Image" />
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Text Area -->
+                    <div class="editor-body">
+                        <textarea class="main-textarea"
+                                  placeholder="Start writing your thoughts here"></textarea>
+                    </div>
+                </div>
+
+                <!-- Editor Footer -->
+                <div class="editor-footer">
+                    <div class="stats">
+                        <span class="stat-item">WORDS: 0</span>
+                        <span class="stat-item">CHARACTERS: 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Sidebar -->
+            <aside class="sidebar-column">
+                <!-- Mood Tracking Card -->
+                <div class="sidebar-card">
+                    <div class="card-header">
+                        <div class="icon-wrapper">
+                            <img src="images/mood-icon.png" alt="Mood Icon" class="header-icon" />
+                        </div>
+                        <h3 class="card-title">Mood Tracking</h3>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Primary Mood <span class="required">*</span></label>
+                        <div class="select-input">
+                            <span class="select-placeholder">Select how you feel</span>
+                            <img src="images/arrow-down.png" alt="Arrow" class="arrow-icon" />
+                        </div>
+                    </div>
+
+                    <!-- Secondary Mood Section with FIXED structure -->
+                    <div class="form-group secondary-mood-section">
+                        <div class="label-row">
+                            <label class="form-label">Secondary Mood <span class="required">*</span></label>
+                            <span class="label-hint">Max 2</span>
+                        </div>
+                        <div class="tags-container">
+                            <div class="tags-row">
+                                <div class="tag active">Productive</div>
+                                <div class="tag">Distracted</div>
+                                <div class="tag">Focused</div>
+                            </div>
+                            <div class="tags-row">
+                                <div class="tag outline">Lonely</div>
+                                <div class="tag">Sleepy</div>
+                                <div class="tag">Curious</div>
+                            </div>
+                        </div>
+
+                        <div class="add-tag-row">
+                            <input type="text" class="input-simple" placeholder="Enter Secondary Mood" />
+                            <button class="btn-add">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categorization Card -->
+                <div class="sidebar-card">
+                    <div class="card-header">
+                        <div class="icon-wrapper">
+                            <img src="images/Categorization-icon.png" alt="Tag Icon" class="header-icon-svg" />
+                        </div>
+                        <h3 class="card-title">Categorization</h3>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Category <span class="required">*</span></label>
+                        <div class="select-input">
+                            <span class="select-placeholder">Select Category</span>
+                            <img src="images/arrow-down.png" alt="Arrow" class="arrow-icon" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Tags <span class="required">*</span></label>
+                        <div class="select-input">
+                            <span class="select-placeholder">Select from recent tags</span>
+                            <img src="images/arrow-down.png" alt="Arrow" class="arrow-icon" />
+                        </div>
+
+                        <div class="add-tag-row">
+                            <input type="text" class="input-simple" placeholder="New tag name" />
+                            <button class="btn-add">Add</button>
+                        </div>
+
+                        <div class="selected-tags">
+                            <div class="tag-chip">
+                                <span>#milestone</span>
+                                <button class="remove-tag-btn">
+                                    <img src="images/close-icon.png" alt="Remove" />
+                                </button>
+                            </div>
+                            <div class="tag-chip">
+                                <span>#holiday</span>
+                                <button class="remove-tag-btn">
+                                    <img src="images/close-icon.png" alt="Remove" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Information Card -->
+                <div class="sidebar-card">
+                    <h3 class="card-title no-icon">System Information</h3>
+                    <div class="info-row">
+                        <span class="info-label">Created At:</span>
+                        <div class="info-value-group">
+                            <span class="info-value">12 December, 2025</span>
+                            <span class="info-value">9:11 AM</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Last Update</span>
+                        <span class="info-value">Just Now</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Total Word Count</span>
+                        <span class="info-value">1200 words</span>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="actions-group">
+                    <button class="btn-primary full-width">
+                        <div class="btn-content">
+                            <img src="images/save-icon.png" alt="Save" />
+                            <span>Save Entry</span>
+                        </div>
+                    </button>
+
+                    <div class="secondary-actions">
+                        <button class="btn-secondary">Cancel</button>
+                        <div class="divider-vertical"></div>
+                        <button class="btn-secondary delete">
+                            <img src="images/delete-icon.png" alt="Delete" />
+                            <span>Delete</span>
+                        </button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </section>
+</div>
