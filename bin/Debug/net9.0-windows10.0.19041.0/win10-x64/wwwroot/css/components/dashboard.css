@@ -1,5 +1,4 @@
-﻿/* Dashboard Styles */
-.dashboard-content {
+﻿.dashboard-content {
     max-width: 1110px;
     margin: 0 auto;
 }
@@ -113,7 +112,7 @@
     color: #000000;
 }
 
-/* Charts Grid - CHANGED TO VERTICAL STACK */
+/* Charts Grid */
 .charts-grid {
     display: flex;
     flex-direction: column;

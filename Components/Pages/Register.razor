@@ -1,0 +1,74 @@
+﻿@page "/register"
+@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+
+<div class="register-page">
+    <div class="register-wrapper">
+        <div class="register-card-container">
+            <div class="register-card-decoration"></div>
+
+            <div class="register-card-content">
+                <header class="register-card-header">
+                    <div class="register-logo-title-wrapper">
+                        <img src="images/logo.png" alt="My Journal Logo" class="register-logo-image">
+                        <h1 class="register-main-title">Create Your Journal Account</h1>
+                    </div>
+                    <p class="register-subtitle">Begin your secure journal today.</p>
+                </header>
+
+                <form class="register-form" @onsubmit="HandleSubmit">
+                    <div class="register-form-group">
+                        <label for="fullname" class="register-input-label">Full Name</label>
+                        <div class="register-input-wrapper">
+                            <input type="text" id="fullname" class="register-form-input" placeholder="e.g. Bhishma Pratap Karki">
+                        </div>
+                    </div>
+
+                    <div class="register-form-group">
+                        <label for="email" class="register-input-label">Email</label>
+                        <div class="register-input-wrapper">
+                            <input type="email" id="email" class="register-form-input" placeholder="Enter your example@gmail.com">
+                        </div>
+                    </div>
+
+                    <div class="register-form-group">
+                        <label for="password" class="register-input-label">Your Password</label>
+                        <div class="register-input-wrapper">
+                            <input type="password" id="password" class="register-form-input" placeholder="Enter Your Password here...">
+                        </div>
+                    </div>
+
+                    <div class="register-form-group">
+                        <label for="confirm-password" class="register-input-label">Confirm Your Password</label>
+                        <div class="register-input-wrapper">
+                            <input type="password" id="confirm-password" class="register-form-input" placeholder="Confirm Your Password here...">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="register-btn">Register</button>
+                </form>
+
+                <img src="images/Seprator.png" alt="" class="register-divider">
+
+                <div class="register-login-prompt">
+                    <span class="register-prompt-text">Already have an account?</span>
+                    <NavLink href="/login" class="register-login-link">Login</NavLink>
+                </div>
+
+                <img src="images/Seprator.png" alt="" class="register-divider">
+
+                <div class="register-security-footer">
+                    <img src="images/verified-badge-regster.png" alt="Verified" class="register-security-icon">
+                    <span class="register-security-text">Your journal data is stored securely</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private void HandleSubmit()
+    {
+        Navigation.NavigateTo("/dashboard");
+    }
+}

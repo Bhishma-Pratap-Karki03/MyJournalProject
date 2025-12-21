@@ -1,178 +1,167 @@
 ﻿@page "/journal"
 @inherits LayoutComponentBase
 
-<div class="journal-page">
-    <!-- Header Section -->
-    <section class="journal-header">
-        <div class="journal-header-content">
-            <div class="title-block">
-                <h1 class="page-title">Journal Entry</h1>
-                <div class="meta-info">
-                    <img src="images/journal-calender.png" alt="Calendar Icon" class="icon-calendar" />
-                    <span class="date-text">Journal Entry for 21 December 2025</span>
+<div class="journal-layout">
+    <section class="journal-header-section">
+        <div class="journal-header-container">
+            <div class="journal-title-wrapper">
+                <h1 class="journal-main-title">Journal Entry</h1>
+                <div class="journal-meta-data">
+                    <img src="images/journal-calender.png" alt="Calendar Icon" class="calendar-icon-small" />
+                    <span class="journal-date-display">Journal Entry for 21 December 2025</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Main Content -->
-    <section class="journal-main">
-        <div class="workspace-grid">
-            <!-- Left Column: Editor -->
-            <div class="editor-column">
-                <div class="editor-card">
-                    <!-- Editor Header -->
-                    <div class="editor-header">
-                        <div class="title-input-group">
+    <section class="journal-content-section">
+        <div class="journal-workspace-layout">
+            <div class="journal-editor-panel">
+                <div class="journal-editor-surface">
+                    <div class="journal-editor-header-area">
+                        <div class="journal-title-input-wrapper">
                             <input type="text"
-                                   class="headline-input"
+                                   class="journal-headline-field"
                                    placeholder="Give your day a headline..."
                                    value="Give your day a headline..." />
-                            <div class="progress-badge">
-                                <span class="progress-text">0/100</span>
+                            <div class="journal-progress-indicator">
+                                <span class="progress-counter">0/100</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Toolbar -->
-                    <div class="toolbar">
-                        <div class="toolbar-group text-styles">
-                            <button class="tool-btn">H1</button>
-                            <button class="tool-btn">H2</button>
-                            <button class="tool-btn">H3</button>
+                    <div class="journal-editor-toolbar">
+                        <div class="editor-tool-section heading-styles">
+                            <button class="editor-style-button">H1</button>
+                            <button class="editor-style-button">H2</button>
+                            <button class="editor-style-button">H3</button>
                         </div>
-                        <div class="divider"></div>
-                        <div class="toolbar-group formatting">
-                            <button class="tool-icon-btn">
+                        <div class="toolbar-divider-line"></div>
+                        <div class="editor-tool-section text-formatting">
+                            <button class="editor-icon-button">
                                 <img src="images/bold-icon.png" alt="Bold" />
                             </button>
-                            <button class="tool-icon-btn">
+                            <button class="editor-icon-button">
                                 <img src="images/italic-icon.png" alt="Italic" />
                             </button>
-                            <button class="tool-icon-btn">
+                            <button class="editor-icon-button">
                                 <img src="images/underline-icon.png" alt="Underline" />
                             </button>
                         </div>
-                        <div class="divider"></div>
-                        <div class="toolbar-group lists">
-                            <button class="tool-icon-btn">
+                        <div class="toolbar-divider-line"></div>
+                        <div class="editor-tool-section list-tools">
+                            <button class="editor-icon-button">
                                 <img src="images/unordered-list.png" alt="Unordered List" />
                             </button>
-                            <button class="tool-icon-btn">
+                            <button class="editor-icon-button">
                                 <img src="images/orderlist.png" alt="Ordered List" />
                             </button>
                         </div>
-                        <div class="divider"></div>
-                        <div class="toolbar-group attachments">
-                            <button class="tool-icon-btn large">
+                        <div class="toolbar-divider-line"></div>
+                        <div class="editor-tool-section attachment-tools">
+                            <button class="editor-icon-button attachment-button">
                                 <img src="images/attach-icon.png" alt="Attach" />
                             </button>
-                            <button class="tool-icon-btn">
+                            <button class="editor-icon-button">
                                 <img src="images/image-icon.png" alt="Add Image" />
                             </button>
                         </div>
                     </div>
 
-                    <!-- Text Area -->
-                    <div class="editor-body">
-                        <textarea class="main-textarea"
+                    <div class="journal-editor-body-area">
+                        <textarea class="journal-main-textarea"
                                   placeholder="Start writing your thoughts here"></textarea>
                     </div>
                 </div>
 
-                <!-- Editor Footer -->
-                <div class="editor-footer">
-                    <div class="stats">
-                        <span class="stat-item">WORDS: 0</span>
-                        <span class="stat-item">CHARACTERS: 0</span>
+                <div class="journal-editor-footer-area">
+                    <div class="editor-statistics">
+                        <span class="editor-stat-item">WORDS: 0</span>
+                        <span class="editor-stat-item">CHARACTERS: 0</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column: Sidebar -->
-            <aside class="sidebar-column">
-                <!-- Mood Tracking Card -->
-                <div class="sidebar-card">
-                    <div class="card-header">
-                        <div class="icon-wrapper">
-                            <img src="images/mood-icon.png" alt="Mood Icon" class="header-icon" />
+            <aside class="journal-sidebar-panel">
+                <div class="journal-sidebar-card">
+                    <div class="sidebar-card-header">
+                        <div class="sidebar-icon-holder">
+                            <img src="images/mood-icon.png" alt="Mood Icon" class="sidebar-header-icon" />
                         </div>
-                        <h3 class="card-title">Mood Tracking</h3>
+                        <h3 class="sidebar-card-heading">Mood Tracking</h3>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Primary Mood <span class="required">*</span></label>
-                        <div class="select-input">
-                            <span class="select-placeholder">Select how you feel</span>
-                            <img src="images/arrow-down.png" alt="Arrow" class="arrow-icon" />
+                    <div class="sidebar-form-element">
+                        <label class="sidebar-form-label">Primary Mood <span class="required-indicator">*</span></label>
+                        <div class="sidebar-select-field">
+                            <span class="select-placeholder-text">Select how you feel</span>
+                            <img src="images/arrow-down.png" alt="Arrow" class="select-arrow-icon" />
                         </div>
                     </div>
 
-                    <!-- Secondary Mood Section with FIXED structure -->
-                    <div class="form-group secondary-mood-section">
-                        <div class="label-row">
-                            <label class="form-label">Secondary Mood <span class="required">*</span></label>
-                            <span class="label-hint">Max 2</span>
+                    <div class="sidebar-form-element mood-secondary-section">
+                        <div class="mood-label-row">
+                            <label class="sidebar-form-label">Secondary Mood <span class="required-indicator">*</span></label>
+                            <span class="mood-hint-text">Max 2</span>
                         </div>
-                        <div class="tags-container">
-                            <div class="tags-row">
-                                <div class="tag active">Productive</div>
-                                <div class="tag">Distracted</div>
-                                <div class="tag">Focused</div>
+                        <div class="mood-tags-grid">
+                            <div class="mood-tags-row">
+                                <div class="mood-tag-item selected-mood">Productive</div>
+                                <div class="mood-tag-item">Distracted</div>
+                                <div class="mood-tag-item">Focused</div>
                             </div>
-                            <div class="tags-row">
-                                <div class="tag outline">Lonely</div>
-                                <div class="tag">Sleepy</div>
-                                <div class="tag">Curious</div>
+                            <div class="mood-tags-row">
+                                <div class="mood-tag-item outline-mood">Lonely</div>
+                                <div class="mood-tag-item">Sleepy</div>
+                                <div class="mood-tag-item">Curious</div>
                             </div>
                         </div>
 
-                        <div class="add-tag-row">
-                            <input type="text" class="input-simple" placeholder="Enter Secondary Mood" />
-                            <button class="btn-add">Add</button>
+                        <div class="mood-input-row">
+                            <input type="text" class="mood-input-field" placeholder="Enter Secondary Mood" />
+                            <button class="mood-add-button">Add</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Categorization Card -->
-                <div class="sidebar-card">
-                    <div class="card-header">
-                        <div class="icon-wrapper">
-                            <img src="images/Categorization-icon.png" alt="Tag Icon" class="header-icon-svg" />
+                <div class="journal-sidebar-card">
+                    <div class="sidebar-card-header">
+                        <div class="sidebar-icon-holder">
+                            <img src="images/Categorization-icon.png" alt="Tag Icon" class="sidebar-header-icon-svg" />
                         </div>
-                        <h3 class="card-title">Categorization</h3>
+                        <h3 class="sidebar-card-heading">Categorization</h3>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Category <span class="required">*</span></label>
-                        <div class="select-input">
-                            <span class="select-placeholder">Select Category</span>
-                            <img src="images/arrow-down.png" alt="Arrow" class="arrow-icon" />
+                    <div class="sidebar-form-element">
+                        <label class="sidebar-form-label">Category <span class="required-indicator">*</span></label>
+                        <div class="sidebar-select-field">
+                            <span class="select-placeholder-text">Select Category</span>
+                            <img src="images/arrow-down.png" alt="Arrow" class="select-arrow-icon" />
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Tags <span class="required">*</span></label>
-                        <div class="select-input">
-                            <span class="select-placeholder">Select from recent tags</span>
-                            <img src="images/arrow-down.png" alt="Arrow" class="arrow-icon" />
+                    <div class="sidebar-form-element">
+                        <label class="sidebar-form-label">Tags <span class="required-indicator">*</span></label>
+                        <div class="sidebar-select-field">
+                            <span class="select-placeholder-text">Select from recent tags</span>
+                            <img src="images/arrow-down.png" alt="Arrow" class="select-arrow-icon" />
                         </div>
 
-                        <div class="add-tag-row">
-                            <input type="text" class="input-simple" placeholder="New tag name" />
-                            <button class="btn-add">Add</button>
+                        <div class="tag-input-row">
+                            <input type="text" class="tag-input-field" placeholder="New tag name" />
+                            <button class="tag-add-button">Add</button>
                         </div>
 
-                        <div class="selected-tags">
-                            <div class="tag-chip">
+                        <div class="selected-tags-container">
+                            <div class="tag-bubble">
                                 <span>#milestone</span>
-                                <button class="remove-tag-btn">
+                                <button class="tag-remove-button">
                                     <img src="images/close-icon.png" alt="Remove" />
                                 </button>
                             </div>
-                            <div class="tag-chip">
+                            <div class="tag-bubble">
                                 <span>#holiday</span>
-                                <button class="remove-tag-btn">
+                                <button class="tag-remove-button">
                                     <img src="images/close-icon.png" alt="Remove" />
                                 </button>
                             </div>
@@ -180,39 +169,37 @@
                     </div>
                 </div>
 
-                <!-- System Information Card -->
-                <div class="sidebar-card">
-                    <h3 class="card-title no-icon">System Information</h3>
-                    <div class="info-row">
-                        <span class="info-label">Created At:</span>
-                        <div class="info-value-group">
-                            <span class="info-value">12 December, 2025</span>
-                            <span class="info-value">9:11 AM</span>
+                <div class="journal-sidebar-card">
+                    <h3 class="sidebar-card-heading no-icon-heading">System Information</h3>
+                    <div class="system-info-row">
+                        <span class="system-info-label">Created At:</span>
+                        <div class="system-info-values">
+                            <span class="system-info-value">12 December, 2025</span>
+                            <span class="system-info-value">9:11 AM</span>
                         </div>
                     </div>
-                    <div class="info-row">
-                        <span class="info-label">Last Update</span>
-                        <span class="info-value">Just Now</span>
+                    <div class="system-info-row">
+                        <span class="system-info-label">Last Update</span>
+                        <span class="system-info-value">Just Now</span>
                     </div>
-                    <div class="info-row">
-                        <span class="info-label">Total Word Count</span>
-                        <span class="info-value">1200 words</span>
+                    <div class="system-info-row">
+                        <span class="system-info-label">Total Word Count</span>
+                        <span class="system-info-value">1200 words</span>
                     </div>
                 </div>
 
-                <!-- Actions -->
-                <div class="actions-group">
-                    <button class="btn-primary full-width">
-                        <div class="btn-content">
+                <div class="journal-actions-container">
+                    <button class="journal-primary-action full-width-action">
+                        <div class="action-button-content">
                             <img src="images/save-icon.png" alt="Save" />
                             <span>Save Entry</span>
                         </div>
                     </button>
 
-                    <div class="secondary-actions">
-                        <button class="btn-secondary">Cancel</button>
-                        <div class="divider-vertical"></div>
-                        <button class="btn-secondary delete">
+                    <div class="journal-secondary-actions">
+                        <button class="journal-secondary-button">Cancel</button>
+                        <div class="action-divider-vertical"></div>
+                        <button class="journal-secondary-button delete-action">
                             <img src="images/delete-icon.png" alt="Delete" />
                             <span>Delete</span>
                         </button>

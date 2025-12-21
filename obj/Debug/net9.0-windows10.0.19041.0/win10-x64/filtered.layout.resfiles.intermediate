@@ -13,6 +13,7 @@ wwwroot\css\components\header.css.gz
 wwwroot\images\happy-icon.svg.gz
 wwwroot\css\components\journal-list.css.gz
 wwwroot\css\bootstrap\bootstrap.min.css.gz
+wwwroot\css\components\register.css.gz
 wwwroot\index.html.gz
 wwwroot\images\export-icon.svg.gz
 wwwroot\images\notifications-icon.svg.gz
@@ -32,6 +33,7 @@ wwwroot\css\components\header.css.br
 wwwroot\images\happy-icon.svg.br
 wwwroot\css\components\journal-list.css.br
 wwwroot\css\bootstrap\bootstrap.min.css.br
+wwwroot\css\components\register.css.br
 wwwroot\index.html.br
 wwwroot\images\export-icon.svg.br
 wwwroot\images\notifications-icon.svg.br
@@ -123,6 +125,7 @@ wwwroot\css\components\header.css
 wwwroot\css\components\journal.css
 wwwroot\css\components\journal-list.css
 wwwroot\css\components\navmenu.css
+wwwroot\css\components\register.css
 wwwroot\css\components\sidebar.css
 wwwroot\css\global.css
 wwwroot\images\analytics-icon.svg
@@ -177,6 +180,7 @@ wwwroot\images\postive-mood-filter.png
 wwwroot\images\prev-arrow-icon.png
 wwwroot\images\save-icon.png
 wwwroot\images\search-icon.png
+wwwroot\images\Seprator.png
 wwwroot\images\smiley.png
 wwwroot\images\theme-icon.svg
 wwwroot\images\to-calendar-icon.png
@@ -184,6 +188,7 @@ wwwroot\images\trophy-icon.svg
 wwwroot\images\twitter-icon.png
 wwwroot\images\underline-icon.png
 wwwroot\images\unordered-list.png
+wwwroot\images\verified-badge-regster.png
 wwwroot\images\ViewDetails.png
 wwwroot\images\word-count-icon.png
 wwwroot\images\write-icon.png

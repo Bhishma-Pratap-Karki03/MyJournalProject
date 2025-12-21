@@ -45,6 +45,10 @@
       "PackagePath": "staticwebassets\\css\\components\\navmenu.css"
     },
     {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\register.css",
+      "PackagePath": "staticwebassets\\css\\components\\register.css"
+    },
+    {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\sidebar.css",
       "PackagePath": "staticwebassets\\css\\components\\sidebar.css"
     },
@@ -71,6 +75,10 @@
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\NewEntry-icon.png",
       "PackagePath": "staticwebassets\\images\\NewEntry-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\Seprator.png",
+      "PackagePath": "staticwebassets\\images\\Seprator.png"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\ViewDetails.png",
@@ -291,6 +299,10 @@
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\unordered-list.png",
       "PackagePath": "staticwebassets\\images\\unordered-list.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\verified-badge-regster.png",
+      "PackagePath": "staticwebassets\\images\\verified-badge-regster.png"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\word-count-icon.png",

@@ -1,16 +1,35 @@
 ﻿@inherits LayoutComponentBase
+@using MyJournalProject.Components.Shared
+@inject NavigationManager Navigation
 
-<div class="app-container">
-    <div class="sidebar-fixed">
-        <Sidebar />
-    </div>
-    <div class="main-content">
-        <div class="header-fixed">
-            <Header />
+@if (ShouldShowLayout)
+{
+    <div class="app-container">
+        <div class="sidebar-fixed">
+            <Sidebar />
         </div>
-        <main class="content-area">
-            @Body
-        </main>
-        <Footer />
+        <div class="main-content">
+            <div class="header-fixed">
+                <Header />
+            </div>
+            <main class="content-area">
+                @Body
+            </main>
+            <Footer />
+        </div>
     </div>
-</div>
+}
+else
+{
+    @Body
+}
+
+@code {
+    private bool ShouldShowLayout => !IsAuthPage();
+
+    private bool IsAuthPage()
+    {
+        var currentUrl = Navigation.Uri.ToLower();
+        return currentUrl.Contains("/register") || currentUrl.Contains("/login");
+    }
+}

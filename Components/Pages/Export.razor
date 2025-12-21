@@ -2,212 +2,201 @@
 @inherits LayoutComponentBase
 
 <div class="export-page">
-    <div class="container">
-        <!-- Page Header -->
+    <div class="export-container">
         <div class="export-header">
-            <h1 class="page-title">Export Journals</h1>
-            <p class="page-subtitle">Select your journal entries based on date, mood, or category and export them as a professionally formatted PDF document.</p>
+            <h1 class="export-page-title">Export Journals</h1>
+            <p class="export-page-subtitle">Select your journal entries based on date, mood, or category and export them as a professionally formatted PDF document.</p>
         </div>
 
-        <!-- Main Content Area -->
-        <div class="export-content">
-            <!-- Left Column - Configuration Cards -->
-            <div class="config-column">
-                <!-- Date Range Card -->
-                <div class="config-card date-range-card">
-                    <div class="card-header">
-                        <div class="card-icon">
+        <div class="export-content-layout">
+            <div class="export-config-column">
+                <div class="export-config-card export-date-range-card">
+                    <div class="export-card-header">
+                        <div class="export-card-icon">
                             <img src="images/calendar-icon-export.png" alt="Calendar" />
                         </div>
-                        <h2 class="card-title">Date Range Selection</h2>
+                        <h2 class="export-card-title">Date Range Selection</h2>
                     </div>
 
-                    <div class="date-range-inputs">
-                        <div class="date-input-group">
-                            <label class="input-label">From Date</label>
-                            <div class="date-input">
+                    <div class="export-date-inputs-row">
+                        <div class="export-date-input-group">
+                            <label class="export-input-label">From Date</label>
+                            <div class="export-date-input">
                                 <img src="images/calendar-icon-export.png" alt="Calendar" />
                                 <span>12/19/2025</span>
                             </div>
                         </div>
 
-                        <div class="date-input-group">
-                            <label class="input-label">To Date</label>
-                            <div class="date-input">
+                        <div class="export-date-input-group">
+                            <label class="export-input-label">To Date</label>
+                            <div class="export-date-input">
                                 <img src="images/calendar-icon-export.png" alt="Calendar" />
                                 <span>12/19/2025</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="info-note">
+                    <div class="export-info-note">
                         <img src="images/information-export-icon.png" alt="Info" />
                         <span>Select the start and end days for your export period.</span>
                     </div>
                 </div>
 
-                <!-- Filter Options Card -->
-                <div class="config-card filter-card">
-                    <div class="card-header">
-                        <div class="card-icon">
+                <div class="export-config-card export-filter-card">
+                    <div class="export-card-header">
+                        <div class="export-card-icon">
                             <img src="images/Filter-Options.png" alt="Filter" />
                         </div>
-                        <h2 class="card-title">Filter Options</h2>
+                        <h2 class="export-card-title">Filter Options</h2>
                     </div>
 
-                    <div class="filter-section">
-                        <label class="section-label">Mood Filter</label>
-                        <div class="mood-filters">
-                            <button class="mood-filter-btn active">
+                    <div class="export-filter-section">
+                        <label class="export-section-label">Mood Filter</label>
+                        <div class="export-mood-buttons">
+                            <button class="export-mood-btn export-mood-btn-active">
                                 <img src="images/postive-mood-filter.png" alt="Positive" />
                                 <span>Positive</span>
                             </button>
-                            <button class="mood-filter-btn">
+                            <button class="export-mood-btn">
                                 <img src="images/negative-mood-filter.png" alt="Negative" />
                                 <span>Negative</span>
                             </button>
-                            <button class="mood-filter-btn">
+                            <button class="export-mood-btn">
                                 <img src="images/negative-mood-filter.png" alt="Neutral" />
                                 <span>Neutral</span>
                             </button>
                         </div>
                     </div>
 
-                    <div class="filter-options-row">
-                        <div class="filter-group">
-                            <label class="section-label">Category</label>
-                            <div class="dropdown-select">
+                    <div class="export-filter-row-split">
+                        <div class="export-filter-group">
+                            <label class="export-section-label">Category</label>
+                            <div class="export-dropdown-field">
                                 <span>All Categorization</span>
                                 <img src="images/arrow-down.png" alt="Dropdown" />
                             </div>
                         </div>
 
-                        <div class="filter-group">
-                            <label class="section-label">Tags</label>
-                            <div class="tags-input">
-                                <div class="selected-tag">
+                        <div class="export-filter-group">
+                            <label class="export-section-label">Tags</label>
+                            <div class="export-tags-field">
+                                <div class="export-tag-chip">
                                     <span>#mileston</span>
                                     <img src="images/close-icon.png" alt="Remove" />
                                 </div>
-                                <span class="placeholder-text">Add Tags...</span>
+                                <span class="export-placeholder-text">Add Tags...</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Export Content Options Card -->
-                <div class="config-card content-options-card">
-                    <div class="card-header">
-                        <div class="card-icon">
+                <div class="export-config-card export-content-options-card">
+                    <div class="export-card-header">
+                        <div class="export-card-icon">
                             <img src="images/Export-content-options-icons.png" alt="Content" />
                         </div>
-                        <h2 class="card-title">Export Content Options</h2>
+                        <h2 class="export-card-title">Export Content Options</h2>
                     </div>
 
-                    <div class="content-options-grid">
-                        <!-- Option 1 -->
-                        <div class="content-option">
-                            <div class="option-header">
-                                <div class="custom-checkbox">
-                                    <input type="checkbox" id="includeMood" checked />
-                                    <label for="includeMood" class="checkbox-label">
-                                        <span class="checkmark"></span>
-                                        <span class="checkbox-text">Include mood details</span>
+                    <div class="export-options-grid">
+                        <div class="export-option-item">
+                            <div class="export-option-header">
+                                <div class="export-custom-checkbox">
+                                    <input type="checkbox" id="exportIncludeMood" checked />
+                                    <label for="exportIncludeMood" class="export-checkbox-label">
+                                        <span class="export-checkmark"></span>
+                                        <span class="export-checkbox-text">Include mood details</span>
                                     </label>
                                 </div>
                             </div>
-                            <p class="option-description">Adds mood details to each entry</p>
+                            <p class="export-checkbox-desc">Adds mood details to each entry</p>
                         </div>
 
-                        <!-- Option 2 -->
-                        <div class="content-option">
-                            <div class="option-header">
-                                <div class="custom-checkbox">
-                                    <input type="checkbox" id="includeTags" checked />
-                                    <label for="includeTags" class="checkbox-label">
-                                        <span class="checkmark"></span>
-                                        <span class="checkbox-text">Include tags</span>
+                        <div class="export-option-item">
+                            <div class="export-option-header">
+                                <div class="export-custom-checkbox">
+                                    <input type="checkbox" id="exportIncludeTags" checked />
+                                    <label for="exportIncludeTags" class="export-checkbox-label">
+                                        <span class="export-checkmark"></span>
+                                        <span class="export-checkbox-text">Include tags</span>
                                     </label>
                                 </div>
                             </div>
-                            <p class="option-description">Displays associated tags</p>
+                            <p class="export-checkbox-desc">Displays associated tags</p>
                         </div>
 
-                        <!-- Option 3 -->
-                        <div class="content-option">
-                            <div class="option-header">
-                                <div class="custom-checkbox">
-                                    <input type="checkbox" id="includeWordCount" />
-                                    <label for="includeWordCount" class="checkbox-label">
-                                        <span class="checkmark"></span>
-                                        <span class="checkbox-text">Include word count</span>
+                        <div class="export-option-item">
+                            <div class="export-option-header">
+                                <div class="export-custom-checkbox">
+                                    <input type="checkbox" id="exportIncludeWordCount" />
+                                    <label for="exportIncludeWordCount" class="export-checkbox-label">
+                                        <span class="export-checkmark"></span>
+                                        <span class="export-checkbox-text">Include word count</span>
                                     </label>
                                 </div>
                             </div>
-                            <p class="option-description">Shows total words per entry.</p>
+                            <p class="export-checkbox-desc">Shows total words per entry.</p>
                         </div>
 
-                        <!-- Option 4 -->
-                        <div class="content-option">
-                            <div class="option-header">
-                                <div class="custom-checkbox">
-                                    <input type="checkbox" id="includeTimestamps" checked />
-                                    <label for="includeTimestamps" class="checkbox-label">
-                                        <span class="checkmark"></span>
-                                        <span class="checkbox-text">Include timestamps</span>
+                        <div class="export-option-item">
+                            <div class="export-option-header">
+                                <div class="export-custom-checkbox">
+                                    <input type="checkbox" id="exportIncludeTimestamps" checked />
+                                    <label for="exportIncludeTimestamps" class="export-checkbox-label">
+                                        <span class="export-checkmark"></span>
+                                        <span class="export-checkbox-text">Include timestamps</span>
                                     </label>
                                 </div>
                             </div>
-                            <p class="option-description">Add precise creation date and time</p>
+                            <p class="export-checkbox-desc">Add precise creation date and time</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column - Summary Card -->
-            <div class="summary-column">
-                <div class="summary-card">
-                    <div class="summary-header">
-                        <div class="summary-label">EXPORT SUMMARY</div>
-                        <h2 class="summary-title">Preview</h2>
+            <div class="export-summary-column">
+                <div class="export-summary-card">
+                    <div class="export-summary-header">
+                        <div class="export-summary-label">EXPORT SUMMARY</div>
+                        <h2 class="export-summary-title">Preview</h2>
                     </div>
 
-                    <div class="summary-content">
-                        <div class="summary-item">
-                            <span class="summary-label-text">Selected Entries</span>
-                            <span class="summary-value highlight">24</span>
+                    <div class="export-summary-body">
+                        <div class="export-summary-row">
+                            <span class="export-row-label">Selected Entries</span>
+                            <span class="export-row-value export-highlight">24</span>
                         </div>
 
-                        <div class="summary-item">
-                            <span class="summary-label-text">Date Range:</span>
-                            <span class="summary-value">12/19/2025 - 12/19/2025</span>
+                        <div class="export-summary-row">
+                            <span class="export-row-label">Date Range:</span>
+                            <span class="export-row-value">12/19/2025 - 12/19/2025</span>
                         </div>
 
-                        <div class="summary-item">
-                            <span class="summary-label-text">Filters:</span>
-                            <span class="summary-value">#blast, #Postive Vibes</span>
+                        <div class="export-summary-row">
+                            <span class="export-row-label">Filters:</span>
+                            <span class="export-row-value">#blast, #Postive Vibes</span>
                         </div>
 
-                        <div class="summary-item">
-                            <span class="summary-label-text">Word Count:</span>
-                            <span class="summary-value">4,580 words</span>
+                        <div class="export-summary-row">
+                            <span class="export-row-label">Word Count:</span>
+                            <span class="export-row-value">4,580 words</span>
                         </div>
 
-                        <div class="summary-item">
-                            <span class="summary-label-text">Format:</span>
-                            <div class="format-info">
+                        <div class="export-summary-row">
+                            <span class="export-row-label">Format:</span>
+                            <div class="export-format-value">
                                 <img src="images/pdf-icon.png" alt="PDF" />
                                 <span>PDF</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="summary-actions">
-                        <button class="btn-primary">
+                    <div class="export-summary-footer">
+                        <button class="export-btn-primary">
                             <img src="images/export-to-pdf.png" alt="Export" />
                             <span>Export to PDF</span>
                         </button>
-                        <button class="btn-secondaryCancel">
+                        <button class="export-btn-secondary">
                             <span>Cancel</span>
                         </button>
                     </div>
