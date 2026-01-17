@@ -1,60 +1,71 @@
-0:03:20 Memory Pressure: Moderate
-0:03:58 Tab1 StartNav6 #renderer-user #link
-0:03:58 Tab1 FinishNav6
-0:04:01 ZoomPlus
-0:04:01 ZoomPlus
-0:04:02 ZoomMinus
-0:04:02 ZoomMinus
-0:04:02 ZoomMinus
-0:04:02 ZoomMinus
-0:04:02 ZoomMinus
-0:04:03 ZoomPlus
-0:04:03 ZoomPlus
-0:04:03 ZoomPlus
-0:06:13 Memory Pressure: Critical
-0:07:02 Memory Pressure: Critical
-0:08:30 Memory Pressure: Moderate
-0:21:33 Tab1 StartNav7 #renderer-user #link
-0:21:33 Tab1 FinishNav7
-0:21:40 Memory Pressure: Critical
-0:23:50 Memory Pressure: Critical
-0:30:22 Memory Pressure: Critical
-0:37:01 Tab1 StartNav8 #renderer-user #link
-0:37:01 Tab1 FinishNav8
-0:39:54 Tab1 StartNav9 #renderer-user #link
-0:39:54 Tab1 FinishNav9
-0:39:54 Tab1 StartNav10 #renderer-user #link
-0:39:54 Tab1 FinishNav10
-0:39:54 Tab1 StartNav11 #renderer-user #link
-0:39:54 Tab1 FinishNav11
-0:39:54 Tab1 PageLoad
-0:39:55 Tab1 StartNav12 #renderer-user #link
-0:39:55 Tab1 FinishNav12
-0:39:56 Tab1 StartNav13 #renderer-user #link
-0:39:56 Tab1 FinishNav13
-0:39:57 Tab1 StartNav14 #renderer-user #link
-0:39:57 Tab1 FinishNav14
-0:39:58 Tab1 StartNav15 #renderer-user #link
-0:39:58 Tab1 FinishNav15
-0:39:58 Tab1 StartNav16 #renderer-user #link
-0:39:58 Tab1 FinishNav16
-0:40:02 Tab1 StartNav17 #renderer-user #link
-0:40:02 Tab1 FinishNav17
-0:40:02 Tab1 StartNav18 #renderer-user #link
-0:40:02 Tab1 FinishNav18
-0:40:02 Tab1 StartNav19 #renderer-user #link
-0:40:02 Tab1 FinishNav19
-0:40:02 Tab1 PageLoad
-0:40:03 Tab1 StartNav20 #renderer-user #link
-0:40:03 Tab1 FinishNav20
-0:40:03 Tab1 StartNav21 #renderer-user #link
-0:40:03 Tab1 FinishNav21
-0:40:06 Tab1 StartNav22 #renderer-user #link
-0:40:06 Tab1 FinishNav22
-0:40:54 Memory Pressure: Critical
-0:41:09 Memory Pressure: Critical
-0:41:55 Memory Pressure: Critical
-0:45:39 Memory Pressure: Critical
-0:45:50 Memory Pressure: Critical
-0:46:39 Memory Pressure: Critical
-0:50:48 Microsoft.UnloadController.IsUnclosableApp_IsNotWebApp
+0:00:00 Tab1 StartNav3 #renderer-user #link
+0:00:00 Tab1 FinishNav3
+0:00:04 Tab1 StartNav4 #renderer-user #link
+0:00:04 Tab1 FinishNav4
+0:00:04 Microsoft.Autofill.Password.SignIn.NoAutofillSuggestions
+0:00:04 Autofill_ShowedProfileSuggestions
+0:00:05 Autofill_SelectedSuggestion
+0:00:05 Autofill_FilledProfileSuggestion
+0:00:05 Widget Closed: PopupBaseView
+0:00:09 Autofill_OnWillSubmitForm
+0:00:14 Tab1 StartNav5 #renderer-user #link
+0:00:14 Tab1 FinishNav5
+0:00:14 PasswordManager_LoginPassed
+0:00:16 Autofill_SelectedSuggestion
+0:00:16 Widget Closed: PopupBaseView
+0:00:16 Autofill_ShowedProfileSuggestions
+0:00:17 Autofill_SelectedSuggestion
+0:00:17 Autofill_FilledProfileSuggestion
+0:00:17 Widget Closed: PopupBaseView
+0:00:27 Tab1 StartNav6 #renderer-user #link
+0:00:27 Tab1 FinishNav6
+0:00:27 PasswordManager_LoginPassed
+0:00:28 Microsoft.Autofill.Password.SignIn.NoAutofillSuggestions
+0:01:43 Autofill_ShowedProfileSuggestions
+0:01:44 Autofill_ShowedProfileSuggestions
+0:01:44 Autofill_ShowedProfileSuggestions
+0:01:45 Autofill_SelectedSuggestion
+0:01:45 Autofill_FilledProfileSuggestion
+0:01:45 Widget Closed: PopupBaseView
+0:01:49 Tab1 StartNav7 #renderer-user #link
+0:01:49 Tab1 FinishNav7
+0:01:49 PasswordManager_LoginPassed
+0:01:52 Tab1 StartNav8 #renderer-user #link
+0:01:52 Tab1 FinishNav8
+0:01:53 Tab1 StartNav9 #renderer-user #link
+0:01:53 Tab1 FinishNav9
+0:01:53 Tab1 PageLoad
+0:01:54 Microsoft.Autofill.Password.SignIn.NoAutofillSuggestions
+0:01:54 Autofill_ShowedProfileSuggestions
+0:01:55 Autofill_ShowedProfileSuggestions
+0:01:55 Autofill_ShowedProfileSuggestions
+0:01:55 Autofill_ShowedProfileSuggestions
+0:01:56 Autofill_SelectedSuggestion
+0:01:56 Autofill_FilledProfileSuggestion
+0:01:56 Widget Closed: PopupBaseView
+0:01:58 Tab1 StartNav10 #renderer-user #link
+0:01:58 Tab1 FinishNav10
+0:01:58 Autofill_OnWillSubmitForm
+0:01:59 Widget Closed: PopupBaseView
+0:02:00 Widget Closed: PopupBaseView
+0:02:01 Widget Closed: PopupBaseView
+0:02:02 Widget Closed: PopupBaseView
+0:02:08 Microsoft.Clipboard.WriteText
+0:02:09 Autofill_ShowedProfileSuggestions
+0:02:10 Autofill_SelectedSuggestion
+0:02:10 Autofill_FilledProfileSuggestion
+0:02:10 Widget Closed: PopupBaseView
+0:02:19 Tab1 StartNav11 #renderer-user #link
+0:02:19 Tab1 FinishNav11
+0:02:19 PasswordManager_LoginPassed
+0:02:19 Microsoft.Autofill.Password.SignIn.NoAutofillSuggestions
+0:02:20 Autofill_ShowedProfileSuggestions
+0:02:21 Autofill_ShowedProfileSuggestions
+0:02:21 Autofill_ShowedProfileSuggestions
+0:02:22 Autofill_SelectedSuggestion
+0:02:22 Autofill_FilledProfileSuggestion
+0:02:22 Widget Closed: PopupBaseView
+0:02:25 Tab1 StartNav12 #renderer-user #link
+0:02:25 Tab1 FinishNav12
+0:02:25 PasswordManager_LoginPassed
+0:02:27 Microsoft.UnloadController.IsUnclosableApp_IsNotWebApp

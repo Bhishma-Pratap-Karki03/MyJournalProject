@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @using MyJournalProject.Components.Shared
 @inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 
 @if (ShouldShowLayout)
 {
@@ -29,7 +30,50 @@ else
 
     private bool IsAuthPage()
     {
-        var currentUrl = Navigation.Uri.ToLower();
-        return currentUrl.Contains("/register") || currentUrl.Contains("/login");
+        var path = Navigation.ToBaseRelativePath(Navigation.Uri).ToLower();
+
+        // Check for auth pages
+        return path == "login" ||
+               path == "register" ||
+               path.StartsWith("login") ||
+               path.StartsWith("register");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CheckAuthentication();
+    }
+
+    private async Task CheckAuthentication()
+    {
+        var path = Navigation.ToBaseRelativePath(Navigation.Uri).ToLower();
+
+        // Skip check for auth pages
+        if (path == "login" || path == "register") return;
+
+        // List of protected pages
+        var protectedPages = new[] { "dashboard", "journal", "calendar", "myjournallist", "analytics", "export" };
+        var isProtectedPage = protectedPages.Any(page => path.StartsWith(page));
+
+        // If trying to access protected page without login, redirect to login
+        if (isProtectedPage)
+        {
+            try
+            {
+                var userJson = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "currentUser");
+                Console.WriteLine($"Auth check - User JSON: {userJson}");
+
+                if (string.IsNullOrEmpty(userJson))
+                {
+                    Console.WriteLine("No user found, redirecting to login");
+                    Navigation.NavigateTo("/login");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Auth check error: {ex.Message}");
+                Navigation.NavigateTo("/login");
+            }
+        }
     }
 }

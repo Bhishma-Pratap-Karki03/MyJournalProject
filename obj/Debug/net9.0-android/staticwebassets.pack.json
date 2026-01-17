@@ -41,6 +41,10 @@
       "PackagePath": "staticwebassets\\css\\components\\journal.css"
     },
     {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\login.css",
+      "PackagePath": "staticwebassets\\css\\components\\login.css"
+    },
+    {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\navmenu.css",
       "PackagePath": "staticwebassets\\css\\components\\navmenu.css"
     },
@@ -229,6 +233,10 @@
       "PackagePath": "staticwebassets\\images\\logo.png"
     },
     {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\logout-icon.svg",
+      "PackagePath": "staticwebassets\\images\\logout-icon.svg"
+    },
+    {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\mood-icon.png",
       "PackagePath": "staticwebassets\\images\\mood-icon.png"
     },
@@ -323,6 +331,10 @@
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\js\\charts.js",
       "PackagePath": "staticwebassets\\js\\charts.js"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\js\\quill-editor.js",
+      "PackagePath": "staticwebassets\\js\\quill-editor.js"
     },
     {
       "Id": "obj\\Debug\\net9.0-android\\staticwebassets\\msbuild.MyJournalProject.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",

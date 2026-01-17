@@ -1,4 +1,7 @@
-﻿<div class="header">
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+
+<div class="header">
     <div class="top-header">
         <div class="header-right">
             <div class="header-actions">
@@ -9,8 +12,48 @@
 
             <div class="user-profile">
                 <img src="images/avatar.jpg" alt="User Avatar" class="avatar">
-                <span class="user-name">Nissan Karki</span>
+                <span class="user-name">@userFullName</span>
             </div>
         </div>
     </div>
 </div>
+
+@code {
+    private string userFullName = "Guest";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUserData();
+    }
+
+    private async Task LoadUserData()
+    {
+        try
+        {
+            // Try to get user data from localStorage
+            var userJson = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "currentUser");
+
+            if (!string.IsNullOrEmpty(userJson))
+            {
+                var userData = System.Text.Json.JsonSerializer.Deserialize<UserData>(userJson);
+                if (userData != null && !string.IsNullOrEmpty(userData.FullName))
+                {
+                    userFullName = userData.FullName;
+                }
+            }
+        }
+        catch
+        {
+            // If error, keep default "Guest"
+            userFullName = "Guest";
+        }
+    }
+
+    // Helper class for deserialization
+    private class UserData
+    {
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public int Id { get; set; }
+    }
+}

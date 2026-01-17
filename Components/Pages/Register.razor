@@ -1,6 +1,8 @@
 ﻿@page "/register"
-@inherits LayoutComponentBase
-@inject NavigationManager Navigation
+@using MyJournalProject.Models
+@using MyJournalProject.Services
+@using Microsoft.AspNetCore.Components
+@using System.ComponentModel.DataAnnotations
 
 <div class="register-page">
     <div class="register-wrapper">
@@ -16,50 +18,106 @@
                     <p class="register-subtitle">Begin your secure journal today.</p>
                 </header>
 
-                <form class="register-form" @onsubmit="HandleSubmit">
+                <!-- Display Error Messages -->
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="register-message register-error">
+                        <strong>Error!</strong> @errorMessage
+                    </div>
+                }
+
+                <!-- Display Success Message -->
+                @if (!string.IsNullOrEmpty(successMessage))
+                {
+                    <div class="register-message register-success">
+                        <strong>Success!</strong> @successMessage
+                    </div>
+                }
+
+                <form @onsubmit="HandleSubmit" class="register-form">
+                    <!-- Full Name Field -->
                     <div class="register-form-group">
-                        <label for="fullname" class="register-input-label">Full Name</label>
+                        <label for="fullname" class="register-input-label">Full Name *</label>
                         <div class="register-input-wrapper">
-                            <input type="text" id="fullname" class="register-form-input" placeholder="e.g. Bhishma Pratap Karki">
+                            <input type="text" id="fullname" @bind="registerModel.FullName" @bind:event="oninput"
+                                   class="register-form-input"
+                                   placeholder="Enter your full name" />
                         </div>
+                        @if (!string.IsNullOrEmpty(fullNameError))
+                        {
+                            <span class="register-validation-message">@fullNameError</span>
+                        }
                     </div>
 
+                    <!-- Email Field -->
                     <div class="register-form-group">
-                        <label for="email" class="register-input-label">Email</label>
+                        <label for="email" class="register-input-label">Email *</label>
                         <div class="register-input-wrapper">
-                            <input type="email" id="email" class="register-form-input" placeholder="Enter your example@gmail.com">
+                            <input type="email" id="email" @bind="registerModel.Email" @bind:event="oninput"
+                                   class="register-form-input"
+                                   placeholder="Enter your email address" />
                         </div>
+                        @if (!string.IsNullOrEmpty(emailError))
+                        {
+                            <span class="register-validation-message">@emailError</span>
+                        }
                     </div>
 
+                    <!-- Password Field -->
                     <div class="register-form-group">
-                        <label for="password" class="register-input-label">Your Password</label>
+                        <label for="password" class="register-input-label">Password *</label>
                         <div class="register-input-wrapper">
-                            <input type="password" id="password" class="register-form-input" placeholder="Enter Your Password here...">
+                            <input type="password" id="password" @bind="registerModel.Password" @bind:event="oninput"
+                                   class="register-form-input"
+                                   placeholder="Enter your password" />
                         </div>
+                        @if (!string.IsNullOrEmpty(passwordError))
+                        {
+                            <span class="register-validation-message">@passwordError</span>
+                        }
+                        <small style="color: #888; font-size: 12px; margin-top: 4px;">
+                            Minimum 8 characters
+                        </small>
                     </div>
 
+                    <!-- Confirm Password Field -->
                     <div class="register-form-group">
-                        <label for="confirm-password" class="register-input-label">Confirm Your Password</label>
+                        <label for="confirm-password" class="register-input-label">Confirm Password *</label>
                         <div class="register-input-wrapper">
-                            <input type="password" id="confirm-password" class="register-form-input" placeholder="Confirm Your Password here...">
+                            <input type="password" id="confirm-password" @bind="registerModel.ConfirmPassword" @bind:event="oninput"
+                                   class="register-form-input"
+                                   placeholder="Confirm your password" />
                         </div>
+                        @if (!string.IsNullOrEmpty(confirmPasswordError))
+                        {
+                            <span class="register-validation-message">@confirmPasswordError</span>
+                        }
                     </div>
 
-                    <button type="submit" class="register-btn">Register</button>
+                    <button type="submit" class="register-btn" disabled="@isLoading">
+                        @if (isLoading)
+                        {
+                            <span>Creating Account...</span>
+                        }
+                        else
+                        {
+                            <span>Register</span>
+                        }
+                    </button>
                 </form>
 
                 <img src="images/Seprator.png" alt="" class="register-divider">
 
                 <div class="register-login-prompt">
                     <span class="register-prompt-text">Already have an account?</span>
-                    <NavLink href="/login" class="register-login-link">Login</NavLink>
+                    <a href="/login" class="register-login-link">Login</a>
                 </div>
 
                 <img src="images/Seprator.png" alt="" class="register-divider">
 
                 <div class="register-security-footer">
                     <img src="images/verified-badge-regster.png" alt="Verified" class="register-security-icon">
-                    <span class="register-security-text">Your journal data is stored securely</span>
+                    <span class="register-security-text">Your journal data is stored securely with password hashing</span>
                 </div>
             </div>
         </div>
@@ -67,8 +125,130 @@
 </div>
 
 @code {
-    private void HandleSubmit()
+    private RegisterModel registerModel = new();
+    private string? errorMessage;
+    private string? successMessage;
+    private bool isLoading = false;
+
+    private string? fullNameError;
+    private string? emailError;
+    private string? passwordError;
+    private string? confirmPasswordError;
+
+    [Inject]
+    private NavigationManager Navigation { get; set; } = null!;
+
+    [Inject]
+    private IAuthService AuthService { get; set; } = null!;
+
+    private async Task HandleSubmit()
     {
-        Navigation.NavigateTo("/dashboard");
+        // Clear previous errors
+        ClearErrors();
+
+        // Validate
+        if (!ValidateForm())
+        {
+            return;
+        }
+
+        isLoading = true;
+        errorMessage = null;
+        successMessage = null;
+
+        try
+        {
+            // Call AuthService to register user
+            var result = await AuthService.RegisterAsync(registerModel);
+
+            if (result.Success)
+            {
+                // Show success message
+                successMessage = "Account created successfully! Redirecting to login...";
+
+                // Wait for 2 seconds so user can see the success message
+                await Task.Delay(2000);
+
+                // Navigate to login page
+                Navigation.NavigateTo("/login");
+            }
+            else
+            {
+                errorMessage = result.ErrorMessage ?? "Registration failed. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+            Console.WriteLine($"Registration error: {ex}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void ClearErrors()
+    {
+        fullNameError = null;
+        emailError = null;
+        passwordError = null;
+        confirmPasswordError = null;
+        errorMessage = null;
+    }
+
+    private bool ValidateForm()
+    {
+        bool isValid = true;
+
+        // Validate Full Name
+        if (string.IsNullOrWhiteSpace(registerModel.FullName))
+        {
+            fullNameError = "Full Name is required";
+            isValid = false;
+        }
+        else if (registerModel.FullName.Length > 100)
+        {
+            fullNameError = "Full Name cannot exceed 100 characters";
+            isValid = false;
+        }
+
+        // Validate Email
+        if (string.IsNullOrWhiteSpace(registerModel.Email))
+        {
+            emailError = "Email is required";
+            isValid = false;
+        }
+        else if (!new EmailAddressAttribute().IsValid(registerModel.Email))
+        {
+            emailError = "Invalid email format";
+            isValid = false;
+        }
+
+        // Validate Password
+        if (string.IsNullOrWhiteSpace(registerModel.Password))
+        {
+            passwordError = "Password is required";
+            isValid = false;
+        }
+        else if (registerModel.Password.Length < 8)
+        {
+            passwordError = "Password must be at least 8 characters";
+            isValid = false;
+        }
+
+        // Validate Confirm Password
+        if (string.IsNullOrWhiteSpace(registerModel.ConfirmPassword))
+        {
+            confirmPasswordError = "Please confirm your password";
+            isValid = false;
+        }
+        else if (registerModel.Password != registerModel.ConfirmPassword)
+        {
+            confirmPasswordError = "Passwords do not match";
+            isValid = false;
+        }
+
+        return isValid;
     }
 }

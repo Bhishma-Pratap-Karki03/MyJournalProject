@@ -1,0 +1,153 @@
+﻿@page "/login"
+@using MyJournalProject.Services
+@using Microsoft.AspNetCore.Components
+
+<div class="login-page">
+    <div class="login-wrapper">
+        <div class="login-card-container">
+            <div class="login-card-decoration"></div>
+
+            <div class="login-card-content">
+                <header class="login-card-header">
+                    <div class="login-logo-title-wrapper">
+                        <img src="images/logo.png" alt="My Journal Logo" class="login-logo-image">
+                        <h1 class="login-main-title">My Journal Journey</h1>
+                    </div>
+                    <p class="login-subtitle">Secure access to your personal journey</p>
+                </header>
+
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="login-message login-error">
+                        <strong>Login Failed!</strong> @errorMessage
+                    </div>
+                }
+
+                <form class="login-form" @onsubmit="HandleSubmit">
+                    <div class="login-form-group">
+                        <label for="email" class="login-input-label">Email *</label>
+                        <div class="login-input-wrapper">
+                            <input type="email" id="email" @bind="email" @bind:event="oninput"
+                                   class="login-form-input"
+                                   placeholder="Enter your email address">
+                        </div>
+                    </div>
+
+                    <div class="login-form-group">
+                        <div class="login-label-row">
+                            <label for="password" class="login-input-label">Password *</label>
+                            <a href="#" class="login-forgot-password-link">Forgot Password?</a>
+                        </div>
+                        <div class="login-input-wrapper">
+                            <input type="password" id="password" @bind="password" @bind:event="oninput"
+                                   class="login-form-input"
+                                   placeholder="Enter your password">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="login-btn" disabled="@isLoading">
+                        @if (isLoading)
+                        {
+                            <span>Logging in...</span>
+                        }
+                        else
+                        {
+                            <span>Login</span>
+                        }
+                    </button>
+                </form>
+
+                <img src="images/Seprator.png" alt="" class="login-divider">
+
+                <div class="login-register-prompt">
+                    <span class="login-prompt-text">Don't have an account?</span>
+                    <a href="/register" class="login-register-link">Register</a>
+                </div>
+
+                <img src="images/Seprator.png" alt="" class="login-divider">
+
+                <div class="login-security-footer">
+                    <img src="images/verified-badge-regster.png" alt="Verified" class="login-security-icon">
+                    <span class="login-security-text">Your journal data is stored securely</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string email = "";
+    private string password = "";
+    private string? errorMessage;
+    private bool isLoading = false;
+
+    [Inject]
+    private NavigationManager Navigation { get; set; } = null!;
+
+    [Inject]
+    private IAuthService AuthService { get; set; } = null!;
+
+    [Inject]
+    private IJSRuntime JSRuntime { get; set; } = null!;
+
+    private async Task HandleSubmit()
+    {
+        isLoading = true;
+        errorMessage = null;
+
+        // Simple validation
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            errorMessage = "Please enter your email";
+            isLoading = false;
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            errorMessage = "Please enter your password";
+            isLoading = false;
+            return;
+        }
+
+        try
+        {
+            Console.WriteLine($"Attempting login for: {email}");
+
+            // Call AuthService to login
+            var result = await AuthService.LoginAsync(email, password);
+            Console.WriteLine($"Login result: Success={result.Success}, Error={result.ErrorMessage}");
+
+            if (result.Success && result.Data != null)
+            {
+                Console.WriteLine($"User logged in: {result.Data.FullName}, ID: {result.Data.Id}");
+
+                // Store user data in localStorage
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "currentUser",
+                    System.Text.Json.JsonSerializer.Serialize(new
+                    {
+                        Id = result.Data.Id,
+                        FullName = result.Data.FullName,
+                        Email = result.Data.Email
+                    }));
+
+                // Login successful - redirect to dashboard
+                Navigation.NavigateTo("/dashboard");
+            }
+            else
+            {
+                errorMessage = result.ErrorMessage ?? "Invalid email or password";
+                Console.WriteLine($"Login failed: {errorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Login error: {ex.Message}";
+            Console.WriteLine($"Login exception: {ex}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

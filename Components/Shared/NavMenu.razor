@@ -1,5 +1,9 @@
-﻿<nav class="sidebar-nav">
-    <NavLink href="/" class="nav-item" ActiveClass="active" Match="NavLinkMatch.All">
+﻿@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+
+<nav class="sidebar-nav">
+    <!-- Dashboard link -->
+    <NavLink href="/dashboard" class="nav-item" ActiveClass="active" Match="NavLinkMatch.All">
         <div class="nav-content">
             <img src="images/dashboard-icon.png" alt="Dashboard" class="nav-icon">
             <span class="nav-text">Dashboard</span>
@@ -22,7 +26,7 @@
 
     <NavLink href="/myjournallist" class="nav-item" ActiveClass="active">
         <div class="nav-content">
-            <img src="images/Journal-List-icon.png" alt="Calendar View" class="nav-icon">
+            <img src="images/Journal-List-icon.png" alt="My Journal List" class="nav-icon">
             <span class="nav-text">My Journal List</span>
         </div>
     </NavLink>
@@ -41,4 +45,22 @@
         </div>
     </NavLink>
 
+    <!-- Simple Logout button -->
+    <div class="nav-item logout-item" @onclick="Logout">
+        <div class="nav-content">
+            <img src="images/logout-icon.svg" alt="Logout" class="nav-icon">
+            <span class="nav-text">Logout</span>
+        </div>
+    </div>
 </nav>
+
+@code {
+    private async Task Logout()
+    {
+        // Clear user data from localStorage
+        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "currentUser");
+
+        // Navigate to login page
+        Navigation.NavigateTo("/login", forceLoad: true);
+    }
+}
