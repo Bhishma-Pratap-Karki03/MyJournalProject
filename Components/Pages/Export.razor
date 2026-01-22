@@ -1,203 +1,282 @@
 ﻿@page "/export"
 @inherits LayoutComponentBase
+@using MyJournalProject.Models
+@using MyJournalProject.Services
+@using Microsoft.AspNetCore.Components
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+@inject IExportService ExportService
+@inject IJournalService JournalService
+@implements IDisposable
 
-<div class="export-page">
-    <div class="export-container">
-        <div class="export-header">
-            <h1 class="export-page-title">Export Journals</h1>
-            <p class="export-page-subtitle">Select your journal entries based on date, mood, or category and export them as a professionally formatted PDF document.</p>
+<div class="exportpdfhero-page">
+    <div class="exportpdfhero-container">
+        <div class="exportpdfhero-header">
+            <h1 class="exportpdfhero-page-title">Export Journals</h1>
+            <p class="exportpdfhero-page-subtitle">Select your journal entries based on date, mood, or category and export them as a professionally formatted PDF document.</p>
         </div>
 
-        <div class="export-content-layout">
-            <div class="export-config-column">
-                <div class="export-config-card export-date-range-card">
-                    <div class="export-card-header">
-                        <div class="export-card-icon">
-                            <img src="images/calendar-icon-export.png" alt="Calendar" />
+        <div class="exportpdfhero-content-layout">
+            <div class="exportpdfhero-config-column">
+                <!-- Date Range Selection -->
+                <div class="exportpdfhero-config-card exportpdfhero-date-range-card">
+                    <div class="exportpdfhero-card-header">
+                        <div class="exportpdfhero-card-icon">
+                            <img src="images/DateRangeSelection.svg" alt="Calendar" />
                         </div>
-                        <h2 class="export-card-title">Date Range Selection</h2>
+                        <h2 class="exportpdfhero-card-title">Date Range Selection</h2>
                     </div>
 
-                    <div class="export-date-inputs-row">
-                        <div class="export-date-input-group">
-                            <label class="export-input-label">From Date</label>
-                            <div class="export-date-input">
-                                <img src="images/calendar-icon-export.png" alt="Calendar" />
-                                <span>12/19/2025</span>
+                    <div class="exportpdfhero-date-inputs-row">
+                        <div class="exportpdfhero-date-input-group">
+                            <label class="exportpdfhero-input-label">From Date</label>
+                            <div class="exportpdfhero-date-input" @onclick='() => ShowDatePicker("from")'>
+                                <img src="images/export-calendar.svg" alt="Calendar" />
+                                <span>@(exportRequest.Filters.FromDate?.ToString("MM/dd/yyyy") ?? "Select date")</span>
                             </div>
                         </div>
 
-                        <div class="export-date-input-group">
-                            <label class="export-input-label">To Date</label>
-                            <div class="export-date-input">
-                                <img src="images/calendar-icon-export.png" alt="Calendar" />
-                                <span>12/19/2025</span>
+                        <div class="exportpdfhero-date-input-group">
+                            <label class="exportpdfhero-input-label">To Date</label>
+                            <div class="exportpdfhero-date-input" @onclick='() => ShowDatePicker("to")'>
+                                <img src="images/export-calendar.svg" alt="Calendar" />
+                                <span>@(exportRequest.Filters.ToDate?.ToString("MM/dd/yyyy") ?? "Select date")</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="export-info-note">
-                        <img src="images/information-export-icon.png" alt="Info" />
+                    <div class="exportpdfhero-info-note">
+                        <img src="images/info-icon.svg" alt="Info" />
                         <span>Select the start and end days for your export period.</span>
                     </div>
                 </div>
 
-                <div class="export-config-card export-filter-card">
-                    <div class="export-card-header">
-                        <div class="export-card-icon">
-                            <img src="images/Filter-Options.png" alt="Filter" />
+                <!-- Filter Options -->
+                <div class="exportpdfhero-config-card exportpdfhero-filter-card">
+                    <div class="exportpdfhero-card-header">
+                        <div class="exportpdfhero-card-icon">
+                            <img src="images/filter-icon.svg" alt="Filter" />
                         </div>
-                        <h2 class="export-card-title">Filter Options</h2>
+                        <h2 class="exportpdfhero-card-title">Filter Options</h2>
                     </div>
 
-                    <div class="export-filter-section">
-                        <label class="export-section-label">Mood Filter</label>
-                        <div class="export-mood-buttons">
-                            <button class="export-mood-btn export-mood-btn-active">
+                    <!-- Primary Mood Filter -->
+                    <div class="exportpdfhero-filter-section">
+                        <label class="exportpdfhero-section-label">Primary Mood</label>
+                        <div class="exportpdfhero-mood-buttons">
+                            <button class="exportpdfhero-mood-btn @(exportRequest.Filters.PrimaryMood == "Positive" ? "exportpdfhero-mood-btn-active" : "")"
+                                    @onclick='() => SelectPrimaryMood("Positive")'>
                                 <img src="images/postive-mood-filter.png" alt="Positive" />
                                 <span>Positive</span>
                             </button>
-                            <button class="export-mood-btn">
+                            <button class="exportpdfhero-mood-btn @(exportRequest.Filters.PrimaryMood == "Negative" ? "exportpdfhero-mood-btn-active" : "")"
+                                    @onclick='() => SelectPrimaryMood("Negative")'>
                                 <img src="images/negative-mood-filter.png" alt="Negative" />
                                 <span>Negative</span>
                             </button>
-                            <button class="export-mood-btn">
+                            <button class="exportpdfhero-mood-btn @(exportRequest.Filters.PrimaryMood == "Neutral" ? "exportpdfhero-mood-btn-active" : "")"
+                                    @onclick='() => SelectPrimaryMood("Neutral")'>
                                 <img src="images/negative-mood-filter.png" alt="Neutral" />
                                 <span>Neutral</span>
+                            </button>
+                            <button class="exportpdfhero-mood-btn @(string.IsNullOrEmpty(exportRequest.Filters.PrimaryMood) ? "exportpdfhero-mood-btn-active" : "")"
+                                    @onclick='() => SelectPrimaryMood(null)'>
+                                <span>All Moods</span>
                             </button>
                         </div>
                     </div>
 
-                    <div class="export-filter-row-split">
-                        <div class="export-filter-group">
-                            <label class="export-section-label">Category</label>
-                            <div class="export-dropdown-field">
-                                <span>All Categorization</span>
+                    <div class="exportpdfhero-filter-row-split">
+                        <!-- Category Filter -->
+                        <div class="exportpdfhero-filter-group">
+                            <label class="exportpdfhero-section-label">Category</label>
+                            <div class="exportpdfhero-dropdown-field" @onclick="ToggleCategoryDropdown">
+                                <span>@(string.IsNullOrEmpty(exportRequest.Filters.Category) ? "All Categories" : exportRequest.Filters.Category)</span>
                                 <img src="images/arrow-down.png" alt="Dropdown" />
                             </div>
+                            @if (showCategoryDropdown)
+                            {
+                                <div class="exportpdfhero-dropdown-menu" style="position: absolute; width: 200px; z-index: 1000;">
+                                    <div class="exportpdfhero-dropdown-item" @onclick='() => SelectCategory(null)'>All Categories</div>
+                                    @foreach (var category in availableCategories)
+                                    {
+                                        <div class="exportpdfhero-dropdown-item" @onclick='() => SelectCategory(category)'>
+                                            @category
+                                        </div>
+                                    }
+                                </div>
+                            }
                         </div>
 
-                        <div class="export-filter-group">
-                            <label class="export-section-label">Tags</label>
-                            <div class="export-tags-field">
-                                <div class="export-tag-chip">
-                                    <span>#mileston</span>
-                                    <img src="images/close-icon.png" alt="Remove" />
-                                </div>
-                                <span class="export-placeholder-text">Add Tags...</span>
+                        <!-- Tags Filter -->
+                        <div class="exportpdfhero-filter-group">
+                            <label class="exportpdfhero-section-label">Tags</label>
+                            <div class="exportpdfhero-dropdown-field" @onclick="ToggleTagsDropdown">
+                                @if (exportRequest.Filters.Tags.Any())
+                                {
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div class="exportpdfhero-tag-chip">
+                                            <span>@exportRequest.Filters.Tags.First()</span>
+                                            <img src="images/close-icon.png" alt="Remove"
+                                                 @onclick='() => RemoveTag(exportRequest.Filters.Tags.First())'
+                                                 @onclick:stopPropagation />
+                                        </div>
+                                        @if (exportRequest.Filters.Tags.Count > 1)
+                                        {
+                                            <span>+@(exportRequest.Filters.Tags.Count - 1) more</span>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="exportpdfhero-placeholder-text">Add Tags...</span>
+                                }
+                                <img src="images/arrow-down.png" alt="Dropdown" />
                             </div>
+                            @if (showTagsDropdown)
+                            {
+                                <div class="exportpdfhero-dropdown-menu" style="position: absolute; width: 200px; z-index: 1000; max-height: 200px; overflow-y: auto;">
+                                    @foreach (var tag in availableTags)
+                                    {
+                                        <div class="exportpdfhero-dropdown-item" @onclick='() => ToggleTag(tag)'>
+                                            <span>#@tag</span>
+                                            @if (exportRequest.Filters.Tags.Contains(tag))
+                                            {
+                                                <span style="color: #007fe8; font-weight: bold;">✓</span>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
 
-                <div class="export-config-card export-content-options-card">
-                    <div class="export-card-header">
-                        <div class="export-card-icon">
+                <!-- Export Content Options -->
+                <div class="exportpdfhero-config-card exportpdfhero-content-options-card">
+                    <div class="exportpdfhero-card-header">
+                        <div class="exportpdfhero-card-icon">
                             <img src="images/Export-content-options-icons.png" alt="Content" />
                         </div>
-                        <h2 class="export-card-title">Export Content Options</h2>
+                        <h2 class="exportpdfhero-card-title">Export Content Options</h2>
                     </div>
 
-                    <div class="export-options-grid">
-                        <div class="export-option-item">
-                            <div class="export-option-header">
-                                <div class="export-custom-checkbox">
-                                    <input type="checkbox" id="exportIncludeMood" checked />
-                                    <label for="exportIncludeMood" class="export-checkbox-label">
-                                        <span class="export-checkmark"></span>
-                                        <span class="export-checkbox-text">Include mood details</span>
+                    <div class="exportpdfhero-options-grid">
+                        <div class="exportpdfhero-option-item">
+                            <div class="exportpdfhero-option-header">
+                                <div class="exportpdfhero-custom-checkbox">
+                                    <input type="checkbox" id="exportIncludeMood"
+                                           @bind="exportRequest.Options.IncludeMoodDetails" />
+                                    <label for="exportIncludeMood" class="exportpdfhero-checkbox-label">
+                                        <span class="exportpdfhero-checkmark"></span>
+                                        <span class="exportpdfhero-checkbox-text">Include mood details</span>
                                     </label>
                                 </div>
                             </div>
-                            <p class="export-checkbox-desc">Adds mood details to each entry</p>
+                            <p class="exportpdfhero-checkbox-desc">Adds mood details to each entry</p>
                         </div>
 
-                        <div class="export-option-item">
-                            <div class="export-option-header">
-                                <div class="export-custom-checkbox">
-                                    <input type="checkbox" id="exportIncludeTags" checked />
-                                    <label for="exportIncludeTags" class="export-checkbox-label">
-                                        <span class="export-checkmark"></span>
-                                        <span class="export-checkbox-text">Include tags</span>
+                        <div class="exportpdfhero-option-item">
+                            <div class="exportpdfhero-option-header">
+                                <div class="exportpdfhero-custom-checkbox">
+                                    <input type="checkbox" id="exportIncludeTags"
+                                           @bind="exportRequest.Options.IncludeTags" />
+                                    <label for="exportIncludeTags" class="exportpdfhero-checkbox-label">
+                                        <span class="exportpdfhero-checkmark"></span>
+                                        <span class="exportpdfhero-checkbox-text">Include tags</span>
                                     </label>
                                 </div>
                             </div>
-                            <p class="export-checkbox-desc">Displays associated tags</p>
+                            <p class="exportpdfhero-checkbox-desc">Displays associated tags</p>
                         </div>
 
-                        <div class="export-option-item">
-                            <div class="export-option-header">
-                                <div class="export-custom-checkbox">
-                                    <input type="checkbox" id="exportIncludeWordCount" />
-                                    <label for="exportIncludeWordCount" class="export-checkbox-label">
-                                        <span class="export-checkmark"></span>
-                                        <span class="export-checkbox-text">Include word count</span>
+                        <div class="exportpdfhero-option-item">
+                            <div class="exportpdfhero-option-header">
+                                <div class="exportpdfhero-custom-checkbox">
+                                    <input type="checkbox" id="exportIncludeWordCount"
+                                           @bind="exportRequest.Options.IncludeWordCount" />
+                                    <label for="exportIncludeWordCount" class="exportpdfhero-checkbox-label">
+                                        <span class="exportpdfhero-checkmark"></span>
+                                        <span class="exportpdfhero-checkbox-text">Include word count</span>
                                     </label>
                                 </div>
                             </div>
-                            <p class="export-checkbox-desc">Shows total words per entry.</p>
+                            <p class="exportpdfhero-checkbox-desc">Shows total words per entry.</p>
                         </div>
 
-                        <div class="export-option-item">
-                            <div class="export-option-header">
-                                <div class="export-custom-checkbox">
-                                    <input type="checkbox" id="exportIncludeTimestamps" checked />
-                                    <label for="exportIncludeTimestamps" class="export-checkbox-label">
-                                        <span class="export-checkmark"></span>
-                                        <span class="export-checkbox-text">Include timestamps</span>
+                        <div class="exportpdfhero-option-item">
+                            <div class="exportpdfhero-option-header">
+                                <div class="exportpdfhero-custom-checkbox">
+                                    <input type="checkbox" id="exportIncludeTimestamps"
+                                           @bind="exportRequest.Options.IncludeTimestamps" />
+                                    <label for="exportIncludeTimestamps" class="exportpdfhero-checkbox-label">
+                                        <span class="exportpdfhero-checkmark"></span>
+                                        <span class="exportpdfhero-checkbox-text">Include timestamps</span>
                                     </label>
                                 </div>
                             </div>
-                            <p class="export-checkbox-desc">Add precise creation date and time</p>
+                            <p class="exportpdfhero-checkbox-desc">Add precise creation date and time</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="export-summary-column">
-                <div class="export-summary-card">
-                    <div class="export-summary-header">
-                        <div class="export-summary-label">EXPORT SUMMARY</div>
-                        <h2 class="export-summary-title">Preview</h2>
+            <!-- Summary Column -->
+            <div class="exportpdfhero-summary-column">
+                <div class="exportpdfhero-summary-card">
+                    <div class="exportpdfhero-summary-header">
+                        <div class="exportpdfhero-summary-label">EXPORT SUMMARY</div>
+                        <h2 class="exportpdfhero-summary-title">Preview</h2>
                     </div>
 
-                    <div class="export-summary-body">
-                        <div class="export-summary-row">
-                            <span class="export-row-label">Selected Entries</span>
-                            <span class="export-row-value export-highlight">24</span>
+                    <div class="exportpdfhero-summary-body">
+                        <div class="exportpdfhero-summary-row">
+                            <span class="exportpdfhero-row-label">Selected Entries</span>
+                            <span class="exportpdfhero-row-value exportpdfhero-highlight">
+                                @(previewData?.EntryCount.ToString() ?? "0")
+                            </span>
                         </div>
 
-                        <div class="export-summary-row">
-                            <span class="export-row-label">Date Range:</span>
-                            <span class="export-row-value">12/19/2025 - 12/19/2025</span>
+                        <div class="exportpdfhero-summary-row">
+                            <span class="exportpdfhero-row-label">Date Range:</span>
+                            <span class="exportpdfhero-row-value">@(GetDateRangeDisplay())</span>
                         </div>
 
-                        <div class="export-summary-row">
-                            <span class="export-row-label">Filters:</span>
-                            <span class="export-row-value">#blast, #Postive Vibes</span>
+                        <div class="exportpdfhero-summary-row">
+                            <span class="exportpdfhero-row-label">Filters:</span>
+                            <span class="exportpdfhero-row-value">
+                                @(GetAppliedFiltersDisplay())
+                            </span>
                         </div>
 
-                        <div class="export-summary-row">
-                            <span class="export-row-label">Word Count:</span>
-                            <span class="export-row-value">4,580 words</span>
+                        <div class="exportpdfhero-summary-row">
+                            <span class="exportpdfhero-row-label">Word Count:</span>
+                            <span class="exportpdfhero-row-value">@(previewData?.TotalWordCount.ToString("N0") ?? "0") words</span>
                         </div>
 
-                        <div class="export-summary-row">
-                            <span class="export-row-label">Format:</span>
-                            <div class="export-format-value">
-                                <img src="images/pdf-icon.png" alt="PDF" />
+                        <div class="exportpdfhero-summary-row">
+                            <span class="exportpdfhero-row-label">Format:</span>
+                            <div class="exportpdfhero-format-value">
+                                <img src="images/pdf-icon.svg" alt="PDF" />
                                 <span>PDF</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="export-summary-footer">
-                        <button class="export-btn-primary">
-                            <img src="images/export-to-pdf.png" alt="Export" />
-                            <span>Export to PDF</span>
+                    <div class="exportpdfhero-summary-footer">
+                        <button class="exportpdfhero-btn-primary" @onclick="ExportToPdf" disabled="@isExporting">
+                            @if (isExporting)
+                            {
+                                <span>Exporting...</span>
+                            }
+                            else
+                            {
+                                <img src="images/download-pdf-icon.svg" alt="Export" />
+                                <span>Export to PDF</span>
+                            }
                         </button>
-                        <button class="export-btn-secondary">
-                            <span>Cancel</span>
+                        <button class="exportpdfhero-btn-secondary" @onclick="ResetFilters">
+                            <span>Reset Filters</span>
                         </button>
                     </div>
                 </div>
@@ -205,3 +284,397 @@
         </div>
     </div>
 </div>
+
+<!-- Date Picker Modal -->
+@if (showDatePicker)
+{
+    <div class="exportpdfhero-date-picker-modal" @onclick="CloseDatePicker">
+        <div class="exportpdfhero-date-picker-content" @onclick:stopPropagation="true">
+            <div class="exportpdfhero-date-picker-header">
+                <h3>Select @(datePickerType == "from" ? "From" : "To") Date</h3>
+                <button class="exportpdfhero-close-btn" @onclick="CloseDatePicker">×</button>
+            </div>
+            <div class="exportpdfhero-date-picker-body">
+                <input type="date"
+                       @bind="datePickerValue"
+                       @bind:format="yyyy-MM-dd"
+                       max="@DateTime.Today.ToString("yyyy-MM-dd")"
+                       class="exportpdfhero-date-input-field" />
+            </div>
+            <div class="exportpdfhero-date-picker-footer">
+                <button class="exportpdfhero-btn-secondary" @onclick="CloseDatePicker">Cancel</button>
+                <button class="exportpdfhero-btn-primary" @onclick="ApplyDateSelection">Apply</button>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Error/Success Messages -->
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div style="position: fixed; top: 20px; right: 20px; background-color: #f44336; color: white; padding: 15px; border-radius: 5px; z-index: 1000;">
+        @errorMessage
+        <button @onclick="ClearErrorMessage" style="background: none; border: none; color: white; margin-left: 10px;">×</button>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div style="position: fixed; top: 20px; right: 20px; background-color: #4CAF50; color: white; padding: 15px; border-radius: 5px; z-index: 1000;">
+        @successMessage
+        <button @onclick="ClearSuccessMessage" style="background: none; border: none; color: white; margin-left: 10px;">×</button>
+    </div>
+}
+
+@code {
+    // Current user
+    private int currentUserId = 0;
+
+    // Export data
+    private ExportRequest exportRequest = new();
+    private ExportPreviewData? previewData;
+
+    // Available options
+    private List<string> availableCategories = new();
+    private List<string> availableTags = new();
+
+    // UI states
+    private bool showCategoryDropdown = false;
+    private bool showTagsDropdown = false;
+    private bool showDatePicker = false;
+    private bool isExporting = false;
+    private string errorMessage = string.Empty;
+    private string successMessage = string.Empty;
+
+    // Date picker
+    private string datePickerType = "from";
+    private DateTime? datePickerValue = null;
+
+    // Timer for auto-update preview
+    private System.Timers.Timer? previewTimer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCurrentUser();
+        await LoadAvailableOptions();
+
+        // Initialize with default date range (last 30 days)
+        exportRequest.Filters.FromDate = DateTime.Today.AddDays(-30);
+        exportRequest.Filters.ToDate = DateTime.Today;
+
+        // Initialize export options with ALL checkboxes checked by default
+        exportRequest.Options = new ExportOptionsModel
+        {
+            IncludeMoodDetails = true,
+            IncludeTags = true,
+            IncludeWordCount = true,  // This was missing!
+            IncludeTimestamps = true,
+            IncludeEntryDate = true,
+            IncludeCategory = true
+        };
+
+        // Setup auto-update timer
+        previewTimer = new System.Timers.Timer(500);
+        previewTimer.Elapsed += async (sender, e) => await UpdatePreview();
+        previewTimer.AutoReset = false;
+
+        await UpdatePreview();
+    }
+
+    private async Task LoadCurrentUser()
+    {
+        try
+        {
+            var userJson = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "currentUser");
+            if (!string.IsNullOrEmpty(userJson))
+            {
+                var user = System.Text.Json.JsonSerializer.Deserialize<UserInfo>(userJson);
+                if (user != null)
+                {
+                    currentUserId = user.Id;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading user: {ex.Message}");
+            Navigation.NavigateTo("/login");
+        }
+    }
+
+    private async Task LoadAvailableOptions()
+    {
+        if (currentUserId == 0) return;
+
+        try
+        {
+            var categoriesResult = await ExportService.GetAvailableCategoriesAsync(currentUserId);
+            if (categoriesResult.Success)
+            {
+                availableCategories = categoriesResult.Data;
+            }
+
+            var tagsResult = await ExportService.GetAvailableTagsAsync(currentUserId);
+            if (tagsResult.Success)
+            {
+                availableTags = tagsResult.Data;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading available options: {ex.Message}");
+        }
+    }
+
+    private async Task UpdatePreview()
+    {
+        if (currentUserId == 0) return;
+
+        try
+        {
+            var result = await ExportService.GetExportPreviewAsync(currentUserId, exportRequest);
+            if (result.Success)
+            {
+                previewData = result.Data;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating preview: {ex.Message}");
+        }
+    }
+
+    private void TriggerPreviewUpdate()
+    {
+        previewTimer?.Stop();
+        previewTimer?.Start();
+    }
+
+    // Helper methods for display
+    private string GetDateRangeDisplay()
+    {
+        if (!exportRequest.Filters.FromDate.HasValue && !exportRequest.Filters.ToDate.HasValue)
+            return "Not selected";
+
+        if (exportRequest.Filters.FromDate.HasValue && exportRequest.Filters.ToDate.HasValue)
+            return $"{exportRequest.Filters.FromDate.Value:MM/dd/yyyy} - {exportRequest.Filters.ToDate.Value:MM/dd/yyyy}";
+
+        if (exportRequest.Filters.FromDate.HasValue)
+            return $"From {exportRequest.Filters.FromDate.Value:MM/dd/yyyy}";
+
+        return $"To {exportRequest.Filters.ToDate!.Value:MM/dd/yyyy}";
+    }
+
+    private string GetAppliedFiltersDisplay()
+    {
+        var filters = new List<string>();
+
+        if (!string.IsNullOrEmpty(exportRequest.Filters.PrimaryMood))
+            filters.Add($"Mood: {exportRequest.Filters.PrimaryMood}");
+
+        if (!string.IsNullOrEmpty(exportRequest.Filters.Category))
+            filters.Add($"Category: {exportRequest.Filters.Category}");
+
+        if (exportRequest.Filters.Tags.Any())
+            filters.Add($"Tags: {exportRequest.Filters.Tags.Count}");
+
+        return filters.Any() ? string.Join(", ", filters) : "No filters";
+    }
+
+    // Date picker methods
+    private void ShowDatePicker(string type)
+    {
+        datePickerType = type;
+
+        if (type == "from" && exportRequest.Filters.FromDate.HasValue)
+        {
+            datePickerValue = exportRequest.Filters.FromDate.Value;
+        }
+        else if (type == "to" && exportRequest.Filters.ToDate.HasValue)
+        {
+            datePickerValue = exportRequest.Filters.ToDate.Value;
+        }
+        else
+        {
+            datePickerValue = DateTime.Today;
+        }
+
+        showDatePicker = true;
+        StateHasChanged();
+    }
+
+    private void CloseDatePicker()
+    {
+        showDatePicker = false;
+        datePickerValue = null;
+        StateHasChanged();
+    }
+
+    private void ApplyDateSelection()
+    {
+        if (datePickerValue.HasValue)
+        {
+            if (datePickerType == "from")
+            {
+                exportRequest.Filters.FromDate = datePickerValue.Value;
+            }
+            else
+            {
+                exportRequest.Filters.ToDate = datePickerValue.Value;
+            }
+
+            // Ensure FromDate is not after ToDate
+            if (exportRequest.Filters.FromDate.HasValue && exportRequest.Filters.ToDate.HasValue &&
+                exportRequest.Filters.FromDate > exportRequest.Filters.ToDate)
+            {
+                var temp = exportRequest.Filters.FromDate;
+                exportRequest.Filters.FromDate = exportRequest.Filters.ToDate;
+                exportRequest.Filters.ToDate = temp;
+            }
+        }
+
+        CloseDatePicker();
+        TriggerPreviewUpdate();
+    }
+
+    // Filter methods
+    private void SelectPrimaryMood(string? mood)
+    {
+        exportRequest.Filters.PrimaryMood = mood;
+        TriggerPreviewUpdate();
+    }
+
+    private void ToggleCategoryDropdown()
+    {
+        showCategoryDropdown = !showCategoryDropdown;
+        showTagsDropdown = false;
+    }
+
+    private void SelectCategory(string? category)
+    {
+        exportRequest.Filters.Category = category;
+        showCategoryDropdown = false;
+        TriggerPreviewUpdate();
+    }
+
+    private void ToggleTagsDropdown()
+    {
+        showTagsDropdown = !showTagsDropdown;
+        showCategoryDropdown = false;
+    }
+
+    private void ToggleTag(string tag)
+    {
+        if (exportRequest.Filters.Tags.Contains(tag))
+        {
+            exportRequest.Filters.Tags.Remove(tag);
+        }
+        else
+        {
+            exportRequest.Filters.Tags.Add(tag);
+        }
+
+        showTagsDropdown = false;
+        TriggerPreviewUpdate();
+    }
+
+    private void RemoveTag(string tag)
+    {
+        exportRequest.Filters.Tags.Remove(tag);
+        TriggerPreviewUpdate();
+    }
+
+    // Export method
+    private async Task ExportToPdf()
+    {
+        if (currentUserId == 0) return;
+
+        isExporting = true;
+        errorMessage = string.Empty;
+        successMessage = string.Empty;
+        StateHasChanged();
+
+        try
+        {
+            var result = await ExportService.GeneratePdfAsync(currentUserId, exportRequest);
+
+            if (result.Success && result.Data != null)
+            {
+                // Generate filename
+                var fileName = $"Journal_Export_{DateTime.Now:yyyyMMdd_HHmmss}.pdf";
+
+                // Download the file
+                await JSRuntime.InvokeVoidAsync("downloadFile",
+                    Convert.ToBase64String(result.Data),
+                    fileName,
+                    "application/pdf");
+
+                successMessage = "PDF exported successfully!";
+            }
+            else
+            {
+                errorMessage = result.ErrorMessage ?? "Failed to generate PDF";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error exporting PDF: {ex.Message}";
+        }
+        finally
+        {
+            isExporting = false;
+            StateHasChanged();
+        }
+    }
+
+    private void ResetFilters()
+    {
+        exportRequest = new ExportRequest
+        {
+            Filters = new ExportFilterModel
+            {
+                FromDate = DateTime.Today.AddDays(-30),
+                ToDate = DateTime.Today
+            },
+            Options = new ExportOptionsModel
+            {
+                IncludeMoodDetails = true,
+                IncludeTags = true,
+                IncludeWordCount = true,
+                IncludeTimestamps = true,
+                IncludeEntryDate = true,
+                IncludeCategory = true
+            }
+        };
+
+        TriggerPreviewUpdate();
+    }
+
+    private void ClearErrorMessage()
+    {
+        errorMessage = string.Empty;
+        StateHasChanged();
+    }
+
+    private void ClearSuccessMessage()
+    {
+        successMessage = string.Empty;
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        previewTimer?.Stop();
+        previewTimer?.Dispose();
+        previewTimer = null;
+    }
+
+    // Helper class for user info
+    private class UserInfo
+    {
+        public int Id { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+    }
+}

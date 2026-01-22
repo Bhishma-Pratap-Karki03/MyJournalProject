@@ -1,11 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "07qKtch0Kp0=",
+  "dgSpecHash": "D7OCzaLZYOM=",
   "success": true,
   "projectFilePath": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\MyJournalProject.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\nissa\\.nuget\\packages\\bouncycastle.cryptography\\2.4.0\\bouncycastle.cryptography.2.4.0.nupkg.sha512",
     "C:\\Users\\nissa\\.nuget\\packages\\googlegson\\2.13.0.1\\googlegson.2.13.0.1.nupkg.sha512",
     "C:\\Users\\nissa\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\nissa\\.nuget\\packages\\itextsharp\\5.5.13.4\\itextsharp.5.5.13.4.nupkg.sha512",
     "C:\\Users\\nissa\\.nuget\\packages\\microsoft.aspnetcore.authorization\\9.0.8\\microsoft.aspnetcore.authorization.9.0.8.nupkg.sha512",
     "C:\\Users\\nissa\\.nuget\\packages\\microsoft.aspnetcore.components\\9.0.8\\microsoft.aspnetcore.components.9.0.8.nupkg.sha512",
     "C:\\Users\\nissa\\.nuget\\packages\\microsoft.aspnetcore.components.analyzers\\9.0.8\\microsoft.aspnetcore.components.analyzers.9.0.8.nupkg.sha512",
@@ -183,5 +185,18 @@
     "C:\\Users\\nissa\\.nuget\\packages\\xamarin.kotlinx.serialization.core.jvm\\1.7.3.4\\xamarin.kotlinx.serialization.core.jvm.1.7.3.4.nupkg.sha512",
     "C:\\Users\\nissa\\.nuget\\packages\\microsoft.windows.sdk.net.ref\\10.0.19041.57\\microsoft.windows.sdk.net.ref.10.0.19041.57.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "message": "Package 'iTextSharp 5.5.13.4' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0-android35.0'. This package may not be fully compatible with your project.",
+      "projectPath": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\MyJournalProject.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\MyJournalProject.csproj",
+      "libraryId": "iTextSharp",
+      "targetGraphs": [
+        "net9.0-android35.0"
+      ]
+    }
+  ]
 }

@@ -93,13 +93,34 @@
 }
 
 .mood-icon-wrapper {
-    background-color: rgba(0, 218, 159, 0.12);
+    /* NO background-color here - it will be set by mood classes */
     border-radius: 37px;
     padding: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
 }
+
+    /* Mood Color Classes - FIXED */
+    .mood-icon-wrapper.mood-positive {
+        background-color: rgba(0, 218, 159, 0.12) !important;
+    }
+
+    .mood-icon-wrapper.mood-negative {
+        background-color: rgba(239, 68, 68, 0.12) !important;
+    }
+
+    .mood-icon-wrapper.mood-neutral {
+        background-color: rgba(148, 163, 184, 0.12) !important;
+    }
+
+    /* Default color if no mood class is applied */
+    .mood-icon-wrapper:not(.mood-positive):not(.mood-negative):not(.mood-neutral) {
+        background-color: rgba(148, 163, 184, 0.12);
+    }
 
 .mood-icon {
     width: 20px;
@@ -110,6 +131,19 @@
     font-size: 24px;
     font-weight: 600;
     color: #000000;
+}
+
+/* Mood Text Colors */
+.text-positive {
+    color: #0a622e !important;
+}
+
+.text-negative {
+    color: #890000 !important;
+}
+
+.text-neutral {
+    color: #0c0e33 !important;
 }
 
 /* Charts Grid */
@@ -233,6 +267,7 @@
     height: 100%;
     background-color: #007fe8;
     border-radius: 143px;
+    transition: width 0.3s ease;
 }
 
 .motivation-widget {
@@ -268,6 +303,52 @@
     font-size: 14px;
     color: #264969;
     line-height: 1.5;
+}
+
+/* Loading overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+    .loading-spinner .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #007fe8;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 16px;
+    }
+
+    .loading-spinner p {
+        color: #5b7d9d;
+        font-size: 16px;
+    }
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Responsive */
@@ -357,6 +438,20 @@
         height: 36px;
         right: 15px;
         bottom: 15px;
+    }
+
+    .mood-icon-wrapper {
+        width: 36px;
+        height: 36px;
+    }
+
+    .mood-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .mood-text {
+        font-size: 18px;
     }
 
     .chart-card {

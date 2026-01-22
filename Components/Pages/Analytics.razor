@@ -1,0 +1,895 @@
+﻿@page "/analytics"
+@inherits LayoutComponentBase
+@using MyJournalProject.Entities
+@using MyJournalProject.Services
+@using MyJournalProject.Models
+@using Microsoft.AspNetCore.Components
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+@inject IDashboardService DashboardService
+@inject IJournalService JournalService
+@implements IDisposable
+
+<div class="analytics-page">
+    <div class="analytics-container">
+        <!-- Header Section -->
+        <section class="analytics-header">
+            <h1 class="analytics-title">Analytics</h1>
+            <p class="analytics-subtitle">Gain insights into your journaling habits, mood trends, and writing patterns</p>
+        </section>
+
+        <!-- Date Filter Section -->
+        <section class="date-filter-section">
+            <div class="filter-header">
+                <img src="images/filter-icon.svg" alt="Filter" class="filter-header-icon" />
+                <h3 class="filter-title">Filter Date Range</h3>
+            </div>
+            <div class="date-range-inputs">
+                <div class="date-input-group">
+                    <label class="input-label">From Date</label>
+                    <div class="date-input-wrapper">
+                        <input type="date"
+                               class="date-input"
+                               @bind="filterFromDate"
+                               @bind:format="yyyy-MM-dd"
+                               max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                        <img src="images/calendar-nav-icon.svg" alt="Calendar" class="calendar-icon" />
+                    </div>
+                </div>
+                <div class="date-input-group">
+                    <label class="input-label">To Date</label>
+                    <div class="date-input-wrapper">
+                        <input type="date"
+                               class="date-input"
+                               @bind="filterToDate"
+                               @bind:format="yyyy-MM-dd"
+                               max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                        <img src="images/calendar-nav-icon.svg" alt="Calendar" class="calendar-icon" />
+                    </div>
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button class="filter-btn filter-btn-secondary" @onclick="ResetDateFilter">
+                    Reset
+                </button>
+                <button class="filter-btn filter-btn-primary" @onclick="ApplyDateFilter">
+                    Apply Filter
+                </button>
+            </div>
+        </section>
+
+        <!-- Loading State -->
+        @if (isLoading)
+        {
+            <div class="loading-overlay">
+                <div class="loading-spinner">
+                    <div class="analytics-spinner"></div>
+                    <p>Loading analytics...</p>
+                </div>
+            </div>
+        }
+
+        <!-- Stats Overview Section -->
+        <section class="stats-overview-section">
+            <h3 class="section-title">Overview</h3>
+            <div class="stats-cards-grid">
+                <!-- Total Entries -->
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper">
+                        <img src="images/journal-icon.png" alt="Journal" class="stat-icon" />
+                    </div>
+                    <div>
+                        <div class="stat-value">@totalEntries</div>
+                        <div class="stat-label">Total Entries</div>
+                    </div>
+                </div>
+
+                <!-- Current Streak -->
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper">
+                        <img src="images/streak-icon.png" alt="Streak" class="stat-icon" />
+                    </div>
+                    <div>
+                        <div class="stat-value">@currentStreak</div>
+                        <div class="stat-label">Current Streak</div>
+                    </div>
+                </div>
+
+                <!-- Longest Streak -->
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper">
+                        <img src="images/trophy-icon.svg" alt="Trophy" class="stat-icon" />
+                    </div>
+                    <div>
+                        <div class="stat-value">@longestStreak</div>
+                        <div class="stat-label">Longest Streak</div>
+                    </div>
+                </div>
+
+                <!-- Missed Days -->
+                <div class="stat-card">
+                    <div class="stat-icon-wrapper">
+                        <img src="images/calendar-icon.svg" alt="Calendar" class="stat-icon" />
+                    </div>
+                    <div>
+                        <div class="stat-value">@missedDays</div>
+                        <div class="stat-label">Missed Days</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Section - Row 1 -->
+        <section class="charts-section">
+            <div class="charts-row">
+                <!-- Mood Distribution Chart -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4 class="chart-title">Mood Distribution</h4>
+                    </div>
+                    <div class="chart-container">
+                        @if (!HasData)
+                        {
+                            <div class="empty-state">
+                                <img src="images/no-data-chart.png" alt="No Data" />
+                                <h3>No Data Available</h3>
+                                <p>Start journaling to see your mood distribution</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <canvas id="moodDistributionChart" width="400" height="400"></canvas>
+                        }
+                    </div>
+                </div>
+
+                <!-- Most Frequent Mood Card -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4 class="chart-title">Most Frequent Mood</h4>
+                    </div>
+                    <div class="chart-container" style="display: flex; align-items: center; justify-content: center;">
+                        @if (!HasData)
+                        {
+                            <div class="empty-state">
+                                <img src="images/no-data-mood.png" alt="No Data" />
+                                <h3>No Data Available</h3>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="text-align: center;">
+                                <div style="margin-bottom: 20px;">
+                                    <div class="mood-icon-wrapper @GetMoodColorClass(mostFrequentMood)" 
+                                         style="margin: 0 auto; width: 80px; height: 80px;">
+                                        @if (mostFrequentMood == "Positive")
+                                        {
+                                            <img src="images/happy-icon.svg" alt="Happy" style="width: 40px; height: 40px;" />
+                                        }
+                                        else if (mostFrequentMood == "Negative")
+                                        {
+                                            <img src="images/sad-icon.svg" alt="Sad" style="width: 40px; height: 40px;" />
+                                        }
+                                        else
+                                        {
+                                            <img src="images/neutral-icon.svg" alt="Neutral" style="width: 40px; height: 40px;" />
+                                        }
+                                    </div>
+                                </div>
+                                <div style="font-size: 24px; font-weight: 700; color: #3e434e; margin-bottom: 10px;">
+                                    @mostFrequentMood
+                                </div>
+                                <div style="font-size: 16px; color: #78828b;">
+                                    @(mostFrequentMoodCount) @(mostFrequentMoodCount == 1 ? "entry" : "entries")
+                                </div>
+                                @if (HasMultipleMoods)
+                                {
+                                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e9ecef;">
+                                        <div style="font-size: 14px; color: #334a5f; margin-bottom: 10px;">All Moods:</div>
+                                        <div style="display: flex; justify-content: center; gap: 20px;">
+                                            @foreach (var mood in moodCounts.Where(m => m.Value > 0))
+                                            {
+                                                <div style="text-align: center;">
+                                                    <div style="font-size: 14px; color: #78828b;">@mood.Key</div>
+                                                    <div style="font-size: 16px; font-weight: 600; @GetMoodTextColor(mood.Key)">@mood.Value</div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Full Width Chart Row 2 -->
+            <div class="charts-row">
+                <!-- Mood Trend Chart -->
+                <div class="chart-card full-width-chart">
+                    <div class="chart-header">
+                        <h4 class="chart-title">Mood Trend Over Time</h4>
+                        <select class="chart-period-select" @bind="moodTrendPeriod" @bind:event="onchange">
+                            <option value="7">Last 7 Days</option>
+                            <option value="30" selected>Last 30 Days</option>
+                            <option value="90">Last 3 Months</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        @if (!HasData)
+                        {
+                            <div class="empty-state">
+                                <img src="images/no-data-trend.png" alt="No Data" />
+                                <h3>No Data Available</h3>
+                                <p>Start journaling to see your mood trends</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <canvas id="moodTrendChart" width="800" height="400"></canvas>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3: Word Count Trend -->
+            <div class="charts-row">
+                <div class="chart-card full-width-chart">
+                    <div class="chart-header">
+                        <h4 class="chart-title">Word Count Trend</h4>
+                        <select class="chart-period-select" @bind="wordTrendPeriod" @bind:event="onchange">
+                            <option value="7">Last 7 Days</option>
+                            <option value="30" selected>Last 30 Days</option>
+                            <option value="90">Last 3 Months</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        @if (!HasData)
+                        {
+                            <div class="empty-state">
+                                <img src="images/no-data-words.png" alt="No Data" />
+                                <h3>No Data Available</h3>
+                                <p>Start journaling to see your word count trends</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <canvas id="wordTrendChart" width="800" height="400"></canvas>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 4: Entries Volume -->
+            <div class="charts-row">
+                <div class="chart-card full-width-chart">
+                    <div class="chart-header">
+                        <h4 class="chart-title">Entries Volume Over Time</h4>
+                        <select class="chart-period-select" @bind="entriesVolumePeriod" @bind:event="onchange">
+                            <option value="weekly" selected>Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        @if (!HasData)
+                        {
+                            <div class="empty-state">
+                                <img src="images/no-data-volume.png" alt="No Data" />
+                                <h3>No Data Available</h3>
+                                <p>Start journaling to see your entries volume</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <canvas id="entriesVolumeChart" width="800" height="400"></canvas>
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tags Analysis Section -->
+        <section class="tags-analysis-section">
+            <h3 class="section-title">Tags Analysis</h3>
+            <div class="tags-content">
+                <!-- Tags Bar Chart -->
+                <div class="tags-bar-chart">
+                    <div class="chart-header">
+                        <h4 class="chart-title">Most Used Tags</h4>
+                    </div>
+                    <div class="chart-container">
+                        @if (!topTags.Any())
+                        {
+                            <div class="empty-state">
+                                <img src="images/no-tags.png" alt="No Tags" />
+                                <h3>No Tags Found</h3>
+                                <p>Add tags to your journal entries to see analysis</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <canvas id="tagsBarChart" width="600" height="400"></canvas>
+                        }
+                    </div>
+                </div>
+
+                <!-- Tag Breakdown -->
+                <div class="tags-breakdown-card">
+                    <h4 class="chart-title">Tag Breakdown</h4>
+                    <div class="tags-list">
+                        @foreach (var tag in topTags)
+                        {
+                            <div class="tag-breakdown-item">
+                                <div>
+                                    <div class="tag-name-breakdown">#@tag.Name</div>
+                                    <div class="tag-category">@tag.Category</div>
+                                </div>
+                                <div class="tag-count-breakdown">@tag.Count @(tag.Count == 1 ? "entry" : "entries")</div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+@code {
+    // Current user
+    private int currentUserId = 0;
+    private string currentUserFullName = string.Empty;
+
+    // Filter states
+    private DateTime filterFromDate = DateTime.Today.AddMonths(-1);
+    private DateTime filterToDate = DateTime.Today;
+    
+    // Chart periods
+    private string moodTrendPeriod = "30";
+    private string wordTrendPeriod = "30";
+    private string entriesVolumePeriod = "weekly";
+
+    // Analytics data
+    private bool isLoading = false;
+    private List<MyJournalProject.Entities.Journal> filteredJournals = new();
+    private Dictionary<string, int> moodCounts = new();
+    private string mostFrequentMood = "No Data";
+    private int mostFrequentMoodCount = 0;
+    private int totalEntries = 0;
+    private int currentStreak = 0;
+    private int longestStreak = 0;
+    private int missedDays = 0;
+    private List<TagAnalysis> topTags = new();
+
+    // JS Interop
+    private IJSObjectReference? chartModule;
+    private DotNetObjectReference<Analytics>? dotNetObjectRef;
+    private bool chartsInitialized = false;
+
+    // Computed properties
+    private bool HasData => filteredJournals.Any();
+    private bool HasMultipleMoods => moodCounts.Count(m => m.Value > 0) > 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCurrentUser();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await InitializeAnalytics();
+        }
+        else if (chartsInitialized)
+        {
+            // Re-render charts after state changes
+            await Task.Delay(50); // Small delay for DOM updates
+            await RenderCharts();
+        }
+    }
+
+    private async Task LoadCurrentUser()
+    {
+        try
+        {
+            var userJson = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "currentUser");
+            if (!string.IsNullOrEmpty(userJson))
+            {
+                var user = System.Text.Json.JsonSerializer.Deserialize<UserInfo>(userJson);
+                if (user != null)
+                {
+                    currentUserId = user.Id;
+                    currentUserFullName = user.FullName;
+                }
+                else
+                {
+                    Navigation.NavigateTo("/login");
+                }
+            }
+            else
+            {
+                Navigation.NavigateTo("/login");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading user: {ex.Message}");
+            Navigation.NavigateTo("/login");
+        }
+    }
+
+    private async Task InitializeAnalytics()
+    {
+        if (currentUserId == 0)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            await Task.Delay(100); // Small delay for better UX
+
+            // Import charts module
+            chartModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/charts.js");
+
+            // Load initial data
+            await LoadFilteredJournals();
+            await CalculateStatistics();
+            await LoadTopTags();
+            
+            // Initialize charts after data is loaded
+            chartsInitialized = true;
+            await RenderCharts();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error initializing analytics: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task RenderCharts()
+    {
+        if (chartModule == null || !HasData) return;
+
+        try
+        {
+            // Clean up any existing charts
+            await chartModule.InvokeVoidAsync("cleanupAnalyticsCharts");
+            
+            await Task.Delay(50); // Small delay for cleanup
+            
+            // Mood Distribution Chart
+            await chartModule.InvokeVoidAsync("createAnalyticsMoodChart",
+                new
+                {
+                    positive = moodCounts["Positive"],
+                    neutral = moodCounts["Neutral"],
+                    negative = moodCounts["Negative"]
+                });
+
+            // Mood Trend Chart
+            await LoadMoodTrendChart();
+            
+            // Word Count Trend Chart
+            await LoadWordTrendChart();
+            
+            // Entries Volume Chart
+            await LoadEntriesVolumeChart();
+            
+            // Tags Bar Chart
+            await LoadTagsBarChart();
+            
+            Console.WriteLine("All charts rendered successfully");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error rendering charts: {ex.Message}");
+        }
+    }
+
+    private async Task LoadFilteredJournals()
+    {
+        try
+        {
+            var result = await JournalService.GetUserJournalsAsync(currentUserId);
+            if (result.Success && result.Data != null)
+            {
+                // Apply date filter
+                filteredJournals = result.Data
+                    .Where(j => j.EntryDate.Date >= filterFromDate.Date && j.EntryDate.Date <= filterToDate.Date)
+                    .OrderBy(j => j.EntryDate)
+                    .ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading journals: {ex.Message}");
+        }
+    }
+
+    private async Task CalculateStatistics()
+    {
+        if (!filteredJournals.Any()) return;
+
+        // Calculate mood counts
+        moodCounts = new Dictionary<string, int>
+        {
+            { "Positive", 0 },
+            { "Neutral", 0 },
+            { "Negative", 0 }
+        };
+
+        foreach (var journal in filteredJournals)
+        {
+            if (moodCounts.ContainsKey(journal.PrimaryMood))
+            {
+                moodCounts[journal.PrimaryMood]++;
+            }
+        }
+
+        // Find most frequent mood
+        mostFrequentMoodCount = moodCounts.Values.Max();
+        mostFrequentMood = moodCounts.FirstOrDefault(m => m.Value == mostFrequentMoodCount).Key;
+
+        // Calculate total entries
+        totalEntries = filteredJournals.Count;
+
+        // Get streak information from dashboard service
+        var statsResult = await DashboardService.GetDashboardStatsAsync(currentUserId);
+        if (statsResult.Success && statsResult.Data != null)
+        {
+            currentStreak = statsResult.Data.CurrentStreak;
+            longestStreak = statsResult.Data.LongestStreak;
+            
+            // Calculate missed days for filtered period
+            missedDays = CalculateMissedDays();
+        }
+    }
+
+    private int CalculateMissedDays()
+    {
+        if (!filteredJournals.Any()) return 0;
+
+        var journalDates = filteredJournals.Select(j => j.EntryDate.Date).ToHashSet();
+        var totalDays = (int)(filterToDate.Date - filterFromDate.Date).TotalDays + 1;
+        
+        var missedDaysCount = 0;
+        for (var date = filterFromDate.Date; date <= filterToDate.Date; date = date.AddDays(1))
+        {
+            if (!journalDates.Contains(date))
+            {
+                missedDaysCount++;
+            }
+        }
+
+        return missedDaysCount;
+    }
+
+    private async Task LoadTopTags()
+    {
+        try
+        {
+            var result = await DashboardService.GetTopTagsAsync(currentUserId, 10);
+            if (result.Success && result.Data != null)
+            {
+                topTags = result.Data.Select(t => new TagAnalysis
+                {
+                    Name = t.Name,
+                    Count = t.Count,
+                    Category = GetTagCategory(t.Name)
+                }).ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading top tags: {ex.Message}");
+        }
+    }
+
+    private string GetTagCategory(string tag)
+    {
+        // Simple categorization based on common tags
+        if (string.IsNullOrEmpty(tag)) return "General";
+        
+        var lowerTag = tag.ToLower();
+        
+        if (lowerTag.Contains("work") || lowerTag.Contains("job") || lowerTag.Contains("career"))
+            return "Work";
+        if (lowerTag.Contains("health") || lowerTag.Contains("fitness") || lowerTag.Contains("exercise"))
+            return "Health";
+        if (lowerTag.Contains("family") || lowerTag.Contains("friend") || lowerTag.Contains("social"))
+            return "Personal";
+        if (lowerTag.Contains("travel") || lowerTag.Contains("vacation") || lowerTag.Contains("trip"))
+            return "Travel";
+        if (lowerTag.Contains("study") || lowerTag.Contains("learn") || lowerTag.Contains("education"))
+            return "Education";
+            
+        return "General";
+    }
+
+    private async Task LoadMoodTrendChart()
+    {
+        if (chartModule == null || !HasData) return;
+
+        var (labels, data) = await GetMoodTrendData();
+        await chartModule.InvokeVoidAsync("createCustomChart",
+            "moodTrendChart",
+            labels,
+            data,
+            "Mood Score",
+            "#007fe8");
+    }
+
+    private async Task<(List<string> labels, List<int> data)> GetMoodTrendData()
+    {
+        var days = int.Parse(moodTrendPeriod);
+        var endDate = DateTime.Today;
+        var startDate = endDate.AddDays(-days + 1);
+
+        var labels = new List<string>();
+        var data = new List<int>();
+
+        // Filter journals for the trend period
+        var trendJournals = filteredJournals
+            .Where(j => j.EntryDate >= startDate && j.EntryDate <= endDate)
+            .ToList();
+
+        // Group by day for last 7 days, by week for 30+ days
+        if (days <= 7)
+        {
+            for (var date = startDate; date <= endDate; date = date.AddDays(1))
+            {
+                var journal = trendJournals.FirstOrDefault(j => j.EntryDate.Date == date.Date);
+                
+                labels.Add(date.ToString("MMM dd"));
+                data.Add(journal != null ? GetMoodScore(journal.PrimaryMood) : 0);
+            }
+        }
+        else
+        {
+            // Group by week
+            var weeks = (int)Math.Ceiling(days / 7.0);
+            for (int i = 0; i < weeks; i++)
+            {
+                var weekStart = endDate.AddDays(-(i + 1) * 7 + 1);
+                var weekEnd = endDate.AddDays(-i * 7);
+                
+                var weekJournals = trendJournals
+                    .Where(j => j.EntryDate >= weekStart && j.EntryDate <= weekEnd)
+                    .ToList();
+                
+                // Calculate average mood score for the week
+                var avgScore = weekJournals.Any() ? 
+                    (int)weekJournals.Average(j => GetMoodScore(j.PrimaryMood)) : 0;
+                
+                labels.Insert(0, $"Week {weeks - i}");
+                data.Insert(0, avgScore);
+            }
+        }
+
+        return (labels, data);
+    }
+
+    private int GetMoodScore(string mood)
+    {
+        return mood switch
+        {
+            "Positive" => 3,
+            "Neutral" => 2,
+            "Negative" => 1,
+            _ => 0
+        };
+    }
+
+    private async Task LoadWordTrendChart()
+    {
+        if (chartModule == null || !HasData) return;
+
+        var (labels, data) = await GetWordTrendData();
+        await chartModule.InvokeVoidAsync("createCustomChart",
+            "wordTrendChart",
+            labels,
+            data,
+            "Word Count",
+            "#22c55e");
+    }
+
+    private async Task<(List<string> labels, List<int> data)> GetWordTrendData()
+    {
+        var days = int.Parse(wordTrendPeriod);
+        var endDate = DateTime.Today;
+        var startDate = endDate.AddDays(-days + 1);
+
+        var labels = new List<string>();
+        var data = new List<int>();
+
+        // Filter journals for the trend period
+        var trendJournals = filteredJournals
+            .Where(j => j.EntryDate >= startDate && j.EntryDate <= endDate)
+            .ToList();
+
+        // Group by day for last 7 days, by week for 30+ days
+        if (days <= 7)
+        {
+            for (var date = startDate; date <= endDate; date = date.AddDays(1))
+            {
+                var journal = trendJournals.FirstOrDefault(j => j.EntryDate.Date == date.Date);
+                
+                labels.Add(date.ToString("MMM dd"));
+                data.Add(journal?.WordCount ?? 0);
+            }
+        }
+        else
+        {
+            // Group by week
+            var weeks = (int)Math.Ceiling(days / 7.0);
+            for (int i = 0; i < weeks; i++)
+            {
+                var weekStart = endDate.AddDays(-(i + 1) * 7 + 1);
+                var weekEnd = endDate.AddDays(-i * 7);
+                
+                var weekJournals = trendJournals
+                    .Where(j => j.EntryDate >= weekStart && j.EntryDate <= weekEnd)
+                    .ToList();
+                
+                var totalWords = weekJournals.Sum(j => j.WordCount);
+                
+                labels.Insert(0, $"Week {weeks - i}");
+                data.Insert(0, totalWords);
+            }
+        }
+
+        return (labels, data);
+    }
+
+    private async Task LoadEntriesVolumeChart()
+    {
+        if (chartModule == null || !HasData) return;
+
+        var (labels, data) = await GetEntriesVolumeData();
+        await chartModule.InvokeVoidAsync("createCustomChart",
+            "entriesVolumeChart",
+            labels,
+            data,
+            "Number of Entries",
+            "#ef4444");
+    }
+
+    private async Task<(List<string> labels, List<int> data)> GetEntriesVolumeData()
+    {
+        var labels = new List<string>();
+        var data = new List<int>();
+
+        if (entriesVolumePeriod == "weekly")
+        {
+            // Last 8 weeks
+            for (int i = 7; i >= 0; i--)
+            {
+                var weekStart = DateTime.Today.AddDays(-(i + 1) * 7 + 1);
+                var weekEnd = DateTime.Today.AddDays(-i * 7);
+                
+                var weekCount = filteredJournals
+                    .Count(j => j.EntryDate >= weekStart && j.EntryDate <= weekEnd);
+                
+                labels.Add($"W{8 - i}");
+                data.Add(weekCount);
+            }
+        }
+        else
+        {
+            // Last 6 months
+            for (int i = 5; i >= 0; i--)
+            {
+                var month = DateTime.Today.AddMonths(-i);
+                var monthStart = new DateTime(month.Year, month.Month, 1);
+                var monthEnd = monthStart.AddMonths(1).AddDays(-1);
+                
+                var monthCount = filteredJournals
+                    .Count(j => j.EntryDate >= monthStart && j.EntryDate <= monthEnd);
+                
+                labels.Add(monthStart.ToString("MMM"));
+                data.Add(monthCount);
+            }
+        }
+
+        return (labels, data);
+    }
+
+    private async Task LoadTagsBarChart()
+    {
+        if (chartModule == null || !topTags.Any()) return;
+
+        var labels = topTags.Select(t => t.Name).ToList();
+        var data = topTags.Select(t => t.Count).ToList();
+
+        await chartModule.InvokeVoidAsync("createCustomChart",
+            "tagsBarChart",
+            labels,
+            data,
+            "Tag Usage",
+            "#94a3b8");
+    }
+
+    // Event handlers
+    private async Task ApplyDateFilter()
+    {
+        if (filterFromDate > filterToDate)
+        {
+            // Swap dates if from is after to
+            var temp = filterFromDate;
+            filterFromDate = filterToDate;
+            filterToDate = temp;
+        }
+
+        isLoading = true;
+        StateHasChanged();
+
+        await LoadFilteredJournals();
+        await CalculateStatistics();
+        await LoadTopTags();
+        await RenderCharts();
+
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    private async Task ResetDateFilter()
+    {
+        filterFromDate = DateTime.Today.AddMonths(-1);
+        filterToDate = DateTime.Today;
+
+        await ApplyDateFilter();
+    }
+
+    // Helper methods
+    private string GetMoodColorClass(string mood)
+    {
+        return mood.ToLower() switch
+        {
+            "positive" => "mood-positive",
+            "negative" => "mood-negative",
+            "neutral" => "mood-neutral",
+            _ => "mood-neutral"
+        };
+    }
+
+    private string GetMoodTextColor(string mood)
+    {
+        return mood.ToLower() switch
+        {
+            "positive" => "color: #0a622e;",
+            "negative" => "color: #890000;",
+            "neutral" => "color: #0c0e33;",
+            _ => "color: #334a5f;"
+        };
+    }
+
+    public void Dispose()
+    {
+        dotNetObjectRef?.Dispose();
+    }
+
+    // Helper classes
+    private class UserInfo
+    {
+        public int Id { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+    }
+
+    private class TagAnalysis
+    {
+        public string Name { get; set; } = string.Empty;
+        public int Count { get; set; }
+        public string Category { get; set; } = "General";
+    }
+}

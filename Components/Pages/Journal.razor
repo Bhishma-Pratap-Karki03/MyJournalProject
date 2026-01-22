@@ -1,20 +1,92 @@
 ﻿@page "/journal"
+@page "/journal/{selectedDate:datetime}"
 @inherits LayoutComponentBase
+@using MyJournalProject.Models
+@using MyJournalProject.Services
+@using MyJournalProject.Entities
+@using Microsoft.AspNetCore.Components
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+@inject IJournalService JournalService
+@inject IDashboardService DashboardService
+@implements IDisposable
 
 <div class="journal-layout">
     <section class="journal-header-section">
         <div class="journal-header-container">
-            <div class="journal-title-wrapper">
-                <h1 class="journal-main-title">Journal Entry</h1>
-                <div class="journal-meta-data">
-                    <img src="images/journal-calender.png" alt="Calendar Icon" class="calendar-icon-small" />
-                    <span class="journal-date-display">Journal Entry for 21 December 2025</span>
+            <div class="journal-header-top">
+                <div class="journal-title-wrapper">
+                    <h1 class="journal-main-title">Journal Entry</h1>
+
+                    <!-- Information Message Below Heading - SIMPLE VERSION -->
+                    @if (!string.IsNullOrEmpty(infoMessage))
+                    {
+                        <div class="journal-info-message">
+                            @infoMessage
+                        </div>
+                    }
+
+                    <div class="journal-meta-data">
+                        <img src="images/journal-calender.svg" alt="Calendar Icon" class="calendar-icon-small" />
+                        <span class="journal-date-display">
+                            @if (IsEditingExisting)
+                            {
+                                <span>Editing Journal Entry for @journalModel.EntryDate.ToString("dd MMMM yyyy")</span>
+                            }
+                            else
+                            {
+                                <span>New Journal Entry for @journalModel.EntryDate.ToString("dd MMMM yyyy")</span>
+                            }
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Streak Counter -->
+                <div class="streak-counter">
+                    <img src="images/streak-icon.png" alt="Streak" class="streak-icon" />
+                    <div class="streak-text">
+                        <span class="streak-label">Current Streak:</span>
+                        <span class="streak-days">@currentStreak days</span>
+                    </div>
                 </div>
             </div>
+
+            <!-- Date Selection - HIDDEN FOR NEW ENTRIES -->
+            @if (IsEditingExisting)
+            {
+                <div class="date-selection-container">
+                    <div class="date-selection-header">
+                        <img src="images/journal-calender.svg" alt="Calendar" class="date-selection-icon" />
+                        <span class="date-selection-label">Entry Date:</span>
+                    </div>
+                    <input type="date"
+                           class="date-selection-input date-readonly-input"
+                           value="@selectedDateInput"
+                           readonly
+                           disabled />
+                    <span class="date-selection-hint">
+                        Journal entry date cannot be changed
+                    </span>
+                </div>
+            }
         </div>
     </section>
 
     <section class="journal-content-section">
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="journal-message journal-error">
+                <strong>Error!</strong> @errorMessage
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(successMessage))
+        {
+            <div class="journal-message journal-success">
+                <strong>Success!</strong> @successMessage
+            </div>
+        }
+
         <div class="journal-workspace-layout">
             <div class="journal-editor-panel">
                 <div class="journal-editor-surface">
@@ -23,66 +95,29 @@
                             <input type="text"
                                    class="journal-headline-field"
                                    placeholder="Give your day a headline..."
-                                   value="Give your day a headline..." />
+                                   @bind="journalModel.Title"
+                                   @bind:event="oninput"
+                                   maxlength="100" />
                             <div class="journal-progress-indicator">
-                                <span class="progress-counter">0/100</span>
+                                <span class="progress-counter">@journalModel.Title.Length/100</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="journal-editor-toolbar">
-                        <div class="editor-tool-section heading-styles">
-                            <button class="editor-style-button">H1</button>
-                            <button class="editor-style-button">H2</button>
-                            <button class="editor-style-button">H3</button>
-                        </div>
-                        <div class="toolbar-divider-line"></div>
-                        <div class="editor-tool-section text-formatting">
-                            <button class="editor-icon-button">
-                                <img src="images/bold-icon.png" alt="Bold" />
-                            </button>
-                            <button class="editor-icon-button">
-                                <img src="images/italic-icon.png" alt="Italic" />
-                            </button>
-                            <button class="editor-icon-button">
-                                <img src="images/underline-icon.png" alt="Underline" />
-                            </button>
-                        </div>
-                        <div class="toolbar-divider-line"></div>
-                        <div class="editor-tool-section list-tools">
-                            <button class="editor-icon-button">
-                                <img src="images/unordered-list.png" alt="Unordered List" />
-                            </button>
-                            <button class="editor-icon-button">
-                                <img src="images/orderlist.png" alt="Ordered List" />
-                            </button>
-                        </div>
-                        <div class="toolbar-divider-line"></div>
-                        <div class="editor-tool-section attachment-tools">
-                            <button class="editor-icon-button attachment-button">
-                                <img src="images/attach-icon.png" alt="Attach" />
-                            </button>
-                            <button class="editor-icon-button">
-                                <img src="images/image-icon.png" alt="Add Image" />
-                            </button>
-                        </div>
-                    </div>
+                    <!-- Quill Editor Container -->
+                    <div id="quill-editor" class="quill-editor-container"></div>
 
-                    <div class="journal-editor-body-area">
-                        <textarea class="journal-main-textarea"
-                                  placeholder="Start writing your thoughts here"></textarea>
-                    </div>
-                </div>
-
-                <div class="journal-editor-footer-area">
-                    <div class="editor-statistics">
-                        <span class="editor-stat-item">WORDS: 0</span>
-                        <span class="editor-stat-item">CHARACTERS: 0</span>
+                    <div class="journal-editor-footer-area">
+                        <div class="editor-statistics">
+                            <span class="editor-stat-item">WORDS: @wordCount</span>
+                            <span class="editor-stat-item">CHARACTERS: @characterCount</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <aside class="journal-sidebar-panel">
+                <!-- Mood Tracking Card -->
                 <div class="journal-sidebar-card">
                     <div class="sidebar-card-header">
                         <div class="sidebar-icon-holder">
@@ -93,37 +128,111 @@
 
                     <div class="sidebar-form-element">
                         <label class="sidebar-form-label">Primary Mood <span class="required-indicator">*</span></label>
-                        <div class="sidebar-select-field">
-                            <span class="select-placeholder-text">Select how you feel</span>
+                        <div class="sidebar-select-field" @onclick="ToggleMoodDropdown">
+                            <span class="select-placeholder-text">
+                                @if (string.IsNullOrEmpty(journalModel.PrimaryMood))
+                                {
+                                    <span style="color: #536171;">Select Primary Mood</span>
+                                }
+                                else
+                                {
+                                    @if (journalModel.PrimaryMood == "Positive")
+                                    {
+                                        <span class="primary-mood-positive">@journalModel.PrimaryMood</span>
+                                    }
+                                    else if (journalModel.PrimaryMood == "Neutral")
+                                    {
+                                        <span class="primary-mood-neutral">@journalModel.PrimaryMood</span>
+                                    }
+                                    else if (journalModel.PrimaryMood == "Negative")
+                                    {
+                                        <span class="primary-mood-negative">@journalModel.PrimaryMood</span>
+                                    }
+                                    else
+                                    {
+                                        @journalModel.PrimaryMood
+                                    }
+                                }
+                            </span>
                             <img src="images/arrow-down.png" alt="Arrow" class="select-arrow-icon" />
                         </div>
+
+                        @if (showMoodDropdown)
+                        {
+                            <div class="primary-mood-dropdown">
+                                <!-- Only show the three options -->
+                                <div class="primary-mood-option primary-mood-positive" @onclick='() => SelectPrimaryMood("Positive")'>
+                                    Positive
+                                </div>
+                                <div class="primary-mood-option primary-mood-neutral" @onclick='() => SelectPrimaryMood("Neutral")'>
+                                    Neutral
+                                </div>
+                                <div class="primary-mood-option primary-mood-negative" @onclick='() => SelectPrimaryMood("Negative")'>
+                                    Negative
+                                </div>
+                            </div>
+                        }
                     </div>
 
                     <div class="sidebar-form-element mood-secondary-section">
                         <div class="mood-label-row">
-                            <label class="sidebar-form-label">Secondary Mood <span class="required-indicator">*</span></label>
-                            <span class="mood-hint-text">Max 2</span>
-                        </div>
-                        <div class="mood-tags-grid">
-                            <div class="mood-tags-row">
-                                <div class="mood-tag-item selected-mood">Productive</div>
-                                <div class="mood-tag-item">Distracted</div>
-                                <div class="mood-tag-item">Focused</div>
-                            </div>
-                            <div class="mood-tags-row">
-                                <div class="mood-tag-item outline-mood">Lonely</div>
-                                <div class="mood-tag-item">Sleepy</div>
-                                <div class="mood-tag-item">Curious</div>
-                            </div>
+                            <label class="sidebar-form-label">Secondary Mood</label>
+                            <span class="mood-hint-text">Optional</span>
                         </div>
 
-                        <div class="mood-input-row">
-                            <input type="text" class="mood-input-field" placeholder="Enter Secondary Mood" />
-                            <button class="mood-add-button">Add</button>
+                        <!-- Predefined secondary moods (oval tags) -->
+                        <div class="secondary-mood-tags-container">
+                            @foreach (var mood in PredefinedSecondaryMoods.Take(8))
+                            {
+                                <div class="secondary-mood-tag @(IsSecondaryMoodSelected(mood) ? "selected-secondary" : "")"
+                                     @onclick="() => ToggleSecondaryMood(mood)">
+                                    @mood
+                                </div>
+                            }
                         </div>
+
+                        <!-- Display manually added secondary moods -->
+                        <div class="secondary-mood-tags-container">
+                            @foreach (var mood in GetSelectedSecondaryMoods())
+                            {
+                                @if (!PredefinedSecondaryMoods.Contains(mood))
+                                {
+                                    <div class="secondary-mood-tag selected-secondary">
+                                        <span>@mood</span>
+                                        <button class="remove-secondary-mood" @onclick="() => RemoveSecondaryMood(mood)" style="margin-left: 6px; background: none; border: none; color: #007fe8; cursor: pointer;">
+                                            ×
+                                        </button>
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                        <!-- Show input if we have less than 2 secondary moods or if we want to replace -->
+                        @if (GetSelectedSecondaryMoods().Count < 2)
+                        {
+                            <div class="mood-input-row">
+                                <input type="text"
+                                       class="mood-input-field"
+                                       placeholder="Add custom mood..."
+                                       @bind="newSecondaryMoodInput"
+                                       @bind:event="oninput"
+                                       @onkeypress="OnSecondaryMoodKeyPress" />
+                                <button class="mood-add-button" @onclick="AddSecondaryMood"
+                                        disabled="@(string.IsNullOrWhiteSpace(newSecondaryMoodInput))">
+                                    Add
+                                </button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="margin-top: 8px; font-size: 12px; color: #78828b; font-style: italic;">
+                                Maximum 2 secondary moods. Remove one to add a new one.
+                            </div>
+                        }
                     </div>
                 </div>
 
+                <!-- Categorization Card -->
                 <div class="journal-sidebar-card">
                     <div class="sidebar-card-header">
                         <div class="sidebar-icon-holder">
@@ -134,78 +243,1116 @@
 
                     <div class="sidebar-form-element">
                         <label class="sidebar-form-label">Category <span class="required-indicator">*</span></label>
-                        <div class="sidebar-select-field">
-                            <span class="select-placeholder-text">Select Category</span>
+                        <div class="sidebar-select-field" @onclick="ToggleCategoryDropdown">
+                            <span class="select-placeholder-text">
+                                @(string.IsNullOrEmpty(journalModel.Category) ? "Select Category" : journalModel.Category)
+                            </span>
                             <img src="images/arrow-down.png" alt="Arrow" class="select-arrow-icon" />
                         </div>
+                        @if (showCategoryDropdown)
+                        {
+                            <div class="category-dropdown">
+                                @foreach (var category in AvailableCategories)
+                                {
+                                    <div class="category-dropdown-item" @onclick="() => SelectCategory(category)">
+                                        @category
+                                    </div>
+                                }
+                                <div class="category-dropdown-item" @onclick="ShowCustomCategoryInput">
+                                    + Add New Category
+                                </div>
+                            </div>
+                        }
+                        @if (showCustomCategoryInput)
+                        {
+                            <div class="category-input-row">
+                                <input type="text"
+                                       class="tag-input-field"
+                                       placeholder="New category name"
+                                       @bind="customCategoryInput"
+                                       @bind:event="oninput" />
+                                <button class="tag-add-button" @onclick="AddCustomCategory">Add</button>
+                                <button class="tag-cancel-button" @onclick="CancelCustomCategoryInput">Cancel</button>
+                            </div>
+                        }
                     </div>
 
                     <div class="sidebar-form-element">
-                        <label class="sidebar-form-label">Tags <span class="required-indicator">*</span></label>
-                        <div class="sidebar-select-field">
+                        <label class="sidebar-form-label">Tags</label>
+                        <div class="sidebar-select-field" @onclick="ToggleTagsDropdown">
                             <span class="select-placeholder-text">Select from recent tags</span>
                             <img src="images/arrow-down.png" alt="Arrow" class="select-arrow-icon" />
                         </div>
+                        @if (showTagsDropdown)
+                        {
+                            <div class="tags-dropdown">
+                                @foreach (var tag in AvailableTags)
+                                {
+                                    <div class="tag-dropdown-item" @onclick="() => ToggleTag(tag)">
+                                        <span>@tag</span>
+                                        @if (journalModel.Tags.Contains(tag))
+                                        {
+                                            <span class="tag-checkmark">✓</span>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
 
                         <div class="tag-input-row">
-                            <input type="text" class="tag-input-field" placeholder="New tag name" />
-                            <button class="tag-add-button">Add</button>
+                            <input type="text"
+                                   class="tag-input-field"
+                                   placeholder="New tag name"
+                                   @bind="journalModel.NewTag"
+                                   @bind:event="oninput" />
+                            <button class="tag-add-button" @onclick="AddCustomTag">Add</button>
                         </div>
 
                         <div class="selected-tags-container">
-                            <div class="tag-bubble">
-                                <span>#milestone</span>
-                                <button class="tag-remove-button">
-                                    <img src="images/close-icon.png" alt="Remove" />
-                                </button>
-                            </div>
-                            <div class="tag-bubble">
-                                <span>#holiday</span>
-                                <button class="tag-remove-button">
-                                    <img src="images/close-icon.png" alt="Remove" />
-                                </button>
-                            </div>
+                            @foreach (var tag in journalModel.Tags)
+                            {
+                                <div class="tag-bubble">
+                                    <span>#@tag</span>
+                                    <button class="tag-remove-button" @onclick="() => RemoveTag(tag)">
+                                        <img src="images/close-icon.png" alt="Remove" />
+                                    </button>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
 
+                <!-- Journal Information Card -->
                 <div class="journal-sidebar-card">
-                    <h3 class="sidebar-card-heading no-icon-heading">System Information</h3>
+                    <h3 class="sidebar-card-heading no-icon-heading">Journal Information</h3>
                     <div class="system-info-row">
-                        <span class="system-info-label">Created At:</span>
-                        <div class="system-info-values">
-                            <span class="system-info-value">12 December, 2025</span>
-                            <span class="system-info-value">9:11 AM</span>
-                        </div>
+                        <span class="system-info-label">Entry Date:</span>
+                        <span class="system-info-value">@journalModel.EntryDate.ToString("dd MMMM, yyyy")</span>
                     </div>
+                    @if (IsEditingExisting)
+                    {
+                        <div class="system-info-row">
+                            <span class="system-info-label">Created At:</span>
+                            <span class="system-info-value">@createdAtFormatted</span>
+                        </div>
+                    }
                     <div class="system-info-row">
                         <span class="system-info-label">Last Update</span>
-                        <span class="system-info-value">Just Now</span>
+                        <span class="system-info-value">@updatedAtRelative</span>
                     </div>
                     <div class="system-info-row">
                         <span class="system-info-label">Total Word Count</span>
-                        <span class="system-info-value">1200 words</span>
+                        <span class="system-info-value">@wordCount words</span>
+                    </div>
+                    <div class="system-info-row">
+                        <span class="system-info-label">Total Character Count</span>
+                        <span class="system-info-value">@characterCount characters</span>
                     </div>
                 </div>
 
+                <!-- Actions Card -->
                 <div class="journal-actions-container">
-                    <button class="journal-primary-action full-width-action">
+                    <button class="journal-primary-action full-width-action"
+                            @onclick="SaveJournal"
+                            disabled="@isSaving">
                         <div class="action-button-content">
                             <img src="images/save-icon.png" alt="Save" />
-                            <span>Save Entry</span>
+                            <span>@(IsEditingExisting ? "Update Entry" : "Save Entry")</span>
                         </div>
                     </button>
 
                     <div class="journal-secondary-actions">
-                        <button class="journal-secondary-button">Cancel</button>
+                        <button class="journal-secondary-button" @onclick="Cancel">Cancel</button>
                         <div class="action-divider-vertical"></div>
-                        <button class="journal-secondary-button delete-action">
-                            <img src="images/delete-icon.png" alt="Delete" />
-                            <span>Delete</span>
-                        </button>
+                        @if (IsEditingExisting)
+                        {
+                            <button class="journal-secondary-button delete-action" @onclick="ShowDeleteConfirm">
+                                <img src="images/delete-icon.svg" alt="Delete" />
+                                <span>Delete</span>
+                            </button>
+                        }
                     </div>
                 </div>
             </aside>
         </div>
     </section>
 </div>
+
+<!-- Custom Dialog Box -->
+@if (showDialog)
+{
+    <div class="dialog-overlay" @onclick="CloseDialog">
+        <div class="dialog-container" @onclick:stopPropagation="true">
+            <div class="dialog-header">
+                <h3 class="dialog-title">@dialogTitle</h3>
+                <button class="dialog-close" @onclick="CloseDialog">×</button>
+            </div>
+            <div class="dialog-body">
+                @((MarkupString)dialogMessage)
+            </div>
+            <div class="dialog-footer">
+                @if (dialogType == "confirm")
+                {
+                    <button class="dialog-button secondary" @onclick="DialogCancel">Cancel</button>
+                    <button class="dialog-button primary" @onclick="DialogConfirm">Confirm</button>
+                }
+                else
+                {
+                    <button class="dialog-button primary" @onclick="CloseDialog">OK</button>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public DateTime SelectedDate { get; set; }
+
+    private JournalModel journalModel = new();
+    private string errorMessage = string.Empty;
+    private string successMessage = string.Empty;
+    private string infoMessage = string.Empty;
+    private bool isLoading = false;
+    private bool isSaving = false;
+    private bool IsEditingExisting = false;
+    private bool showDateWarning = false;
+    private int currentJournalId = 0;
+    private int currentStreak = 0; // Changed from static 5 to dynamic 0
+
+    // Date handling
+    private string selectedDateInput = string.Empty;
+
+    // Stats
+    private int wordCount = 0;
+    private int characterCount = 0;
+    private DateTime createdAt;
+    private string createdAtFormatted = string.Empty;
+    private string updatedAtRelative = "Just Now";
+
+    // Dropdown states
+    private bool showMoodDropdown = false;
+    private bool showCategoryDropdown = false;
+    private bool showTagsDropdown = false;
+    private bool showCustomCategoryInput = false;
+
+    // Dialog states
+    private bool showDialog = false;
+    private string dialogTitle = string.Empty;
+    private string dialogMessage = string.Empty;
+    private string dialogType = "alert";
+    private Action? dialogConfirmAction;
+
+    // Inputs
+    private string customCategoryInput = string.Empty;
+    private string secondaryMoodError = string.Empty;
+    private string newSecondaryMoodInput = string.Empty;
+
+    // Available options
+    private List<string> AvailableCategories = new()
+    {
+        "General", "Work", "Personal", "Health", "Travel", "Family", "Friends",
+        "Education", "Fitness", "Hobbies", "Finance", "Spiritual"
+    };
+
+    private List<string> AvailableTags = new();
+
+    // Predefined secondary moods (oval tags)
+    private List<string> PredefinedSecondaryMoods = new()
+    {
+        "Happy", "Excited", "Grateful", "Hopeful", "Calm",
+        "Content", "Peaceful", "Optimistic", "Joyful", "Proud",
+        "Relaxed", "Focused", "Sad", "Angry", "Anxious",
+        "Stressed", "Frustrated", "Lonely", "Tired", "Worried"
+    };
+
+    // Current user info
+    private int currentUserId = 0;
+    private string currentUserFullName = string.Empty;
+
+    // DotNet object reference for JS interop
+    private DotNetObjectReference<Journal>? dotNetObjectRef;
+    private bool isInitialized = false;
+    private CancellationTokenSource? dialogTaskSource;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            dotNetObjectRef = DotNetObjectReference.Create(this);
+
+            // If SelectedDate is default (not provided via URL), set to today
+            if (SelectedDate == default)
+            {
+                SelectedDate = DateTime.Today;
+            }
+
+            selectedDateInput = SelectedDate.ToString("yyyy-MM-dd");
+
+            await LoadCurrentUser();
+            await LoadJournalData();
+            await LoadAvailableOptions();
+            await LoadStreakData(); // Added this line to load streak data
+
+            // Set initial info message
+            UpdateInfoMessage();
+
+            isInitialized = true;
+
+            Console.WriteLine("Journal component initialized. User ID: " + currentUserId);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error initializing journal: {ex.Message}";
+            Console.WriteLine($"OnInitializedAsync error: {ex}");
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && isInitialized)
+        {
+            await InitializeQuillEditor();
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (isInitialized && SelectedDate != default)
+        {
+            // Update the selected date input
+            selectedDateInput = SelectedDate.ToString("yyyy-MM-dd");
+
+            // Reload journal data for the new date
+            await LoadJournalData();
+
+            // Update info message
+            UpdateInfoMessage();
+
+            // Update Quill editor content if it exists
+            if (dotNetObjectRef != null)
+            {
+                await Task.Delay(100);
+                await UpdateQuillContent();
+            }
+        }
+    }
+
+    private void UpdateInfoMessage()
+    {
+        if (IsEditingExisting)
+        {
+            infoMessage = "You're editing an existing journal entry. Update or delete as needed.";
+        }
+        else
+        {
+            if (journalModel.EntryDate.Date < DateTime.Today)
+            {
+                infoMessage = "You can create a journal entry for this past date. Each day allows only one entry.";
+            }
+            else if (journalModel.EntryDate.Date == DateTime.Today)
+            {
+                infoMessage = "Create your journal entry for today. Remember, only one entry per day is allowed.";
+            }
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task LoadCurrentUser()
+    {
+        try
+        {
+            var userJson = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "currentUser");
+            Console.WriteLine("User JSON from localStorage: " + (userJson ?? "null"));
+
+            if (!string.IsNullOrEmpty(userJson))
+            {
+                var user = System.Text.Json.JsonSerializer.Deserialize<UserInfo>(userJson);
+                if (user != null)
+                {
+                    currentUserId = user.Id;
+                    currentUserFullName = user.FullName;
+                    Console.WriteLine($"Loaded user: ID={currentUserId}, Name={currentUserFullName}");
+                }
+                else
+                {
+                    Console.WriteLine("Failed to deserialize user JSON");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No user found in localStorage. User might not be logged in.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading user: {ex.Message}");
+        }
+    }
+
+    // Added this new method to load streak data
+    private async Task LoadStreakData()
+    {
+        if (currentUserId == 0) return;
+
+        try
+        {
+            var result = await DashboardService.GetDashboardStatsAsync(currentUserId);
+            if (result.Success && result.Data != null)
+            {
+                currentStreak = result.Data.CurrentStreak;
+                Console.WriteLine($"Loaded streak data: {currentStreak} days");
+            }
+            else
+            {
+                Console.WriteLine($"Failed to load streak data: {result.ErrorMessage}");
+                currentStreak = 0;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading streak data: {ex.Message}");
+            currentStreak = 0;
+        }
+    }
+
+    private async Task LoadJournalData()
+    {
+        if (currentUserId == 0)
+        {
+            errorMessage = "User not logged in. Please log in first.";
+            Console.WriteLine("User ID is 0 - user not logged in");
+            return;
+        }
+
+        isLoading = true;
+        errorMessage = string.Empty;
+        successMessage = string.Empty;
+        showDateWarning = false;
+
+        try
+        {
+            Console.WriteLine($"Loading journal data for date: {SelectedDate:yyyy-MM-dd}, User ID: {currentUserId}");
+
+            // Validate date - cannot be future date
+            if (SelectedDate.Date > DateTime.Today)
+            {
+                await ShowAlertDialog("Invalid Date", "Cannot create journal entries for future dates.");
+                SelectedDate = DateTime.Today;
+                selectedDateInput = DateTime.Today.ToString("yyyy-MM-dd");
+                Navigation.NavigateTo($"/journal/{DateTime.Today:yyyy-MM-dd}");
+                return;
+            }
+
+            // Set the journal model date
+            journalModel.EntryDate = SelectedDate.Date;
+            Console.WriteLine($"Journal model date set to: {journalModel.EntryDate:yyyy-MM-dd}");
+
+            // Check if journal exists for selected date
+            var checkResult = await JournalService.CheckJournalExistsAsync(SelectedDate, currentUserId);
+            Console.WriteLine($"Check journal exists result: Success={checkResult.Success}, Exists={checkResult.Data}");
+
+            if (checkResult.Success && checkResult.Data)
+            {
+                // Load existing journal
+                var journalResult = await JournalService.GetJournalByDateAsync(SelectedDate, currentUserId);
+                Console.WriteLine($"Get journal result: Success={journalResult.Success}, Data={(journalResult.Data != null ? "Exists" : "Null")}");
+
+                if (journalResult.Success && journalResult.Data != null)
+                {
+                    var journal = journalResult.Data;
+
+                    journalModel = new JournalModel
+                    {
+                        Id = journal.Id,
+                        Title = journal.Title,
+                        Content = journal.Content,
+                        PrimaryMood = journal.PrimaryMood,
+                        SecondaryMood1 = journal.SecondaryMood1,
+                        SecondaryMood2 = journal.SecondaryMood2,
+                        Category = journal.Category,
+                        Tags = journal.Tags,
+                        EntryDate = journal.EntryDate.Date
+                    };
+
+                    currentJournalId = journal.Id;
+                    IsEditingExisting = true;
+                    createdAt = journal.CreatedAt;
+                    createdAtFormatted = journal.CreatedAt.ToLocalTime().ToString("dd MMMM, yyyy hh:mm tt");
+                    updatedAtRelative = GetRelativeTime(journal.UpdatedAt);
+                    wordCount = journal.WordCount;
+                    characterCount = journal.CharacterCount;
+
+                    showDateWarning = true;
+
+                    Console.WriteLine($"Loaded existing journal: ID={journal.Id}, Title='{journal.Title}'");
+                }
+            }
+            else
+            {
+                // New journal for selected date
+                journalModel = new JournalModel
+                {
+                    EntryDate = SelectedDate.Date,
+                    Category = "General"
+                };
+                IsEditingExisting = false;
+                createdAtFormatted = "Not created yet";
+                updatedAtRelative = "Not updated";
+                showDateWarning = false;
+
+                Console.WriteLine("Creating new journal entry");
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading journal: {ex.Message}";
+            Console.WriteLine($"Load journal error: {ex}");
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadAvailableOptions()
+    {
+        try
+        {
+            // Load user's previous categories
+            var categoriesResult = await JournalService.GetUserCategoriesAsync(currentUserId);
+            if (categoriesResult.Success)
+            {
+                AvailableCategories = categoriesResult.Data.Union(AvailableCategories).Distinct().ToList();
+            }
+
+            // Load user's previous tags
+            var tagsResult = await JournalService.GetUserTagsAsync(currentUserId);
+            if (tagsResult.Success)
+            {
+                AvailableTags = tagsResult.Data;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading available options: {ex.Message}");
+        }
+    }
+
+    private async Task InitializeQuillEditor()
+    {
+        try
+        {
+            Console.WriteLine("Initializing Quill editor...");
+
+            var initialized = await JSRuntime.InvokeAsync<bool>(
+                "QuillEditor.initialize",
+                "quill-editor",
+                "Start writing your thoughts here...",
+                journalModel.Content,
+                dotNetObjectRef
+            );
+
+            if (initialized)
+            {
+                Console.WriteLine("Quill editor initialized successfully");
+
+                var editorContent = await JSRuntime.InvokeAsync<EditorContent>(
+                    "QuillEditor.getContent",
+                    "quill-editor"
+                );
+
+                wordCount = editorContent.WordCount;
+                characterCount = editorContent.CharCount;
+                Console.WriteLine($"Initial content: {editorContent.WordCount} words, {editorContent.CharCount} chars");
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error initializing Quill editor: {ex.Message}");
+        }
+    }
+
+    private async Task UpdateQuillContent()
+    {
+        try
+        {
+            var updated = await JSRuntime.InvokeAsync<bool>(
+                "QuillEditor.setContent",
+                "quill-editor",
+                journalModel.Content
+            );
+
+            if (updated)
+            {
+                var editorContent = await JSRuntime.InvokeAsync<EditorContent>(
+                    "QuillEditor.getContent",
+                    "quill-editor"
+                );
+
+                wordCount = editorContent.WordCount;
+                characterCount = editorContent.CharCount;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating Quill content: {ex.Message}");
+        }
+    }
+
+    [JSInvokable]
+    public void HandleEditorContentChanged(string html, string text, int wordCount, int charCount)
+    {
+        this.wordCount = wordCount;
+        this.characterCount = charCount;
+        journalModel.Content = html;
+        Console.WriteLine($"Editor content changed: {wordCount} words, {charCount} chars");
+        InvokeAsync(StateHasChanged);
+    }
+
+    private async Task SaveJournal()
+    {
+        Console.WriteLine("SaveJournal called...");
+        Console.WriteLine($"Current User ID: {currentUserId}");
+        Console.WriteLine($"IsSaving: {isSaving}");
+        Console.WriteLine($"Title: '{journalModel.Title}'");
+        Console.WriteLine($"Primary Mood: '{journalModel.PrimaryMood}'");
+        Console.WriteLine($"Category: '{journalModel.Category}'");
+
+        // First check if user is logged in
+        if (currentUserId == 0)
+        {
+            await ShowAlertDialog("Login Required", "Please log in to save journal entries.");
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        // Now validate required fields
+        var validationErrors = new List<string>();
+
+        if (string.IsNullOrWhiteSpace(journalModel.Title))
+        {
+            validationErrors.Add("• Title is required");
+        }
+
+        if (string.IsNullOrWhiteSpace(journalModel.PrimaryMood))
+        {
+            validationErrors.Add("• Primary mood is required");
+        }
+
+        if (string.IsNullOrWhiteSpace(journalModel.Category))
+        {
+            validationErrors.Add("• Category is required");
+        }
+
+        // Check if primary mood is valid (Positive, Negative, or Neutral)
+        if (!string.IsNullOrWhiteSpace(journalModel.PrimaryMood) &&
+            !IsValidPrimaryMood(journalModel.PrimaryMood))
+        {
+            validationErrors.Add("• Primary mood must be Positive, Negative, or Neutral");
+        }
+
+        // If there are validation errors, show them and return
+        if (validationErrors.Count > 0)
+        {
+            string errorMessage = "Please fix the following errors:\n\n" + string.Join("\n", validationErrors);
+            await ShowAlertDialog("Validation Error", errorMessage);
+            return;
+        }
+
+        // Check for duplicate entry (only for new entries)
+        if (!IsEditingExisting)
+        {
+            var checkResult = await JournalService.CheckJournalExistsAsync(journalModel.EntryDate, currentUserId);
+            if (checkResult.Success && checkResult.Data)
+            {
+                await ShowAlertDialog("Duplicate Entry",
+                    "A journal entry already exists for this date. You can only update or delete existing entries.");
+                return;
+            }
+        }
+
+        isSaving = true;
+        errorMessage = string.Empty;
+        successMessage = string.Empty;
+        StateHasChanged(); // Update UI to show saving state
+
+        try
+        {
+            // Get content from Quill editor
+            Console.WriteLine("Getting content from Quill editor...");
+            var editorContent = await JSRuntime.InvokeAsync<EditorContent>(
+                "QuillEditor.getContent",
+                "quill-editor"
+            );
+
+            Console.WriteLine($"Quill content: {editorContent.WordCount} words, {editorContent.CharCount} chars");
+
+            journalModel.Content = editorContent.Html;
+            wordCount = editorContent.WordCount;
+            characterCount = editorContent.CharCount;
+
+            ServiceResult<MyJournalProject.Entities.Journal> result;
+
+            if (IsEditingExisting)
+            {
+                Console.WriteLine($"Updating journal ID: {currentJournalId}");
+                result = await JournalService.UpdateJournalAsync(currentJournalId, journalModel, currentUserId);
+                Console.WriteLine($"Update result: Success={result.Success}, Error={result.ErrorMessage}");
+
+                if (result.Success)
+                {
+                    successMessage = "Journal updated successfully!";
+                    updatedAtRelative = "Just Now";
+                    UpdateInfoMessage();
+
+                    // Refresh streak data after update
+                    await LoadStreakData();
+
+                    await ShowAlertDialog("Journal Updated", "Your journal entry has been updated successfully.");
+                }
+                else
+                {
+                    errorMessage = result.ErrorMessage ?? "Unknown error occurred";
+                    await ShowAlertDialog("Update Failed", errorMessage);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Creating new journal...");
+                result = await JournalService.CreateJournalAsync(journalModel, currentUserId);
+                Console.WriteLine($"Create result: Success={result.Success}, Error={result.ErrorMessage}");
+
+                if (result.Success && result.Data != null)
+                {
+                    currentJournalId = result.Data.Id;
+                    IsEditingExisting = true;
+                    createdAt = result.Data.CreatedAt;
+                    createdAtFormatted = result.Data.CreatedAt.ToLocalTime().ToString("dd MMMM, yyyy hh:mm tt");
+                    successMessage = "Journal saved successfully!";
+                    updatedAtRelative = "Just Now";
+                    showDateWarning = true;
+                    UpdateInfoMessage();
+
+                    // Refresh streak data after creation
+                    await LoadStreakData();
+
+                    await ShowAlertDialog("Journal Saved", "Your journal entry has been saved successfully.");
+                }
+                else
+                {
+                    errorMessage = result.ErrorMessage ?? "Unknown error occurred";
+                    await ShowAlertDialog("Save Failed", errorMessage);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error saving journal: {ex.Message}";
+            Console.WriteLine($"Save journal error: {ex}");
+            await ShowAlertDialog("Error", errorMessage);
+        }
+        finally
+        {
+            isSaving = false;
+            StateHasChanged();
+        }
+    }
+
+    private bool IsValidPrimaryMood(string mood)
+    {
+        return mood == "Positive" || mood == "Negative" || mood == "Neutral";
+    }
+
+    private async Task OnDateInputChanged(ChangeEventArgs e)
+    {
+        var newDateValue = e.Value?.ToString();
+        if (string.IsNullOrEmpty(newDateValue))
+            return;
+
+        selectedDateInput = newDateValue;
+
+        if (DateTime.TryParse(selectedDateInput, out var newDate))
+        {
+            // Prevent future dates
+            if (newDate.Date > DateTime.Today)
+            {
+                await ShowAlertDialog("Invalid Date", "Cannot create journal entries for future dates.");
+                selectedDateInput = journalModel.EntryDate.ToString("yyyy-MM-dd");
+                StateHasChanged();
+                return;
+            }
+
+            // Check if there are unsaved changes
+            bool hasChanges = await CheckForUnsavedChanges();
+            if (hasChanges)
+            {
+                bool confirmed = await ShowConfirmDialog("Unsaved Changes",
+                    "You have unsaved changes. Changing dates will lose your changes. Continue?");
+                if (!confirmed)
+                {
+                    selectedDateInput = journalModel.EntryDate.ToString("yyyy-MM-dd");
+                    StateHasChanged();
+                    return;
+                }
+            }
+
+            Navigation.NavigateTo($"/journal/{newDate:yyyy-MM-dd}");
+        }
+    }
+
+    private async Task ShowDeleteConfirm()
+    {
+        bool confirmed = await ShowConfirmDialog("Delete Journal",
+            "Are you sure you want to delete this journal entry? This action cannot be undone and will break your streak.");
+
+        if (confirmed)
+        {
+            await DeleteJournal();
+        }
+    }
+
+    private async Task DeleteJournal()
+    {
+        try
+        {
+            var result = await JournalService.DeleteJournalAsync(currentJournalId, currentUserId);
+            if (result.Success)
+            {
+                // Refresh streak data after deletion
+                await LoadStreakData();
+                await ShowAlertDialog("Journal Deleted", "Your journal entry has been deleted successfully.");
+                Navigation.NavigateTo("/myjournallist");
+            }
+            else
+            {
+                errorMessage = result.ErrorMessage ?? "Unknown error occurred";
+                StateHasChanged();
+                await ShowAlertDialog("Delete Failed", errorMessage);
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error deleting journal: {ex.Message}";
+            StateHasChanged();
+            await ShowAlertDialog("Error", errorMessage);
+        }
+    }
+
+    private async Task Cancel()
+    {
+        bool hasChanges = await CheckForUnsavedChanges();
+
+        if (!hasChanges)
+        {
+            Navigation.NavigateTo("/myjournallist");
+            return;
+        }
+
+        bool confirmed = await ShowConfirmDialog("Unsaved Changes",
+            "You have unsaved changes. Are you sure you want to leave?");
+
+        if (confirmed)
+        {
+            Navigation.NavigateTo("/myjournallist");
+        }
+    }
+
+    private async Task<bool> CheckForUnsavedChanges()
+    {
+        try
+        {
+            var editorContent = await JSRuntime.InvokeAsync<EditorContent>(
+                "QuillEditor.getContent",
+                "quill-editor"
+            );
+
+            bool contentChanged = editorContent.Html != journalModel.Content;
+
+            bool hasData = !string.IsNullOrEmpty(editorContent.Html) ||
+                          !string.IsNullOrEmpty(journalModel.Title) ||
+                          !string.IsNullOrEmpty(journalModel.PrimaryMood) ||
+                          !string.IsNullOrEmpty(journalModel.Category) ||
+                          GetSelectedSecondaryMoods().Count > 0 ||
+                          journalModel.Tags.Count > 0;
+
+            return contentChanged || hasData;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    // Mood methods
+    private void ToggleMoodDropdown() => showMoodDropdown = !showMoodDropdown;
+
+    private void SelectPrimaryMood(string mood)
+    {
+        journalModel.PrimaryMood = mood;
+        showMoodDropdown = false;
+        Console.WriteLine($"Primary mood selected: {mood}");
+        StateHasChanged();
+    }
+
+    private List<string> GetSelectedSecondaryMoods()
+    {
+        var moods = new List<string>();
+        if (!string.IsNullOrEmpty(journalModel.SecondaryMood1))
+            moods.Add(journalModel.SecondaryMood1);
+        if (!string.IsNullOrEmpty(journalModel.SecondaryMood2))
+            moods.Add(journalModel.SecondaryMood2);
+        return moods;
+    }
+
+    private bool IsSecondaryMoodSelected(string mood)
+    {
+        return journalModel.SecondaryMood1 == mood || journalModel.SecondaryMood2 == mood;
+    }
+
+    private void ToggleSecondaryMood(string mood)
+    {
+        if (IsSecondaryMoodSelected(mood))
+        {
+            RemoveSecondaryMood(mood);
+        }
+        else
+        {
+            AddSecondaryMoodFromList(mood);
+        }
+    }
+
+    private void AddSecondaryMoodFromList(string mood)
+    {
+        if (string.IsNullOrEmpty(journalModel.SecondaryMood1))
+            journalModel.SecondaryMood1 = mood;
+        else if (string.IsNullOrEmpty(journalModel.SecondaryMood2))
+            journalModel.SecondaryMood2 = mood;
+        else
+        {
+            // If both are filled, replace the second one
+            journalModel.SecondaryMood2 = mood;
+        }
+
+        secondaryMoodError = string.Empty;
+        StateHasChanged();
+    }
+
+    private void AddSecondaryMood()
+    {
+        if (!string.IsNullOrWhiteSpace(newSecondaryMoodInput))
+        {
+            if (string.IsNullOrEmpty(journalModel.SecondaryMood1))
+                journalModel.SecondaryMood1 = newSecondaryMoodInput.Trim();
+            else if (string.IsNullOrEmpty(journalModel.SecondaryMood2))
+                journalModel.SecondaryMood2 = newSecondaryMoodInput.Trim();
+            else
+            {
+                // If both are filled, replace the second one
+                journalModel.SecondaryMood2 = newSecondaryMoodInput.Trim();
+            }
+
+            newSecondaryMoodInput = string.Empty;
+            secondaryMoodError = string.Empty;
+            StateHasChanged();
+        }
+    }
+
+    private void RemoveSecondaryMood(string mood)
+    {
+        if (journalModel.SecondaryMood1 == mood)
+            journalModel.SecondaryMood1 = null;
+        else if (journalModel.SecondaryMood2 == mood)
+            journalModel.SecondaryMood2 = null;
+
+        StateHasChanged();
+    }
+
+    private void OnSecondaryMoodKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            AddSecondaryMood();
+        }
+    }
+
+    // Category methods
+    private void ToggleCategoryDropdown() => showCategoryDropdown = !showCategoryDropdown;
+
+    private void SelectCategory(string category)
+    {
+        journalModel.Category = category;
+        showCategoryDropdown = false;
+        Console.WriteLine($"Category selected: {category}");
+        StateHasChanged();
+    }
+
+    private void ShowCustomCategoryInput()
+    {
+        showCategoryDropdown = false;
+        showCustomCategoryInput = true;
+        StateHasChanged();
+    }
+
+    private void AddCustomCategory()
+    {
+        if (!string.IsNullOrWhiteSpace(customCategoryInput))
+        {
+            journalModel.Category = customCategoryInput;
+            if (!AvailableCategories.Contains(customCategoryInput))
+            {
+                AvailableCategories.Add(customCategoryInput);
+            }
+            customCategoryInput = string.Empty;
+            showCustomCategoryInput = false;
+            StateHasChanged();
+        }
+    }
+
+    private void CancelCustomCategoryInput()
+    {
+        showCustomCategoryInput = false;
+        customCategoryInput = string.Empty;
+        StateHasChanged();
+    }
+
+    // Tag methods
+    private void ToggleTagsDropdown() => showTagsDropdown = !showTagsDropdown;
+
+    private void ToggleTag(string tag)
+    {
+        if (journalModel.Tags.Contains(tag))
+            journalModel.Tags.Remove(tag);
+        else
+            journalModel.Tags.Add(tag);
+
+        StateHasChanged();
+    }
+
+    private void AddCustomTag()
+    {
+        if (!string.IsNullOrWhiteSpace(journalModel.NewTag))
+        {
+            var tag = journalModel.NewTag.Trim();
+            if (!journalModel.Tags.Contains(tag))
+            {
+                journalModel.Tags.Add(tag);
+            }
+            if (!AvailableTags.Contains(tag))
+            {
+                AvailableTags.Add(tag);
+            }
+            journalModel.NewTag = string.Empty;
+            StateHasChanged();
+        }
+    }
+
+    private void RemoveTag(string tag)
+    {
+        journalModel.Tags.Remove(tag);
+        StateHasChanged();
+    }
+
+    // Dialog Methods
+    private async Task ShowAlertDialog(string title, string message)
+    {
+        dialogTitle = title;
+        dialogMessage = message;
+        dialogType = "alert";
+        showDialog = true;
+
+        StateHasChanged();
+
+        dialogTaskSource = new CancellationTokenSource();
+        try
+        {
+            await Task.Delay(Timeout.Infinite, dialogTaskSource.Token);
+        }
+        catch (TaskCanceledException) { }
+    }
+
+    private async Task<bool> ShowConfirmDialog(string title, string message)
+    {
+        dialogTitle = title;
+        dialogMessage = message;
+        dialogType = "confirm";
+        showDialog = true;
+
+        var tcs = new TaskCompletionSource<bool>();
+
+        dialogConfirmAction = () =>
+        {
+            tcs.SetResult(true);
+            dialogTaskSource?.Cancel();
+            CloseDialog();
+        };
+
+        StateHasChanged();
+
+        return await tcs.Task;
+    }
+
+    private void DialogConfirm()
+    {
+        dialogConfirmAction?.Invoke();
+    }
+
+    private void DialogCancel()
+    {
+        dialogTaskSource?.Cancel();
+        CloseDialog();
+    }
+
+    private void CloseDialog()
+    {
+        showDialog = false;
+        dialogTitle = string.Empty;
+        dialogMessage = string.Empty;
+        dialogType = "alert";
+        dialogConfirmAction = null;
+        dialogTaskSource?.Cancel();
+        StateHasChanged();
+    }
+
+    private string GetRelativeTime(DateTime date)
+    {
+        var timeSpan = DateTime.UtcNow - date;
+
+        if (timeSpan.TotalMinutes < 1)
+            return "Just Now";
+        if (timeSpan.TotalHours < 1)
+            return $"{(int)timeSpan.TotalMinutes} minute{(timeSpan.TotalMinutes >= 2 ? "s" : "")} ago";
+        if (timeSpan.TotalDays < 1)
+            return $"{(int)timeSpan.TotalHours} hour{(timeSpan.TotalHours >= 2 ? "s" : "")} ago";
+        if (timeSpan.TotalDays < 7)
+            return $"{(int)timeSpan.TotalDays} day{(timeSpan.TotalDays >= 2 ? "s" : "")} ago";
+
+        return date.ToLocalTime().ToString("dd MMMM, yyyy");
+    }
+
+    public void Dispose()
+    {
+        dotNetObjectRef?.Dispose();
+        dialogTaskSource?.Dispose();
+    }
+
+    // Helper classes
+    private class UserInfo
+    {
+        public int Id { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+    }
+
+    private class EditorContent
+    {
+        public string Html { get; set; } = string.Empty;
+        public string Text { get; set; } = string.Empty;
+        public int WordCount { get; set; }
+        public int CharCount { get; set; }
+    }
+}

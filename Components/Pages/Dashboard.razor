@@ -1,65 +1,116 @@
 ﻿@page "/dashboard"
 @inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
+@inject IDashboardService DashboardService
+@inject NavigationManager Navigation
 
 <div class="dashboard">
     <div class="dashboard-content">
         <!-- Hero Section -->
         <div class="dashboard-hero">
             <h1 class="page-title">Dashboard Overview</h1>
-            <p class="page-subtitle">Welcome back, Nissan. Here is your activity summary.</p>
+            <p class="page-subtitle">Welcome back. Here is your activity summary.</p>
         </div>
+
+        <!-- Loading State -->
+        @if (isLoading)
+        {
+            <div class="loading-overlay">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Loading dashboard...</p>
+                </div>
+            </div>
+        }
 
         <!-- Stats Grid -->
         <div class="stats-grid">
-            <!-- Card 1 -->
+            <!-- Card 1: Current Streak -->
             <div class="stat-card">
                 <div class="stat-header">
                     <span class="stat-label">CURRENT STREAK</span>
                     <div class="stat-value-group">
-                        <span class="stat-number">20</span>
+                        <span class="stat-number">@dashboardStats.CurrentStreak</span>
                         <span class="stat-unit">Days</span>
                     </div>
                 </div>
-                <img src="images/fire-icon.svg" alt="Fire Icon" class="stat-icon">
+                <img src="images/streak-icon.png" alt="Fire Icon" class="stat-icon">
             </div>
 
-            <!-- Card 2 -->
+            <!-- Card 2: Longest Streak -->
             <div class="stat-card">
                 <div class="stat-header">
                     <span class="stat-label">LONGEST STREAK</span>
                     <div class="stat-value-group">
-                        <span class="stat-number">40</span>
+                        <span class="stat-number">@dashboardStats.LongestStreak</span>
                         <span class="stat-unit">Days</span>
                     </div>
                 </div>
                 <img src="images/trophy-icon.svg" alt="Trophy Icon" class="stat-icon">
             </div>
 
-            <!-- Card 3 -->
+            <!-- Card 3: Missed Days -->
             <div class="stat-card">
                 <div class="stat-header">
                     <span class="stat-label">MISSED DAYS</span>
                     <div class="stat-value-group">
-                        <span class="stat-number">3</span>
+                        <span class="stat-number">@dashboardStats.MissedDaysThisMonth</span>
                         <span class="stat-unit">This Month</span>
                     </div>
                 </div>
                 <img src="images/calendar-icon.svg" alt="Calendar Icon" class="stat-icon">
             </div>
 
-            <!-- Card 4 -->
+            <!-- Card 4: Current Mood -->
             <div class="stat-card">
                 <div class="stat-header">
                     <span class="stat-label">CURRENT MOOD</span>
                     <div class="mood-badge">
-                        <div class="mood-icon-wrapper">
-                            <img src="images/happy-icon.svg" alt="Happy" class="mood-icon">
+                        <div class="mood-icon-wrapper @GetMoodColorClass(currentMood.Mood)">
+                            @if (currentMood.Icon == "happy")
+                            {
+                                <img src="images/happy-icon.svg" alt="Happy" class="mood-icon">
+                            }
+                            else if (currentMood.Icon == "sad")
+                            {
+                                <img src="images/sad-icon.svg" alt="Sad" class="mood-icon">
+                            }
+                            else
+                            {
+                                <img src="images/neutral-icon.svg" alt="Neutral" class="mood-icon">
+                            }
                         </div>
-                        <span class="mood-text">Happy</span>
+                        <span class="mood-text @GetMoodTextClass(currentMood.Mood)">
+                            @GetMoodDisplayText(currentMood.Mood)
+                        </span>
                     </div>
+                    @if (!currentMood.IsRecent && currentMood.Date.HasValue)
+                    {
+                        <div style="margin-top: 5px; font-size: 11px; color: #78828b; font-style: italic;">
+                            Latest mood from @currentMood.Date.Value.ToString("MMM d")
+                        </div>
+                    }
+                    else if (!currentMood.IsRecent)
+                    {
+                        <div style="margin-top: 5px; font-size: 11px; color: #78828b; font-style: italic;">
+                            Not recent
+                        </div>
+                    }
                 </div>
-                <img src="images/smiley.png" alt="Smiley" class="stat-icon smiley-icon">
+                
+                <!-- Dynamic Smiley Icon based on mood -->
+                @if (currentMood.Icon == "happy")
+                {
+                    <img src="images/smiley-happy.png" alt="Happy" class="stat-icon smiley-icon">
+                }
+                else if (currentMood.Icon == "sad")
+                {
+                    <img src="images/smiley-sad.png" alt="Sad" class="stat-icon smiley-icon">
+                }
+                else
+                {
+                    <img src="images/smiley-neutral.png" alt="Neutral" class="stat-icon smiley-icon">
+                }
             </div>
         </div>
 
@@ -70,9 +121,9 @@
                 <div class="chart-header">
                     <h3 class="chart-title">Mood Distribution</h3>
                     <div class="chart-dropdown">
-                        <select id="moodPeriod" @onchange="UpdateMoodChart">
+                        <select id="moodPeriod" @bind="moodPeriod" @bind:event="onchange">
                             <option value="7">Last 7 Days</option>
-                            <option value="30" selected>Last Month</option>
+                            <option value="30">Last Month</option>
                             <option value="120">Last 4 Months</option>
                         </select>
                     </div>
@@ -87,8 +138,8 @@
                 <div class="chart-header">
                     <h3 class="chart-title">Word Count Trend</h3>
                     <div class="chart-dropdown">
-                        <select id="wordCountPeriod" @onchange="UpdateWordCountChart">
-                            <option value="7" selected>Last 7 Days</option>
+                        <select id="wordCountPeriod" @bind="wordCountPeriod" @bind:event="onchange">
+                            <option value="7">Last 7 Days</option>
                             <option value="30">Last Month</option>
                             <option value="120">Last 4 Months</option>
                         </select>
@@ -106,33 +157,27 @@
             <div class="widget-card tags-widget">
                 <h3 class="widget-title">Most Used Tags</h3>
                 <div class="tags-list">
-                    <div class="tag-item">
-                        <div class="tag-info">
-                            <span class="tag-name">#Research</span>
-                            <span class="tag-count">12 entries</span>
+                    @if (!topTags.Any())
+                    {
+                        <div style="text-align: center; padding: 20px; color: #78828b;">
+                            No tags yet
                         </div>
-                        <div class="progress-track">
-                            <div class="progress-fill" style="width: 100%;"></div>
-                        </div>
-                    </div>
-                    <div class="tag-item">
-                        <div class="tag-info">
-                            <span class="tag-name">#Personal</span>
-                            <span class="tag-count">8 entries</span>
-                        </div>
-                        <div class="progress-track">
-                            <div class="progress-fill" style="width: 66%;"></div>
-                        </div>
-                    </div>
-                    <div class="tag-item">
-                        <div class="tag-info">
-                            <span class="tag-name">#Ideas</span>
-                            <span class="tag-count">5 entries</span>
-                        </div>
-                        <div class="progress-track">
-                            <div class="progress-fill" style="width: 41%;"></div>
-                        </div>
-                    </div>
+                    }
+                    else
+                    {
+                        @foreach (var tag in topTags)
+                        {
+                            <div class="tag-item">
+                                <div class="tag-info">
+                                    <span class="tag-name">#@tag.Name</span>
+                                    <span class="tag-count">@tag.Count @(tag.Count == 1 ? "entry" : "entries")</span>
+                                </div>
+                                <div class="progress-track">
+                                    <div class="progress-fill" style="width: @(tag.Percentage)%;"></div>
+                                </div>
+                            </div>
+                        }
+                    }
                 </div>
             </div>
 
@@ -141,7 +186,26 @@
                 <div class="motivation-content">
                     <img src="images/write-icon.png" alt="Write Icon" class="motivation-icon">
                     <h3 class="motivation-title">Keep it up!</h3>
-                    <p class="motivation-text">Be consistent. Keep posting daily. Break your own streak record</p>
+                    @if (dashboardStats.CurrentStreak > 0)
+                    {
+                        <p class="motivation-text">
+                            Your current streak is @dashboardStats.CurrentStreak days!
+                            @if (dashboardStats.CurrentStreak < dashboardStats.LongestStreak)
+                            {
+                                <span>Beat your record of @dashboardStats.LongestStreak days!</span>
+                            }
+                            else
+                            {
+                                <span>You're at your personal best!</span>
+                            }
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="motivation-text">
+                            Start a new streak today! Consistency is key to building good journaling habits.
+                        </p>
+                    }
                 </div>
             </div>
         </div>
@@ -150,98 +214,239 @@
 
 @code {
     private bool isInitialized = false;
+    private bool isLoading = false;
     private IJSObjectReference? chartModule;
+    private DashboardStats dashboardStats = new();
+    private CurrentMoodInfo currentMood = new();
+    private List<TopTag> topTags = new();
+
+    private string _moodPeriod = "30";
+    private string moodPeriod
+    {
+        get => _moodPeriod;
+        set
+        {
+            if (_moodPeriod != value)
+            {
+                _moodPeriod = value;
+                if (isInitialized)
+                {
+                    _ = LoadMoodChart();
+                }
+            }
+        }
+    }
+
+    private string _wordCountPeriod = "7";
+    private string wordCountPeriod
+    {
+        get => _wordCountPeriod;
+        set
+        {
+            if (_wordCountPeriod != value)
+            {
+                _wordCountPeriod = value;
+                if (isInitialized)
+                {
+                    _ = LoadWordCountChart();
+                }
+            }
+        }
+    }
+
+    private int currentUserId = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCurrentUser();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && !isInitialized)
         {
-            await InitializeCharts();
+            await InitializeDashboard();
             isInitialized = true;
+        }
+    }
+
+    private async Task LoadCurrentUser()
+    {
+        try
+        {
+            var userJson = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "currentUser");
+            if (!string.IsNullOrEmpty(userJson))
+            {
+                var user = System.Text.Json.JsonSerializer.Deserialize<UserInfo>(userJson);
+                if (user != null)
+                {
+                    currentUserId = user.Id;
+                }
+                else
+                {
+                    Navigation.NavigateTo("/login");
+                }
+            }
+            else
+            {
+                Navigation.NavigateTo("/login");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading user: {ex.Message}");
+            Navigation.NavigateTo("/login");
+        }
+    }
+
+    private async Task InitializeDashboard()
+    {
+        if (currentUserId == 0)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            await Task.WhenAll(
+                LoadDashboardStats(),
+                LoadCurrentMood(),
+                LoadTopTags(),
+                InitializeCharts()
+            );
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error initializing dashboard: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadDashboardStats()
+    {
+        var result = await DashboardService.GetDashboardStatsAsync(currentUserId);
+        if (result.Success && result.Data != null)
+        {
+            dashboardStats = result.Data;
+        }
+    }
+
+    private async Task LoadCurrentMood()
+    {
+        var result = await DashboardService.GetCurrentMoodAsync(currentUserId);
+        if (result.Success && result.Data != null)
+        {
+            currentMood = result.Data;
+        }
+    }
+
+    private async Task LoadTopTags()
+    {
+        var result = await DashboardService.GetTopTagsAsync(currentUserId, 3);
+        if (result.Success && result.Data != null)
+        {
+            topTags = result.Data;
+            
+            var total = topTags.Sum(t => t.Count);
+            if (total > 0)
+            {
+                foreach (var tag in topTags)
+                {
+                    tag.Percentage = (double)tag.Count / total * 100;
+                }
+            }
         }
     }
 
     private async Task InitializeCharts()
     {
-        // Import Chart.js module
         chartModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/charts.js");
 
-        // Initialize both charts
-        await InitializeMoodChart();
-        await InitializeWordCountChart();
+        await LoadMoodChart();
+        await LoadWordCountChart();
     }
 
-    private async Task InitializeMoodChart()
+    private async Task LoadMoodChart()
     {
         if (chartModule != null)
         {
-            await chartModule.InvokeVoidAsync("createMoodChart",
-                new
-                {
-                    positive = 60,
-                    neutral = 30,
-                    negative = 10
-                });
-        }
-    }
-
-    private async Task InitializeWordCountChart()
-    {
-        if (chartModule != null)
-        {
-            // Static data for last 7 days
-            var days = new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
-            var wordCounts = new[] { 450, 325, 280, 500, 420, 380, 550 };
-
-            await chartModule.InvokeVoidAsync("createWordCountChart",
-                new
-                {
-                    labels = days,
-                    data = wordCounts
-                });
-        }
-    }
-
-    private async Task UpdateMoodChart(ChangeEventArgs e)
-    {
-        if (chartModule != null)
-        {
-            var period = e.Value?.ToString();
-
-            // Static data based on period
-            var moodData = period switch
+            var result = await DashboardService.GetMoodDistributionAsync(currentUserId, moodPeriod);
+            if (result.Success && result.Data != null)
             {
-                "7" => new { positive = 65, neutral = 25, negative = 10 }, // Last 7 days
-                "30" => new { positive = 60, neutral = 30, negative = 10 }, // Last month
-                "120" => new { positive = 55, neutral = 35, negative = 10 }, // Last 4 months
-                _ => new { positive = 60, neutral = 30, negative = 10 }
-            };
-
-            await chartModule.InvokeVoidAsync("updateMoodChart", moodData);
+                await chartModule.InvokeVoidAsync("createMoodChart",
+                    new
+                    {
+                        positive = result.Data.Positive,
+                        neutral = result.Data.Neutral,
+                        negative = result.Data.Negative
+                    });
+            }
         }
     }
 
-    private async Task UpdateWordCountChart(ChangeEventArgs e)
+    private async Task LoadWordCountChart()
     {
         if (chartModule != null)
         {
-            var period = e.Value?.ToString();
-
-            // Static data based on period
-            var (labels, data) = period switch
+            var result = await DashboardService.GetWordCountTrendAsync(currentUserId, wordCountPeriod);
+            if (result.Success && result.Data != null)
             {
-                "7" => (new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" },
-                        new[] { 450, 325, 280, 500, 420, 380, 550 }),
-                "30" => (new[] { "Week 1", "Week 2", "Week 3", "Week 4" },
-                         new[] { 1850, 2100, 1950, 2200 }),
-                "120" => (new[] { "Month 1", "Month 2", "Month 3", "Month 4" },
-                          new[] { 8500, 9200, 8800, 9500 }),
-                _ => (new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" },
-                      new[] { 450, 325, 280, 500, 420, 380, 550 })
-            };
-
-            await chartModule.InvokeVoidAsync("updateWordCountChart",
-                new { labels, data });
+                await chartModule.InvokeVoidAsync("createWordCountChart",
+                    new
+                    {
+                        labels = result.Data.Labels,
+                        data = result.Data.Data
+                    });
+            }
         }
+    }
+
+    // Helper methods for mood display
+    private string GetMoodDisplayText(string mood)
+    {
+        return mood.ToLower() switch
+        {
+            "positive" => "Happy",
+            "negative" => "Sad",
+            "neutral" => "Normal",
+            _ => mood
+        };
+    }
+
+    private string GetMoodColorClass(string mood)
+    {
+        return mood.ToLower() switch
+        {
+            "positive" => "mood-positive",
+            "negative" => "mood-negative",
+            "neutral" => "mood-neutral",
+            _ => "mood-neutral"
+        };
+    }
+
+    private string GetMoodTextClass(string mood)
+    {
+        return mood.ToLower() switch
+        {
+            "positive" => "text-positive",
+            "negative" => "text-negative",
+            "neutral" => "text-neutral",
+            _ => "text-neutral"
+        };
+    }
+
+    private class UserInfo
+    {
+        public int Id { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
     }
 }

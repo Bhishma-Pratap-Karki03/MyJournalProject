@@ -1,62 +1,84 @@
 ﻿@page "/calendar"
 @inherits LayoutComponentBase
+@using MyJournalProject.Entities
+@using MyJournalProject.Services
+@using Microsoft.AspNetCore.Components
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+@inject IJournalService JournalService
+@implements IDisposable
 
 <div class="calendar-page">
     <!-- Header Section -->
     <section class="calendar-header-section">
         <div class="container">
             <!-- Top Bar -->
-            <div class="header-top">
-                <div class="header-left">
-                    <h1 class="month-title">December 2025</h1>
-                    <div class="nav-controls">
-                        <div class="nav-arrow">
+            <div class="calendar-header-top">
+                <div class="calendar-header-left">
+                    <h1 class="calendar-month-title">@currentMonth.ToString("MMMM yyyy")</h1>
+                    <div class="calendar-nav-controls">
+                        <div class="calendar-nav-arrow" @onclick="NavigateToPreviousMonth">
                             <img src="images/prev-arrow-icon.png" alt="Previous Month" />
                         </div>
-                        <div class="nav-today">
-                            <span>Today</span>
+                        <div class="calendar-nav-month">
+                            <span>@currentMonth.ToString("MMMM")</span>
                         </div>
-                        <div class="nav-arrow">
+                        <div class="calendar-nav-arrow" @onclick="NavigateToNextMonth">
                             <img src="images/next-arrow-icon.png" alt="Next Month" />
                         </div>
                     </div>
                 </div>
 
-                <div class="header-right">
-                    <div class="view-switcher">
-                        <div class="view-option">Month</div>
-                        <div class="view-option active">Week</div>
-                        <div class="view-option">Yearly</div>
+                <div class="calendar-header-right">
+                    <!-- Month/Year Selection -->
+                    <div class="calendar-month-year-selector">
+                        <div class="calendar-selector-group">
+                            <select class="calendar-month-select" @bind="selectedMonth">
+                                @foreach (var month in months)
+                                {
+                                    <option value="@month.Value">@month.Text</option>
+                                }
+                            </select>
+                            <select class="calendar-year-select" @bind="selectedYear">
+                                @foreach (var year in years)
+                                {
+                                    <option value="@year">@year</option>
+                                }
+                            </select>
+                            <button class="calendar-btn-apply" @onclick="ApplyMonthYearSelection">
+                                Apply
+                            </button>
+                        </div>
                     </div>
-                    <div class="divider"></div>
-                    <button class="btn-new-entry">
-                        <img src="images/NewEntry-icon.png" alt="New Entry" />
-                        <span>New Entry</span>
-                    </button>
                 </div>
             </div>
 
             <!-- Filter Bar -->
-            <div class="filter-bar">
-                <span class="filter-label">FILTER VIEW</span>
-                <div class="filter-chips">
-                    <div class="chip chip--positive">
+            <div class="calendar-filter-bar">
+                <span class="calendar-filter-label">Indicators</span>
+                <div class="calendar-filter-chips">
+                    <div class="calendar-chip calendar-chip--positive @(activeFilters.Contains("positive") ? "active" : "")"
+                         @onclick='() => ToggleFilter("positive")'>
                         <img src="images/chip-positive.png" alt="Positive" />
                         <span>Positive</span>
                     </div>
-                    <div class="chip chip--negative">
+                    <div class="calendar-chip calendar-chip--negative @(activeFilters.Contains("negative") ? "active" : "")"
+                         @onclick='() => ToggleFilter("negative")'>
                         <img src="images/chip-negative.png" alt="Negative" />
                         <span>Negative</span>
                     </div>
-                    <div class="chip chip--neutral">
+                    <div class="calendar-chip calendar-chip--neutral @(activeFilters.Contains("neutral") ? "active" : "")"
+                         @onclick='() => ToggleFilter("neutral")'>
                         <img src="images/chip-neutral.png" alt="Neutral" />
                         <span>Neutral</span>
                     </div>
-                    <div class="chip chip--has-entry">
+                    <div class="calendar-chip calendar-chip--has-entry @(activeFilters.Contains("hasEntry") ? "active" : "")"
+                         @onclick='() => ToggleFilter("hasEntry")'>
                         <img src="images/chip-has-entry.png" alt="Has Entry" />
                         <span>Has Entry</span>
                     </div>
-                    <div class="chip chip--missed">
+                    <div class="calendar-chip calendar-chip--missed @(activeFilters.Contains("missed") ? "active" : "")"
+                         @onclick='() => ToggleFilter("missed")'>
                         <img src="images/chip-has-missed.png" alt="Missed" />
                         <span>Missed Days</span>
                     </div>
@@ -71,206 +93,536 @@
             <div class="calendar-wrapper">
                 <!-- Calendar Header -->
                 <div class="calendar-days-header">
-                    <div class="day-name">SUN</div>
-                    <div class="day-name">MON</div>
-                    <div class="day-name">TUE</div>
-                    <div class="day-name">WED</div>
-                    <div class="day-name">THU</div>
-                    <div class="day-name">FRI</div>
-                    <div class="day-name">SAT</div>
+                    @foreach (var day in dayNames)
+                    {
+                        <div class="calendar-day-name">@day</div>
+                    }
                 </div>
 
                 <!-- Calendar Grid -->
                 <div class="calendar-grid">
-                    <!-- Row 1 -->
-                    <div class="day-cell prev-month">
-                        <span class="date-number">29</span>
-                    </div>
-                    <div class="day-cell prev-month">
-                        <span class="date-number">30</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">1</span>
-                        <div class="event-card event-positive">
-                            <div class="event-bar"></div>
-                            <div class="event-content">
-                                <div class="event-title">Project Kickoff</div>
-                                <div class="event-detail"><div class="dot dot-green"></div>Excited</div>
-                                <div class="event-detail"><div class="dot dot-green"></div>450 Words</div>
+                    @if (isLoading)
+                    {
+                        <div class="calendar-loading-overlay">
+                            <div class="calendar-loading-spinner">
+                                <div class="calendar-spinner"></div>
+                                <p>Loading calendar...</p>
                             </div>
                         </div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">2</span>
-                        <div class="event-card event-neutral">
-                            <div class="event-bar"></div>
-                            <div class="event-content">
-                                <div class="event-title">Routine Work</div>
-                                <div class="event-detail"><div class="dot dot-grey"></div>Normal Day</div>
-                                <div class="event-detail"><div class="dot dot-grey"></div>325 Words</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">3</span>
-                        <div class="missed-pill">
-                            <img src="images/chip-has-missed.png" alt="Missed" />
-                            <span>Missed Day</span>
-                        </div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">4</span>
-                        <div class="event-card event-negative">
-                            <div class="event-bar"></div>
-                            <div class="event-content">
-                                <div class="event-title">Difficult Meeting</div>
-                                <div class="event-detail"><div class="dot dot-red"></div>Stressed</div>
-                                <div class="event-detail"><div class="dot dot-red"></div>150 Words</div>
-                            </div>
-                        </div>
-                        <div class="event-card event-positive" style="margin-top: 12px;">
-                            <div class="event-bar"></div>
-                            <div class="event-content">
-                                <div class="event-title">Family Meet</div>
-                                <div class="event-detail"><div class="dot dot-green"></div>Happy</div>
-                                <div class="event-detail"><div class="dot dot-green"></div>320 Words</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">5</span>
-                        <div class="no-events">No entries</div>
-                    </div>
+                    }
 
-                    <!-- Row 2 -->
-                    <div class="day-cell">
-                        <span class="date-number">6</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">7</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">8</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">9</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">10</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell selected-day">
-                        <div class="selected-header">
-                            <img src="images/ViewDetails.png" alt="View Details" class="view-icon" />
-                            <span class="date-number">11</span>
-                        </div>
-                        <div class="event-card event-positive">
-                            <div class="event-bar"></div>
-                            <div class="event-content">
-                                <div class="event-title">Project Kickoff</div>
-                                <div class="event-detail"><div class="dot dot-green"></div>Excited</div>
-                                <div class="event-detail"><div class="dot dot-green"></div>450 Words</div>
+                    @foreach (var day in calendarDays)
+                    {
+                        <div class="calendar-day-cell @(day.IsCurrentMonth ? "" : "calendar-prev-month") @(day.IsToday ? "calendar-today" : "") @(day.IsSelected ? "calendar-selected-day" : "")">
+                            <div class="calendar-day-header">
+                                <span class="calendar-date-number">@day.Date.Day</span>
+                                @if (day.HasJournal && day.Journal != null && IsRecentJournal(day.Journal))
+                                {
+                                    <img src="images/ViewDetails.png"
+                                         alt="View Details"
+                                         class="calendar-view-icon"
+                                         @onclick="() => ViewJournalDetails(day.Journal!)" />
+                                }
                             </div>
+
+                            @if (day.HasJournal && day.Journal != null)
+                            {
+                                var journal = day.Journal;
+                                var moodColor = GetMoodColor(journal.PrimaryMood);
+
+                                <div class="calendar-event-card @($"calendar-event-{moodColor}")" @onclick="() => ViewJournalDetails(journal)">
+                                    <div class="calendar-event-bar"></div>
+                                    <div class="calendar-event-content">
+                                        <div class="calendar-event-title">@journal.Title</div>
+                                        @if (!string.IsNullOrEmpty(journal.SecondaryMood1))
+                                        {
+                                            <div class="calendar-event-detail">
+                                                <div class="calendar-dot @($"calendar-dot-{moodColor}")"></div>
+                                                @journal.SecondaryMood1
+                                            </div>
+                                        }
+                                        <div class="calendar-event-detail">
+                                            <div class="calendar-dot @($"calendar-dot-{moodColor}")"></div>
+                                            @journal.WordCount words
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else if (day.IsMissedDay)
+                            {
+                                <div class="calendar-missed-pill">
+                                    <img src="images/chip-has-missed.png" alt="Missed" />
+                                    <span>Missed Day</span>
+                                </div>
+                            }
+                            else if (day.IsCurrentMonth && day.IsToday && !day.HasJournal)
+                            {
+                                <div class="calendar-no-events" @onclick="() => NavigateToJournalForDate(day.Date)">
+                                    No entries
+                                </div>
+                            }
+                            else if (day.IsCurrentMonth)
+                            {
+                                <div class="calendar-no-events">
+                                    No entries
+                                </div>
+                            }
                         </div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">12</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-
-                    <!-- Row 3 -->
-                    <div class="day-cell">
-                        <span class="date-number">13</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">14</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">15</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">16</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">17</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">18</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">19</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-
-                    <!-- Row 4 -->
-                    <div class="day-cell">
-                        <span class="date-number">20</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">21</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">22</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">23</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">24</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">25</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">26</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-
-                    <!-- Row 5 -->
-                    <div class="day-cell">
-                        <span class="date-number">27</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">28</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">29</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">30</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="date-number">31</span>
-                        <div class="no-events">No entries</div>
-                    </div>
-                    <div class="day-cell prev-month">
-                        <span class="date-number">1</span>
-                    </div>
-                    <div class="day-cell prev-month">
-                        <span class="date-number">2</span>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
     </section>
 </div>
+
+<!-- Journal Details Dialog -->
+@if (showJournalDetails && selectedJournal != null)
+{
+    <div class="dialog-overlay" @onclick="CloseJournalDetails">
+        <div class="dialog-container journal-details-dialog" @onclick:stopPropagation="true">
+            <div class="dialog-header">
+                <h3 class="dialog-title">Journal Details</h3>
+                <button class="dialog-close" @onclick="CloseJournalDetails">×</button>
+            </div>
+            <div class="dialog-body">
+                <div class="journal-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Date:</span>
+                        <span class="detail-value">@selectedJournal.EntryDate.ToString("dd MMMM yyyy")</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Title:</span>
+                        <span class="detail-value">@selectedJournal.Title</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Primary Mood:</span>
+                        <span class="detail-value @GetMoodTextClass(selectedJournal.PrimaryMood)">
+                            @selectedJournal.PrimaryMood
+                        </span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(selectedJournal.SecondaryMood1) || !string.IsNullOrEmpty(selectedJournal.SecondaryMood2))
+                    {
+                        <div class="detail-row">
+                            <span class="detail-label">Secondary Moods:</span>
+                            <span class="detail-value">
+                                @(!string.IsNullOrEmpty(selectedJournal.SecondaryMood1) ? selectedJournal.SecondaryMood1 : "")
+                                @if (!string.IsNullOrEmpty(selectedJournal.SecondaryMood1) && !string.IsNullOrEmpty(selectedJournal.SecondaryMood2))
+                                {
+                                    <span>, </span>
+                                }
+                                @(!string.IsNullOrEmpty(selectedJournal.SecondaryMood2) ? selectedJournal.SecondaryMood2 : "")
+                            </span>
+                        </div>
+                    }
+                    <div class="detail-row">
+                        <span class="detail-label">Category:</span>
+                        <span class="detail-value">@selectedJournal.Category</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Word Count:</span>
+                        <span class="detail-value">@selectedJournal.WordCount words</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Character Count:</span>
+                        <span class="detail-value">@selectedJournal.CharacterCount characters</span>
+                    </div>
+                    @if (selectedJournal.Tags != null && selectedJournal.Tags.Any())
+                    {
+                        <div class="detail-row">
+                            <span class="detail-label">Tags:</span>
+                            <div class="tags-container">
+                                @foreach (var tag in selectedJournal.Tags)
+                                {
+                                    <span class="tag">#@tag</span>
+                                }
+                            </div>
+                        </div>
+                    }
+                    <div class="detail-row">
+                        <span class="detail-label">Content Preview:</span>
+                        <div class="content-preview">
+                            @((MarkupString)GetContentPreview(selectedJournal.Content))
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-footer">
+                <button class="dialog-button secondary" @onclick="CloseJournalDetails">Close</button>
+                <button class="dialog-button primary" @onclick="EditSelectedJournal">Edit Journal</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    // Current user
+    private int currentUserId = 0;
+    private string currentUserFullName = string.Empty;
+
+    // Calendar state
+    private DateTime currentMonth = DateTime.Today;
+    private DateTime selectedDate = DateTime.Today;
+    private List<CalendarDay> calendarDays = new();
+    private readonly string[] dayNames = { "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT" };
+
+    // Month/Year selection
+    private int selectedMonth = DateTime.Today.Month;
+    private int selectedYear = DateTime.Today.Year;
+    private List<(int Value, string Text)> months = new();
+    private List<int> years = new();
+
+    // Data
+    private List<MyJournalProject.Entities.Journal> userJournals = new();
+    private MyJournalProject.Entities.Journal? selectedJournal = null;
+    private bool isLoading = false;
+    private bool showJournalDetails = false;
+
+    // Filters
+    private HashSet<string> activeFilters = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCurrentUser();
+        await LoadUserJournals();
+        InitializeMonthYearLists();
+        GenerateCalendar();
+    }
+
+    private void InitializeMonthYearLists()
+    {
+        // Initialize months list
+        months = new List<(int, string)>
+        {
+            (1, "January"), (2, "February"), (3, "March"), (4, "April"),
+            (5, "May"), (6, "June"), (7, "July"), (8, "August"),
+            (9, "September"), (10, "October"), (11, "November"), (12, "December")
+        };
+
+        // Initialize years list - ONLY 2024, 2025, 2026
+        years = new List<int> { 2024, 2025, 2026 };
+
+        // Set initial selected values
+        selectedMonth = currentMonth.Month;
+
+        // Check if current year is in our allowed years
+        if (years.Contains(currentMonth.Year))
+        {
+            selectedYear = currentMonth.Year;
+        }
+        else
+        {
+            // Default to 2024 if current year is not in the list
+            selectedYear = 2024;
+            currentMonth = new DateTime(selectedYear, selectedMonth, 1);
+        }
+    }
+
+    private async Task LoadCurrentUser()
+    {
+        try
+        {
+            var userJson = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "currentUser");
+            if (!string.IsNullOrEmpty(userJson))
+            {
+                var user = System.Text.Json.JsonSerializer.Deserialize<UserInfo>(userJson);
+                if (user != null)
+                {
+                    currentUserId = user.Id;
+                    currentUserFullName = user.FullName;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading user: {ex.Message}");
+        }
+    }
+
+    private async Task LoadUserJournals()
+    {
+        if (currentUserId == 0)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            var result = await JournalService.GetUserJournalsAsync(currentUserId);
+            if (result.Success && result.Data != null)
+            {
+                userJournals = result.Data;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading journals: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void GenerateCalendar()
+    {
+        calendarDays.Clear();
+
+        // Get first day of month
+        var firstDayOfMonth = new DateTime(currentMonth.Year, currentMonth.Month, 1);
+        var daysInMonth = DateTime.DaysInMonth(currentMonth.Year, currentMonth.Month);
+
+        // Calculate days from previous month to show
+        var startDayOfWeek = (int)firstDayOfMonth.DayOfWeek;
+        var daysFromPreviousMonth = startDayOfWeek; // 0 = Sunday, 6 = Saturday
+
+        // Add days from previous month
+        var previousMonth = currentMonth.AddMonths(-1);
+        var daysInPreviousMonth = DateTime.DaysInMonth(previousMonth.Year, previousMonth.Month);
+
+        for (int i = daysFromPreviousMonth - 1; i >= 0; i--)
+        {
+            var date = new DateTime(previousMonth.Year, previousMonth.Month, daysInPreviousMonth - i);
+            calendarDays.Add(CreateCalendarDay(date, false));
+        }
+
+        // Add days from current month
+        for (int day = 1; day <= daysInMonth; day++)
+        {
+            var date = new DateTime(currentMonth.Year, currentMonth.Month, day);
+            calendarDays.Add(CreateCalendarDay(date, true));
+        }
+
+        // Add days from next month to complete grid (6 rows * 7 days = 42 cells)
+        var totalCells = 42; // 6 weeks * 7 days
+        var daysAdded = calendarDays.Count;
+        var nextMonth = currentMonth.AddMonths(1);
+
+        for (int i = 1; i <= totalCells - daysAdded; i++)
+        {
+            var date = new DateTime(nextMonth.Year, nextMonth.Month, i);
+            calendarDays.Add(CreateCalendarDay(date, false));
+        }
+
+        // Apply filters
+        ApplyFilters();
+    }
+
+    private CalendarDay CreateCalendarDay(DateTime date, bool isCurrentMonth)
+{
+    var journal = userJournals.FirstOrDefault(j => j.EntryDate.Date == date.Date);
+    var hasJournal = journal != null;
+    var isToday = date.Date == DateTime.Today;
+    var isSelected = date.Date == selectedDate.Date;
+
+    // FIXED: Only show missed days for past dates (excluding today)
+    // Today is not a missed day until tomorrow
+    var isMissedDay = isCurrentMonth && !hasJournal && date.Date < DateTime.Today.Date;
+
+    return new CalendarDay
+    {
+        Date = date,
+        IsCurrentMonth = isCurrentMonth,
+        IsToday = isToday,
+        IsSelected = isSelected,
+        HasJournal = hasJournal,
+        Journal = journal,
+        IsMissedDay = isMissedDay
+    };
+}
+
+    private void ApplyFilters()
+    {
+        if (!activeFilters.Any()) return;
+
+        foreach (var day in calendarDays)
+        {
+            day.IsVisible = ShouldShowDay(day);
+        }
+    }
+
+    private bool ShouldShowDay(CalendarDay day)
+    {
+        if (!activeFilters.Any()) return true;
+
+        // If no journal, only show if "missed" filter is active
+        if (!day.HasJournal)
+        {
+            return day.IsMissedDay && activeFilters.Contains("missed");
+        }
+
+        // If has journal, check mood filters
+        if (day.Journal != null)
+        {
+            var mood = day.Journal.PrimaryMood.ToLower();
+
+            if (activeFilters.Contains("hasEntry")) return true;
+            if (activeFilters.Contains("positive") && mood == "positive") return true;
+            if (activeFilters.Contains("negative") && mood == "negative") return true;
+            if (activeFilters.Contains("neutral") && mood == "neutral") return true;
+        }
+
+        return false;
+    }
+
+    // Navigation methods
+    private void NavigateToPreviousMonth()
+    {
+        currentMonth = currentMonth.AddMonths(-1);
+        selectedMonth = currentMonth.Month;
+        selectedYear = currentMonth.Year;
+        GenerateCalendar();
+        StateHasChanged();
+    }
+
+    private void NavigateToNextMonth()
+    {
+        currentMonth = currentMonth.AddMonths(1);
+        selectedMonth = currentMonth.Month;
+        selectedYear = currentMonth.Year;
+        GenerateCalendar();
+        StateHasChanged();
+    }
+
+    private void NavigateToToday()
+    {
+        currentMonth = DateTime.Today;
+        selectedMonth = currentMonth.Month;
+        selectedYear = currentMonth.Year;
+        GenerateCalendar();
+        StateHasChanged();
+    }
+
+    private void ApplyMonthYearSelection()
+    {
+        currentMonth = new DateTime(selectedYear, selectedMonth, 1);
+        GenerateCalendar();
+        StateHasChanged();
+    }
+
+    private void NavigateToJournalForDate(DateTime date)
+    {
+        // Only navigate if it's today and has no journal
+        if (date.Date == DateTime.Today.Date && !userJournals.Any(j => j.EntryDate.Date == date.Date))
+        {
+            Navigation.NavigateTo($"/journal/{date:yyyy-MM-dd}");
+        }
+    }
+
+    // Day selection
+    private void ViewJournalDetails(MyJournalProject.Entities.Journal journal)
+    {
+        selectedJournal = journal;
+        showJournalDetails = true;
+        StateHasChanged();
+    }
+
+    private void CloseJournalDetails()
+    {
+        showJournalDetails = false;
+        selectedJournal = null;
+        StateHasChanged();
+    }
+
+    private void EditSelectedJournal()
+    {
+        if (selectedJournal != null)
+        {
+            Navigation.NavigateTo($"/journal/{selectedJournal.EntryDate:yyyy-MM-dd}");
+        }
+    }
+
+    // Filter methods
+    private void ToggleFilter(string filter)
+    {
+        if (activeFilters.Contains(filter))
+        {
+            activeFilters.Remove(filter);
+        }
+        else
+        {
+            activeFilters.Add(filter);
+        }
+
+        ApplyFilters();
+        StateHasChanged();
+    }
+
+    // Helper methods
+    private string GetMoodColor(string primaryMood)
+    {
+        return primaryMood.ToLower() switch
+        {
+            "positive" => "positive",
+            "negative" => "negative",
+            "neutral" => "neutral",
+            _ => "neutral"
+        };
+    }
+
+    private string GetMoodTextClass(string primaryMood)
+    {
+        return primaryMood.ToLower() switch
+        {
+            "positive" => "text-positive",
+            "negative" => "text-negative",
+            "neutral" => "text-neutral",
+            _ => ""
+        };
+    }
+
+    private string GetContentPreview(string htmlContent)
+    {
+        if (string.IsNullOrEmpty(htmlContent)) return string.Empty;
+
+        // Strip HTML tags for preview
+        var text = System.Text.RegularExpressions.Regex.Replace(htmlContent, "<.*?>", " ");
+        text = System.Text.RegularExpressions.Regex.Replace(text, "\\s+", " ").Trim();
+
+        // Take first 200 characters
+        if (text.Length > 200)
+        {
+            text = text.Substring(0, 200) + "...";
+        }
+
+        // Escape HTML for display
+        return text.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
+    }
+
+    private bool IsRecentJournal(MyJournalProject.Entities.Journal journal)
+    {
+        if (journal == null || journal.CreatedAt == default) return false;
+
+        // Check if journal was created within the last 24 hours
+        return (DateTime.UtcNow - journal.CreatedAt).TotalHours <= 24;
+    }
+
+    public void Dispose()
+    {
+        // Clean up if needed
+    }
+
+    // Helper classes
+    private class CalendarDay
+    {
+        public DateTime Date { get; set; }
+        public bool IsCurrentMonth { get; set; }
+        public bool IsToday { get; set; }
+        public bool IsSelected { get; set; }
+        public bool HasJournal { get; set; }
+        public MyJournalProject.Entities.Journal? Journal { get; set; }
+        public bool IsMissedDay { get; set; }
+        public bool IsVisible { get; set; } = true;
+    }
+
+    private class UserInfo
+    {
+        public int Id { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+    }
+}

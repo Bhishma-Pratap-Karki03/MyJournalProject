@@ -102,6 +102,10 @@
               "target": "Package",
               "version": "[9.0.11, )",
               "autoReferenced": true
+            },
+            "iTextSharp": {
+              "target": "Package",
+              "version": "[5.5.13.4, )"
             }
           },
           "imports": [
@@ -163,6 +167,10 @@
               "target": "Package",
               "version": "[9.0.11, )",
               "autoReferenced": true
+            },
+            "iTextSharp": {
+              "target": "Package",
+              "version": "[5.5.13.4, )"
             }
           },
           "imports": [
@@ -224,6 +232,10 @@
               "target": "Package",
               "version": "[9.0.11, )",
               "autoReferenced": true
+            },
+            "iTextSharp": {
+              "target": "Package",
+              "version": "[5.5.13.4, )"
             }
           },
           "imports": [
@@ -280,6 +292,10 @@
             "Microsoft.Maui.Controls": {
               "target": "Package",
               "version": "[9.0.111, )"
+            },
+            "iTextSharp": {
+              "target": "Package",
+              "version": "[5.5.13.4, )"
             }
           },
           "imports": [

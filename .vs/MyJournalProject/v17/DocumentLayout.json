@@ -3,20 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\services\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:services\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\wwwroot\\css\\components\\analytics.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:wwwroot\\css\\components\\analytics.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +14,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -38,54 +26,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "AppDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Data\\AppDbContext.cs",
-              "RelativeDocumentMoniker": "Data\\AppDbContext.cs",
-              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Data\\AppDbContext.cs",
-              "RelativeToolTip": "Data\\AppDbContext.cs",
-              "ViewState": "AgIAACAAAAAAAAAAAADwvzIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-17T09:14:44.377Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Services\\AuthService.cs",
-              "RelativeDocumentMoniker": "Services\\AuthService.cs",
-              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Services\\AuthService.cs",
-              "RelativeToolTip": "Services\\AuthService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAALEAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-17T09:04:49.649Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "IAuthService.cs",
-              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Services\\IAuthService.cs",
-              "RelativeDocumentMoniker": "Services\\IAuthService.cs",
-              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Services\\IAuthService.cs",
-              "RelativeToolTip": "Services\\IAuthService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAeAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-17T09:04:47.409Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "MauiProgram.cs",
-              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\MauiProgram.cs",
-              "RelativeDocumentMoniker": "MauiProgram.cs",
-              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\MauiProgram.cs",
-              "RelativeToolTip": "MauiProgram.cs",
-              "ViewState": "AgIAADoAAAAAAAAAAAAIwGQAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-17T09:04:30.229Z",
+              "Title": "analytics.css",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\analytics.css",
+              "RelativeDocumentMoniker": "wwwroot\\css\\components\\analytics.css",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\analytics.css",
+              "RelativeToolTip": "wwwroot\\css\\components\\analytics.css",
+              "ViewState": "AgIAAA8CAAAAAAAAAAAIwC4CAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-01-22T03:50:57.545Z",
               "EditorCaption": ""
             }
           ]

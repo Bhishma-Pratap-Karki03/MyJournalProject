@@ -1,190 +1,237 @@
-﻿let quillInstance = null;
-let editorInitialized = false;
-let dotNetHelper = null;
+﻿// Quill Editor JavaScript Bridge - No Image Upload
+window.QuillEditor = {
+    editors: {},
 
-// Initialize Quill editor
-window.initializeQuillEditor = (dotNetHelperRef, elementId, placeholder, initialContent) => {
-    try {
-        console.log('Initializing Quill editor on:', elementId);
-        dotNetHelper = dotNetHelperRef;
-
-        const container = document.getElementById(elementId);
-        if (!container) {
-            console.error('Element not found:', elementId);
-            return false;
-        }
-
-        // Clear any existing content
-        container.innerHTML = '';
-
-        // Create editor container
-        const editorContainer = document.createElement('div');
-        editorContainer.id = elementId + '-editor';
-        editorContainer.className = 'quill-editor-container';
-        container.appendChild(editorContainer);
-
-        // Check if Quill is loaded
-        if (typeof Quill === 'undefined') {
-            console.error('Quill.js is not loaded!');
-            return false;
-        }
-
-        // Initialize Quill with basic options
-        quillInstance = new Quill('#' + elementId + '-editor', {
-            theme: 'snow',
-            placeholder: placeholder || 'Start writing your thoughts here...',
-            modules: {
-                toolbar: [
-                    [{ 'header': [1, 2, 3, false] }],
-                    ['bold', 'italic', 'underline'],
-                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                    ['link'],
-                    ['clean']
-                ]
+    initialize: function (elementId, placeholder, content, dotNetObjectRef) {
+        try {
+            // Check if Quill is available
+            if (typeof Quill === 'undefined') {
+                console.error('Quill is not loaded. Make sure to include Quill.js in your HTML.');
+                return false;
             }
-        });
 
-        // Set initial content if provided
-        if (initialContent && initialContent.trim() !== '' && initialContent !== '<p><br></p>') {
-            quillInstance.root.innerHTML = initialContent;
-        }
+            // Create the editor container
+            const container = document.getElementById(elementId);
+            if (!container) {
+                console.error('Editor container not found:', elementId);
+                return false;
+            }
 
-        // Store last content for change detection
-        let lastContent = quillInstance.root.innerHTML;
+            // Clear container and create editor structure WITHOUT image button
+            container.innerHTML = `
+                <div id="${elementId}_toolbar" class="quill-toolbar">
+                    <span class="ql-formats">
+                        <select class="ql-header">
+                            <option value="1">Heading 1</option>
+                            <option value="2">Heading 2</option>
+                            <option value="3">Heading 3</option>
+                            <option selected value="">Normal</option>
+                        </select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-clean"></button>
+                    </span>
+                </div>
+                <div id="${elementId}_editor" class="quill-editor-content"></div>
+            `;
 
-        // Function to update stats
-        const updateStats = () => {
-            try {
-                const text = quillInstance.getText().trim();
-                const words = text === '' ? 0 : text.split(/\s+/).length;
-                const characters = text.length;
-                const currentContent = quillInstance.root.innerHTML;
+            // Configure Quill WITHOUT image module
+            const quill = new Quill(`#${elementId}_editor`, {
+                modules: {
+                    toolbar: `#${elementId}_toolbar`,
+                    clipboard: {
+                        matchVisual: false
+                    }
+                },
+                placeholder: placeholder || 'Start writing your thoughts here...',
+                theme: 'snow',
+                formats: [
+                    'bold', 'italic', 'underline', 'strike',
+                    'header', 'list', 'link',
+                    'color', 'background'
+                ]
+            });
 
-                // Only dispatch event if content actually changed
-                if (currentContent !== lastContent) {
-                    lastContent = currentContent;
+            // Set initial content if provided
+            if (content) {
+                quill.root.innerHTML = content;
+            }
 
-                    // Call .NET method directly
-                    if (dotNetHelper) {
-                        dotNetHelper.invokeMethodAsync('UpdateEditorStats', words, characters, currentContent)
-                            .catch(err => console.warn('Failed to invoke .NET method:', err));
+            // Store editor reference
+            this.editors[elementId] = quill;
+
+            // Setup event listeners
+            const handleContentChange = () => {
+                const html = quill.root.innerHTML;
+                const text = this.getPlainText(html);
+                const wordCount = this.countWords(text);
+                const charCount = this.countCharacters(text);
+
+                // Call Blazor method using DotNetObjectReference
+                if (dotNetObjectRef) {
+                    try {
+                        dotNetObjectRef.invokeMethodAsync('HandleEditorContentChanged', html, text, wordCount, charCount);
+                    } catch (e) {
+                        console.log('Error calling Blazor method:', e);
                     }
                 }
-            } catch (error) {
-                console.error('Error in updateStats:', error);
-            }
-        };
+            };
 
-        // Debounced version
-        let debounceTimer;
-        const debouncedUpdateStats = () => {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(updateStats, 300);
-        };
+            // Initial call to set stats
+            handleContentChange();
 
-        // Set up event listeners
-        quillInstance.on('text-change', debouncedUpdateStats);
+            // Listen for changes
+            quill.on('text-change', function (delta, oldDelta, source) {
+                if (source === 'user' || source === 'api') {
+                    handleContentChange();
+                }
+            });
 
-        // Also update on paste
-        editorContainer.addEventListener('paste', debouncedUpdateStats);
-
-        // Mark as initialized
-        editorInitialized = true;
-
-        console.log('Quill editor initialized successfully');
-        return true;
-    } catch (error) {
-        console.error('Error initializing Quill editor:', error);
-        console.error(error.stack);
-        return false;
-    }
-};
-
-// Get Quill editor content as HTML
-window.getQuillContent = () => {
-    if (quillInstance && quillInstance.root) {
-        const content = quillInstance.root.innerHTML;
-        return content === '<p><br></p>' ? '' : content;
-    }
-    return '';
-};
-
-// Set Quill editor content
-window.setQuillContent = (content) => {
-    if (quillInstance) {
-        try {
-            quillInstance.root.innerHTML = content || '';
+            console.log(`Quill editor initialized: ${elementId}`);
             return true;
         } catch (error) {
-            console.error('Error setting content:', error);
+            console.error('Error initializing Quill editor:', error);
             return false;
         }
-    }
-    return false;
-};
+    },
 
-// Clear Quill editor content
-window.clearQuillEditor = () => {
-    if (quillInstance) {
-        quillInstance.root.innerHTML = '';
-        return true;
-    }
-    return false;
-};
-
-// Get word and character count
-window.getEditorStats = () => {
-    if (quillInstance) {
-        const text = quillInstance.getText().trim();
-        const words = text === '' ? 0 : text.split(/\s+/).length;
-        const characters = text.length;
-        return { words: words, characters: characters };
-    }
-    return { words: 0, characters: 0 };
-};
-
-// Check if content is empty
-window.isQuillContentEmpty = () => {
-    if (quillInstance) {
-        const html = quillInstance.root.innerHTML;
-        return html === '<p><br></p>' || html === '' || html === '<p></p>';
-    }
-    return true;
-};
-
-// Destroy editor instance
-window.destroyQuillEditor = () => {
-    try {
-        if (quillInstance) {
-            quillInstance = null;
-            editorInitialized = false;
-            dotNetHelper = null;
+    getContent: function (elementId) {
+        const editor = this.editors[elementId];
+        if (!editor) {
+            console.error('Editor not found:', elementId);
+            return { html: '', text: '', wordCount: 0, charCount: 0 };
         }
-        return true;
-    } catch (error) {
-        console.error('Error destroying editor:', error);
+
+        const html = editor.root.innerHTML;
+        const text = this.getPlainText(html);
+        const wordCount = this.countWords(text);
+        const charCount = this.countCharacters(text);
+
+        return {
+            html: html,
+            text: text,
+            wordCount: wordCount,
+            charCount: charCount
+        };
+    },
+
+    setContent: function (elementId, content) {
+        const editor = this.editors[elementId];
+        if (editor && content !== undefined) {
+            editor.root.innerHTML = content;
+            return true;
+        }
+        return false;
+    },
+
+    clearContent: function (elementId) {
+        return this.setContent(elementId, '');
+    },
+
+    getPlainText: function (html) {
+        if (!html) return '';
+
+        // Create a temporary div to parse HTML
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+
+        // Get plain text and normalize whitespace
+        let text = tempDiv.textContent || tempDiv.innerText || '';
+        text = text.replace(/\s+/g, ' ').trim();
+
+        return text;
+    },
+
+    countWords: function (text) {
+        if (!text || text.trim() === '') return 0;
+        return text.split(' ').filter(word => word.length > 0).length;
+    },
+
+    countCharacters: function (text) {
+        if (!text) return 0;
+        // Count all characters including spaces
+        return text.length;
+    },
+
+    destroy: function (elementId) {
+        const editor = this.editors[elementId];
+        if (editor) {
+            // Remove event listeners
+            editor.off('text-change');
+            delete this.editors[elementId];
+
+            // Clear container
+            const container = document.getElementById(elementId);
+            if (container) {
+                container.innerHTML = '';
+            }
+            return true;
+        }
         return false;
     }
 };
 
-// Helper to count words from HTML
-window.countWordsInHtml = (html) => {
-    if (!html) return 0;
+// Initialize all editors when DOM is loaded
+document.addEventListener('DOMContentLoaded', function () {
+    // Auto-initialize editors with data-quill attribute
+    const quillElements = document.querySelectorAll('[data-quill]');
+    quillElements.forEach(element => {
+        const elementId = element.id;
+        const placeholder = element.getAttribute('data-placeholder') || '';
+        const content = element.getAttribute('data-content') || '';
 
-    // Remove HTML tags
-    const plainText = html.replace(/<[^>]*>/g, ' ');
-    // Replace multiple spaces with single space
-    const cleanText = plainText.replace(/\s+/g, ' ').trim();
+        if (elementId) {
+            window.QuillEditor.initialize(elementId, placeholder, content, null);
+        }
+    });
+});
+window.downloadFile = function (base64Data, fileName, contentType) {
+    try {
+        // Create a blob from the base64 data
+        const byteCharacters = atob(base64Data);
+        const byteNumbers = new Array(byteCharacters.length);
 
-    if (!cleanText) return 0;
-    return cleanText.split(' ').length;
-};
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
 
-// Helper to count characters from HTML
-window.countCharsInHtml = (html) => {
-    if (!html) return 0;
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: contentType });
 
-    // Remove HTML tags
-    const plainText = html.replace(/<[^>]*>/g, '');
-    return plainText.length;
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = fileName;
+
+        document.body.appendChild(a);
+        a.click();
+
+        // Cleanup
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        return true;
+    } catch (error) {
+        console.error('Error downloading file:', error);
+        return false;
+    }
 };

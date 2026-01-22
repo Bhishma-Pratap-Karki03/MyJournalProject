@@ -3,16 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\services\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:services\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\wwwroot\\js\\charts.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:wwwroot\\js\\charts.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\services\\idashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:services\\idashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:mauiprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\services\\dashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:services\\dashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\components\\pages\\dashboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:components\\pages\\dashboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\components\\pages\\analytics.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:components\\pages\\analytics.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -35,40 +43,65 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Services\\AuthService.cs",
-              "RelativeDocumentMoniker": "Services\\AuthService.cs",
-              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Services\\AuthService.cs",
-              "RelativeToolTip": "Services\\AuthService.cs",
-              "ViewState": "AgIAAG0AAAAAAAAAAAAuwJ4AAAABAAAAAAAAAA==",
+              "Title": "IDashboardService.cs",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Services\\IDashboardService.cs",
+              "RelativeDocumentMoniker": "Services\\IDashboardService.cs",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Services\\IDashboardService.cs",
+              "RelativeToolTip": "Services\\IDashboardService.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAAA+wDIAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-17T09:04:49.649Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "IAuthService.cs",
-              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Services\\IAuthService.cs",
-              "RelativeDocumentMoniker": "Services\\IAuthService.cs",
-              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Services\\IAuthService.cs",
-              "RelativeToolTip": "Services\\IAuthService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-17T09:04:47.409Z",
+              "WhenOpened": "2026-01-21T10:31:04.124Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "MauiProgram.cs",
-              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\MauiProgram.cs",
-              "RelativeDocumentMoniker": "MauiProgram.cs",
-              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\MauiProgram.cs",
-              "RelativeToolTip": "MauiProgram.cs",
-              "ViewState": "AgIAADMAAAAAAAAAAAAuwGQAAAABAAAAAAAAAA==",
+              "Title": "DashboardService.cs",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Services\\DashboardService.cs",
+              "RelativeDocumentMoniker": "Services\\DashboardService.cs",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Services\\DashboardService.cs",
+              "RelativeToolTip": "Services\\DashboardService.cs",
+              "ViewState": "AgIAAJoBAAAAAAAAAADwv7cBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-17T09:04:30.229Z",
+              "WhenOpened": "2026-01-21T10:28:38.966Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Dashboard.razor",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Components\\Pages\\Dashboard.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\Dashboard.razor",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Components\\Pages\\Dashboard.razor",
+              "RelativeToolTip": "Components\\Pages\\Dashboard.razor",
+              "ViewState": "AgIAAKUBAAAAAAAAAAAIwMMBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-21T10:27:04.596Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Analytics.razor",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Components\\Pages\\Analytics.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\Analytics.razor",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Components\\Pages\\Analytics.razor",
+              "RelativeToolTip": "Components\\Pages\\Analytics.razor",
+              "ViewState": "AgIAAGADAAAAAAAAAAAmwH4DAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-21T07:28:36.243Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "charts.js",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\js\\charts.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\charts.js",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\js\\charts.js",
+              "RelativeToolTip": "wwwroot\\js\\charts.js",
+              "ViewState": "AgIAAJwAAAAAAAAAAAAIwLgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-01-21T07:27:46.419Z",
               "EditorCaption": ""
             }
           ]

@@ -6,10 +6,10 @@ namespace MyJournalProject.Data;
 public class AppDbContext : DbContext
 {
     public DbSet<User> Users { get; set; }
+    public DbSet<Journal> Journals { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
-        // Ensure database is created
         try
         {
             Database.EnsureCreated();
@@ -40,35 +40,65 @@ public class AppDbContext : DbContext
 
             entity.Property(e => e.Password)
                 .IsRequired()
-                .HasMaxLength(256); // For SHA256 hash
+                .HasMaxLength(256);
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            // Unique constraint on email
             entity.HasIndex(e => e.Email)
                   .IsUnique();
-
-            // Add default value for CreatedAt
-            entity.Property(e => e.CreatedAt)
-                  .HasDefaultValueSql("datetime('now')");
         });
 
-        // SQLite specific configuration
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
+        // Journal configuration
+        modelBuilder.Entity<Journal>(entity =>
         {
-            // Fallback configuration
-            var databasePath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "MyJournalProject",
-                "myjournal.db");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
-            optionsBuilder.UseSqlite($"Data Source={databasePath}");
-        }
+            entity.Property(e => e.Title)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(e => e.Content)
+                .IsRequired();
+
+            entity.Property(e => e.PrimaryMood)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            entity.Property(e => e.SecondaryMood1)
+                .HasMaxLength(50);
+
+            entity.Property(e => e.SecondaryMood2)
+                .HasMaxLength(50);
+
+            entity.Property(e => e.Category)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasDefaultValue("General");
+
+            entity.Property(e => e.TagsJson)
+                .HasDefaultValue("[]");
+
+            entity.Property(e => e.EntryDate)
+                .IsRequired();
+
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            // Foreign key relationship
+            entity.HasOne(j => j.User)
+                  .WithMany()
+                  .HasForeignKey(j => j.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            // Unique constraint: one journal per user per day
+            entity.HasIndex(j => new { j.UserId, j.EntryDate })
+                  .IsUnique()
+                  .HasDatabaseName("IX_Journal_UserId_EntryDate");
+        });
     }
 }

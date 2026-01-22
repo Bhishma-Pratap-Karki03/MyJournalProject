@@ -1,5 +1,13 @@
 ﻿@page "/myjournallist"
 @inherits LayoutComponentBase
+@using MyJournalProject.Entities
+@using MyJournalProject.Services
+@using MyJournalProject.Models
+@using Microsoft.AspNetCore.Components
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+@inject IJournalService JournalService
+@implements IDisposable
 
 <div class="journal-list-page">
     <!-- Filters Section -->
@@ -10,250 +18,819 @@
                 <div class="filter-top">
                     <div class="search-bar">
                         <img src="images/search-icon.png" alt="Search" class="icon-search" />
-                        <input type="text" placeholder="Search journals by title or content" class="search-input" />
+                        <input type="text"
+                               placeholder="Search journals by title"
+                               class="search-input"
+                               @bind="searchText"
+                               @bind:event="oninput"
+                               @onkeypress="OnSearchKeyPress" />
                     </div>
 
                     <div class="date-actions-group">
                         <div class="date-range">
                             <div class="date-input">
                                 <span class="label">From</span>
-                                <div class="date-value">
+                                <div class="date-value" @onclick='() => ShowDatePicker("from")'>
                                     <img src="images/from-calendar-icon.png" alt="Calendar" />
-                                    <span>12/01/2025</span>
+                                    <span class="@(filterFromDate.HasValue ? "date-text-green" : "")">
+                                        @(filterFromDate?.ToString("MM/dd/yyyy") ?? "Select date")
+                                    </span>
                                 </div>
                             </div>
+
                             <div class="separator">
                                 <img src="images/date-separator.png" alt="Separator" />
                             </div>
+
                             <div class="date-input">
                                 <span class="label">To</span>
-                                <div class="date-value">
+                                <div class="date-value" @onclick='() => ShowDatePicker("to")'>
                                     <img src="images/to-calendar-icon.png" alt="Calendar" />
-                                    <span class="date-text-green">12/19/2025</span>
+                                    <span class="@(filterToDate.HasValue ? "date-text-green" : "")">
+                                        @(filterToDate?.ToString("MM/dd/yyyy") ?? "Select date")
+                                    </span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="action-buttons">
-                            <button class="btn-apply">Apply</button>
-                            <button class="btn-cancel">Cancel</button>
+                            <button class="btn-apply" @onclick="ApplyFilters">Apply</button>
+                            <button class="btn-cancel" @onclick="ResetFilters">Clear</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Bottom Row: Filter Dropdowns -->
-                <div class="filter-bottom">
-                    <span class="filter-label">FILTERS</span>
-                    <div class="filter-options">
-                        <div class="dropdown">
-                            <span>Primary Mood</span>
-                            <img src="images/arrow-down.png" alt="Arrow" />
-                        </div>
-                        <div class="dropdown">
-                            <span>Secondary Mood</span>
-                            <img src="images/arrow-down.png" alt="Arrow" />
-                        </div>
-                        <div class="dropdown">
-                            <span>Tags</span>
-                            <img src="images/arrow-down.png" alt="Arrow" />
-                        </div>
-                        <div class="dropdown">
-                            <span>Category</span>
-                            <img src="images/arrow-down.png" alt="Arrow" />
-                        </div>
+                <!-- Manual Tag and Category Inputs -->
+                <div class="manual-filters">
+                    <div class="manual-input-group">
+                        <label>Enter Tag:</label>
+                        <input type="text"
+                               placeholder="Enter tag to filter..."
+                               @bind="manualTagInput"
+                               @bind:event="oninput"
+                               @onkeypress="OnManualTagKeyPress" />
+                    </div>
+
+                    <div class="manual-input-group">
+                        <label>Enter Category:</label>
+                        <input type="text"
+                               placeholder="Enter category to filter..."
+                               @bind="manualCategoryInput"
+                               @bind:event="oninput"
+                               @onkeypress="OnManualCategoryKeyPress" />
+                    </div>
+                </div>
+
+                <!-- Manual Primary and Secondary Mood Inputs -->
+                <div class="manual-mood-inputs">
+                    <div class="manual-mood-input-group">
+                        <label>Enter Primary Mood:</label>
+                        <input type="text"
+                               placeholder="Enter primary mood (Positive, Negative, Neutral)..."
+                               @bind="manualPrimaryMoodInput"
+                               @bind:event="oninput"
+                               @onkeypress="OnManualPrimaryMoodKeyPress" />
+                    </div>
+
+                    <div class="manual-mood-input-group">
+                        <label>Enter Secondary Mood:</label>
+                        <input type="text"
+                               placeholder="Enter secondary mood..."
+                               @bind="manualSecondaryMoodInput"
+                               @bind:event="oninput"
+                               @onkeypress="OnManualSecondaryMoodKeyPress" />
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Sort Section -->
-    <section class="sort-section">
-        <div class="container">
-            <div class="sort-container">
-                <span class="sort-label">SORT BY:</span>
-                <div class="sort-dropdown">
-                    <span>Newest to Oldest</span>
-                    <img src="images/arrow-down.png" alt="Arrow" />
-                </div>
-            </div>
-        </div>
-    </section>
-
+    <!-- REMOVED SORT SECTION COMPLETELY -->
     <!-- Journal List Section -->
     <section class="journal-list-section">
         <div class="container">
-            <div class="journal-list">
-
-                <!-- Card 1: Featured/Active -->
-                <article class="journal-card featured">
-                    <div class="card-date">
-                        <span class="day">24</span>
-                        <span class="month">OCT</span>
-                        <span class="year">2025</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-header">
-                            <div class="title-group">
-                                <h2>Reflections on the Semester Project</h2>
-                                <span class="badge badge-gray">ACADEMIC</span>
-                            </div>
-                            <div class="status-group">
-                                <div class="status-tag blue-bg">
-                                    <span>FOCUSED</span>
-                                </div>
-                                <div class="status-tag gray-bg">
-                                    <span>Tired</span>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="card-description">
-                            This semester project enhanced my technical skills and deepened my understanding of applying theoretical concepts to real-world problems. It also improved my problem-solving, time management, and independent learning abilities.
-                        </p>
-                        <div class="card-footer">
-                            <div class="meta-info">
-                                <div class="meta-item">
-                                    <img src="images/word-count-icon.png" alt="Words" />
-                                    <span>250 words</span>
-                                </div>
-                                <div class="meta-item">
-                                    <img src="images/clock-icon.png" alt="Clock" />
-                                    <span>Updated 1 hours ago</span>
-                                </div>
-                                <div class="tags">
-                                    <span>#coding</span>
-                                    <span>#csharp</span>
-                                </div>
-                            </div>
-                            <div class="actions">
-                                <button class="btn-icon">
-                                    <img src="images/edit-icon.png" alt="Edit" />
-                                </button>
-                                <button class="btn-icon">
-                                    <img src="images/delete-icon.png" alt="Delete" />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Card 2 -->
-                <article class="journal-card">
-                    <div class="card-date">
-                        <span class="day">19</span>
-                        <span class="month">OCT</span>
-                        <span class="year">2025</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-header">
-                            <div class="title-group">
-                                <h2>Meeting with Advisor</h2>
-                                <span class="badge badge-gray">PERSONAL</span>
-                            </div>
-                            <div class="status-group">
-                                <div class="status-tag green-bg">
-                                    <span>Happy</span>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="card-description">
-                            The meeting with my advisor was highly productive and provided clear guidance on the project's direction, scope, and expectations. Through constructive feedback and discussion, I was able to identify areas for improvement, clarify doubts, and gain confidence in my approach.
-                        </p>
-                        <div class="card-footer">
-                            <div class="meta-info">
-                                <div class="meta-item">
-                                    <img src="images/word-count-icon.png" alt="Words" />
-                                    <span>210 words</span>
-                                </div>
-                                <div class="meta-item">
-                                    <img src="images/clock-icon.png" alt="Clock" />
-                                    <span>Updated 1 days ago</span>
-                                </div>
-                                <div class="tags">
-                                    <span>#coding</span>
-                                    <span>#csharp</span>
-                                </div>
-                            </div>
-                            <div class="actions">
-                                <button class="btn-icon">
-                                    <img src="images/edit-icon.png" alt="Edit" />
-                                </button>
-                                <button class="btn-icon">
-                                    <img src="images/delete-icon.png" alt="Delete" />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Card 3 -->
-                <article class="journal-card">
-                    <div class="card-date">
-                        <span class="day">01</span>
-                        <span class="month">OCT</span>
-                        <span class="year">2025</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-header">
-                            <div class="title-group">
-                                <h2>Late Night Thoughts</h2>
-                                <span class="badge badge-gray">GENERAL</span>
-                            </div>
-                            <div class="status-group">
-                                <div class="status-tag gray-bg">
-                                    <span>Sleepy</span>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="card-description">
-                            Late night thoughts often bring clarity, self-reflection, and ideas that remain unheard during the day. Late night thoughts often bring clarity, self-reflection, and ideas that remain unheard during the day.
-                        </p>
-                        <div class="card-footer">
-                            <div class="meta-info">
-                                <div class="meta-item">
-                                    <img src="images/word-count-icon.png" alt="Words" />
-                                    <span>250 words</span>
-                                </div>
-                                <div class="meta-item">
-                                    <img src="images/clock-icon.png" alt="Clock" />
-                                    <span>Updated 2 days ago</span>
-                                </div>
-                                <div class="tags">
-                                    <span>#coding</span>
-                                    <span>#csharp</span>
-                                </div>
-                            </div>
-                            <div class="actions">
-                                <button class="btn-icon">
-                                    <img src="images/edit-icon.png" alt="Edit" />
-                                </button>
-                                <button class="btn-icon">
-                                    <img src="images/delete-icon.png" alt="Delete" />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-
-            </div>
-
-            <!-- Pagination Section -->
-            <div class="pagination-section">
-                <div class="pagination-bar">
-                    <span class="showing-text">Showing 1 to 3 of 12 entries</span>
-                    <div class="pagination-controls">
-                        <button class="page-btn arrow">
-                            <img src="images/prev-arrow-icon.png" alt="Prev" />
-                        </button>
-                        <button class="page-btn active">1</button>
-                        <button class="page-btn">2</button>
-                        <button class="page-btn">3</button>
-                        <button class="page-btn arrow">
-                            <img src="images/next-arrow-icon.png" alt="Next" />
-                        </button>
-                    </div>
+            @if (isLoading)
+            {
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Loading journals...</p>
                 </div>
-            </div>
+            }
+            else if (!filteredJournals.Any())
+            {
+                <div class="empty-state">
+                    <img src="images/empty-journal.png" alt="No journals" />
+                    <h3>No journals found</h3>
+                    <p>@(HasActiveFilters ? "Try changing your filters or search" : "Start by creating your first journal entry!")</p>
+                    @if (!HasActiveFilters)
+                    {
+                        <button class="btn-primary" @onclick="NavigateToJournal">Create Journal</button>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="journal-list">
+                    @foreach (var journal in pagedJournals)
+                    {
+                        <article class="journal-card @(IsRecentJournal(journal) ? "featured" : "")">
+                            <div class="card-date">
+                                <span class="day">@journal.EntryDate.Day.ToString("00")</span>
+                                <span class="month">@journal.EntryDate.ToString("MMM").ToUpper()</span>
+                                <span class="year">@journal.EntryDate.Year</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-header">
+                                    <div class="title-group">
+                                        <h2>@journal.Title</h2>
+                                        <span class="badge badge-gray">@journal.Category?.ToUpper()</span>
+                                    </div>
+                                    <div class="status-group">
+                                        <div class="status-tag @GetMoodColorClass(journal.PrimaryMood)">
+                                            <span>@journal.PrimaryMood.ToUpper()</span>
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(journal.SecondaryMood1))
+                                        {
+                                            <div class="status-tag gray-bg">
+                                                <span>@journal.SecondaryMood1</span>
+                                            </div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(journal.SecondaryMood2))
+                                        {
+                                            <div class="status-tag gray-bg">
+                                                <span>@journal.SecondaryMood2</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <p class="card-description">
+                                    @GetContentPreview(journal.Content)
+                                </p>
+                                <div class="card-footer">
+                                    <div class="meta-info">
+                                        <div class="meta-item">
+                                            <img src="images/word-count-icon.png" alt="Words" />
+                                            <span>@journal.WordCount words</span>
+                                        </div>
+                                        <div class="meta-item">
+                                            <img src="images/clock-icon.png" alt="Clock" />
+                                            <span>Updated @GetRelativeTime(journal.UpdatedAt)</span>
+                                        </div>
+                                        <div class="tags">
+                                            @foreach (var tag in journal.Tags.Take(3))
+                                            {
+                                                <span>#@tag</span>
+                                            }
+                                            @if (journal.Tags.Count > 3)
+                                            {
+                                                <span>+@(journal.Tags.Count - 3) more</span>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="actions">
+                                        <button class="btn-icon" @onclick="() => EditJournal(journal)">
+                                            <img src="images/edit-icon.svg" alt="Edit" />
+                                        </button>
+                                        <button class="btn-icon" @onclick="() => DeleteJournal(journal)">
+                                            <img src="images/delete-icon.svg" alt="Delete" />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    }
+                </div>
+
+                <!-- Pagination Section -->
+                @if (totalPages > 1)
+                {
+                    <div class="pagination-section">
+                        <div class="pagination-bar">
+                            <span class="showing-text">
+                                Showing @((currentPage - 1) * pageSize + 1) to
+                                @Math.Min(currentPage * pageSize, totalItems) of @totalItems entries
+                            </span>
+                            <div class="pagination-controls">
+                                <button class="page-btn arrow @(currentPage == 1 ? "disabled" : "")"
+                                        @onclick="() => ChangePage(1)"
+                                        disabled="@(currentPage == 1)">
+                                    <img src="images/prev-arrow-icon.png" alt="First" />
+                                </button>
+                                <button class="page-btn arrow @(currentPage == 1 ? "disabled" : "")"
+                                        @onclick="() => ChangePage(currentPage - 1)"
+                                        disabled="@(currentPage == 1)">
+                                    <img src="images/prev-arrow-icon.png" alt="Prev" />
+                                </button>
+
+                                @for (int i = startPage; i <= endPage; i++)
+                                {
+                                    <button class="page-btn @(i == currentPage ? "active" : "")"
+                                            @onclick="() => ChangePage(i)">
+                                        @i
+                                    </button>
+                                }
+
+                                <button class="page-btn arrow @(currentPage == totalPages ? "disabled" : "")"
+                                        @onclick="() => ChangePage(currentPage + 1)"
+                                        disabled="@(currentPage == totalPages)">
+                                    <img src="images/next-arrow-icon.png" alt="Next" />
+                                </button>
+                                <button class="page-btn arrow @(currentPage == totalPages ? "disabled" : "")"
+                                        @onclick="() => ChangePage(totalPages)"
+                                        disabled="@(currentPage == totalPages)">
+                                    <img src="images/next-arrow-icon.png" alt="Last" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
         </div>
     </section>
 </div>
+
+<!-- Date Picker Modal -->
+@if (showDatePicker)
+{
+    <div class="date-picker-modal" @onclick="CloseDatePicker">
+        <div class="date-picker-content" @onclick:stopPropagation="true">
+            <div class="date-picker-header">
+                <h3>Select @(datePickerType == "from" ? "From" : "To") Date</h3>
+                <button class="close-btn" @onclick="CloseDatePicker">×</button>
+            </div>
+            <div class="date-picker-body">
+                <input type="date"
+                       @bind="datePickerDate"
+                       @bind:format="yyyy-MM-dd"
+                       max="@DateTime.Today.ToString("yyyy-MM-dd")"
+                       class="date-input-field" />
+            </div>
+            <div class="date-picker-footer">
+                <button class="btn-secondary" @onclick="CloseDatePicker">Cancel</button>
+                <button class="btn-primary" @onclick="SetDate">Apply</button>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Confirmation Dialog -->
+@if (showDeleteDialog)
+{
+    <div class="dialog-overlay" @onclick="CloseDeleteDialog">
+        <div class="dialog-container" @onclick:stopPropagation="true">
+            <div class="dialog-header">
+                <h3 class="dialog-title">Delete Journal</h3>
+                <button class="dialog-close" @onclick="CloseDeleteDialog">×</button>
+            </div>
+            <div class="dialog-body">
+                Are you sure you want to delete "<strong>@journalToDelete?.Title</strong>"?
+                This action cannot be undone.
+            </div>
+            <div class="dialog-footer">
+                <button class="dialog-button secondary" @onclick="CloseDeleteDialog">Cancel</button>
+                <button class="dialog-button primary" @onclick="ConfirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    // Current user
+    private int currentUserId = 0;
+    private string currentUserFullName = string.Empty;
+
+    // Data
+    private List<Entities.Journal> allJournals = new();
+    private List<Entities.Journal> filteredJournals = new();
+    private List<Entities.Journal> pagedJournals = new();
+    private Entities.Journal? journalToDelete = null;
+
+    // Filter states
+    private string searchText = string.Empty;
+    private DateTime? filterFromDate = null;
+    private DateTime? filterToDate = null;
+    private string? selectedPrimaryMood = null;
+    private string? selectedSecondaryMood = null;
+    private string? selectedTag = null;
+    private string? selectedCategory = null;
+
+    // Manual input fields
+    private string manualTagInput = string.Empty;
+    private string manualCategoryInput = string.Empty;
+    private string manualPrimaryMoodInput = string.Empty;
+    private string manualSecondaryMoodInput = string.Empty;
+
+    // Available options (still loaded but not used in dropdowns)
+    private List<string> availablePrimaryMoods = new();
+    private List<string> availableSecondaryMoods = new();
+    private List<string> availableTags = new();
+    private List<string> availableCategories = new();
+
+    // UI states
+    private bool isLoading = true;
+    private bool showDatePicker = false;
+    private bool showDeleteDialog = false;
+
+    // Date picker
+    private string datePickerType = "from";
+    private DateTime? datePickerDate = null;
+
+    // Pagination
+    private const int pageSize = 7;
+    private int currentPage = 1;
+    private int totalItems = 0;
+    private int totalPages = 0;
+    private int startPage = 1;
+    private int endPage = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCurrentUser();
+        await LoadJournals();
+        await LoadAvailableOptions();
+    }
+
+    private async Task LoadCurrentUser()
+    {
+        try
+        {
+            var userJson = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "currentUser");
+            if (!string.IsNullOrEmpty(userJson))
+            {
+                var user = System.Text.Json.JsonSerializer.Deserialize<UserInfo>(userJson);
+                if (user != null)
+                {
+                    currentUserId = user.Id;
+                    currentUserFullName = user.FullName;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading user: {ex.Message}");
+        }
+    }
+
+    private async Task LoadJournals()
+    {
+        if (currentUserId == 0)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            var result = await JournalService.GetUserJournalsAsync(currentUserId);
+            if (result.Success && result.Data != null)
+            {
+                allJournals = result.Data;
+                ApplyFiltersAndSort();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading journals: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadAvailableOptions()
+    {
+        if (currentUserId == 0) return;
+
+        try
+        {
+            // Load primary moods
+            availablePrimaryMoods = new List<string> { "Positive", "Neutral", "Negative" };
+
+            // Load secondary moods
+            var moodsResult = await JournalService.GetUserMoodsAsync(currentUserId);
+            var predefinedMoods = new List<string>
+            {
+                "Happy", "Excited", "Grateful", "Hopeful", "Calm",
+                "Content", "Peaceful", "Optimistic", "Joyful", "Proud",
+                "Relaxed", "Focused", "Sad", "Angry", "Anxious",
+                "Stressed", "Frustrated", "Lonely", "Tired", "Worried"
+            };
+
+            if (moodsResult.Success && moodsResult.Data != null)
+            {
+                availableSecondaryMoods = moodsResult.Data
+                    .Where(m => !availablePrimaryMoods.Contains(m))
+                    .Union(predefinedMoods)
+                    .Distinct()
+                    .OrderBy(m => m)
+                    .ToList();
+            }
+            else
+            {
+                availableSecondaryMoods = predefinedMoods.OrderBy(m => m).ToList();
+            }
+
+            // Load tags
+            var tagsResult = await JournalService.GetUserTagsAsync(currentUserId);
+            if (tagsResult.Success && tagsResult.Data != null)
+            {
+                availableTags = tagsResult.Data;
+            }
+
+            // Load categories
+            var categoriesResult = await JournalService.GetUserCategoriesAsync(currentUserId);
+            if (categoriesResult.Success && categoriesResult.Data != null)
+            {
+                availableCategories = categoriesResult.Data;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading available options: {ex.Message}");
+        }
+    }
+
+    private void ApplyFiltersAndSort()
+    {
+        // Start with all journals
+        var query = allJournals.AsQueryable();
+
+        // Apply search filter (title only)
+        if (!string.IsNullOrWhiteSpace(searchText))
+        {
+            query = query.Where(j => j.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+        }
+
+        // Apply date range filter
+        if (filterFromDate.HasValue)
+        {
+            query = query.Where(j => j.EntryDate.Date >= filterFromDate.Value.Date);
+        }
+        if (filterToDate.HasValue)
+        {
+            query = query.Where(j => j.EntryDate.Date <= filterToDate.Value.Date);
+        }
+
+        // Apply primary mood filter from manual input
+        if (!string.IsNullOrEmpty(selectedPrimaryMood))
+        {
+            query = query.Where(j => j.PrimaryMood == selectedPrimaryMood);
+        }
+
+        // Apply secondary mood filter from manual input
+        if (!string.IsNullOrEmpty(selectedSecondaryMood))
+        {
+            query = query.Where(j =>
+                j.SecondaryMood1 == selectedSecondaryMood ||
+                j.SecondaryMood2 == selectedSecondaryMood);
+        }
+
+        // Apply tag filter
+        if (!string.IsNullOrEmpty(selectedTag))
+        {
+            query = query.Where(j => j.Tags.Contains(selectedTag));
+        }
+
+        // Apply category filter
+        if (!string.IsNullOrEmpty(selectedCategory))
+        {
+            query = query.Where(j => j.Category == selectedCategory);
+        }
+
+        // Default sorting: Newest to Oldest (removed sort dropdown)
+        query = query.OrderByDescending(j => j.EntryDate);
+
+        filteredJournals = query.ToList();
+        totalItems = filteredJournals.Count;
+        totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+        UpdatePagination();
+        UpdatePageData();
+    }
+
+    private void UpdatePagination()
+    {
+        totalPages = Math.Max(1, (int)Math.Ceiling((double)totalItems / pageSize));
+        currentPage = Math.Max(1, Math.Min(currentPage, totalPages));
+
+        startPage = Math.Max(1, currentPage - 2);
+        endPage = Math.Min(totalPages, currentPage + 2);
+
+        if (endPage - startPage < 4)
+        {
+            if (startPage == 1)
+            {
+                endPage = Math.Min(5, totalPages);
+            }
+            else if (endPage == totalPages)
+            {
+                startPage = Math.Max(1, totalPages - 4);
+            }
+        }
+    }
+
+    private void UpdatePageData()
+    {
+        var skip = (currentPage - 1) * pageSize;
+        pagedJournals = filteredJournals.Skip(skip).Take(pageSize).ToList();
+    }
+
+    private void ChangePage(int page)
+    {
+        if (page < 1 || page > totalPages || page == currentPage) return;
+
+        currentPage = page;
+        UpdatePageData();
+        StateHasChanged();
+    }
+
+    // Filter methods
+    private async Task ApplyFilters()
+    {
+        currentPage = 1;
+
+        // Apply manual inputs if they exist
+        if (!string.IsNullOrWhiteSpace(manualTagInput))
+        {
+            selectedTag = manualTagInput.Trim();
+            manualTagInput = string.Empty;
+        }
+
+        if (!string.IsNullOrWhiteSpace(manualCategoryInput))
+        {
+            selectedCategory = manualCategoryInput.Trim();
+            manualCategoryInput = string.Empty;
+        }
+
+        if (!string.IsNullOrWhiteSpace(manualPrimaryMoodInput))
+        {
+            selectedPrimaryMood = manualPrimaryMoodInput.Trim();
+            manualPrimaryMoodInput = string.Empty;
+        }
+
+        if (!string.IsNullOrWhiteSpace(manualSecondaryMoodInput))
+        {
+            selectedSecondaryMood = manualSecondaryMoodInput.Trim();
+            manualSecondaryMoodInput = string.Empty;
+        }
+
+        ApplyFiltersAndSort();
+        StateHasChanged();
+        await Task.CompletedTask;
+    }
+
+    private async Task ResetFilters()
+    {
+        searchText = string.Empty;
+        filterFromDate = null;
+        filterToDate = null;
+        selectedPrimaryMood = null;
+        selectedSecondaryMood = null;
+        selectedTag = null;
+        selectedCategory = null;
+        manualTagInput = string.Empty;
+        manualCategoryInput = string.Empty;
+        manualPrimaryMoodInput = string.Empty;
+        manualSecondaryMoodInput = string.Empty;
+
+        currentPage = 1;
+        ApplyFiltersAndSort();
+        StateHasChanged();
+        await Task.CompletedTask;
+    }
+
+    private bool HasActiveFilters =>
+        !string.IsNullOrWhiteSpace(searchText) ||
+        filterFromDate.HasValue ||
+        filterToDate.HasValue ||
+        !string.IsNullOrEmpty(selectedPrimaryMood) ||
+        !string.IsNullOrEmpty(selectedSecondaryMood) ||
+        !string.IsNullOrEmpty(selectedTag) ||
+        !string.IsNullOrEmpty(selectedCategory) ||
+        !string.IsNullOrWhiteSpace(manualTagInput) ||
+        !string.IsNullOrWhiteSpace(manualCategoryInput) ||
+        !string.IsNullOrWhiteSpace(manualPrimaryMoodInput) ||
+        !string.IsNullOrWhiteSpace(manualSecondaryMoodInput);
+
+    // Manual input methods
+    private void OnManualTagKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(manualTagInput))
+        {
+            selectedTag = manualTagInput.Trim();
+            manualTagInput = string.Empty;
+            ApplyFilters();
+        }
+    }
+
+    private void OnManualCategoryKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(manualCategoryInput))
+        {
+            selectedCategory = manualCategoryInput.Trim();
+            manualCategoryInput = string.Empty;
+            ApplyFilters();
+        }
+    }
+
+    private void OnManualPrimaryMoodKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(manualPrimaryMoodInput))
+        {
+            selectedPrimaryMood = manualPrimaryMoodInput.Trim();
+            manualPrimaryMoodInput = string.Empty;
+            ApplyFilters();
+        }
+    }
+
+    private void OnManualSecondaryMoodKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(manualSecondaryMoodInput))
+        {
+            selectedSecondaryMood = manualSecondaryMoodInput.Trim();
+            manualSecondaryMoodInput = string.Empty;
+            ApplyFilters();
+        }
+    }
+
+    // Date picker methods
+    private void ShowDatePicker(string type)
+    {
+        datePickerType = type;
+
+        if (type == "from" && filterFromDate.HasValue)
+        {
+            datePickerDate = filterFromDate.Value;
+        }
+        else if (type == "to" && filterToDate.HasValue)
+        {
+            datePickerDate = filterToDate.Value;
+        }
+        else
+        {
+            datePickerDate = DateTime.Today;
+        }
+
+        showDatePicker = true;
+        StateHasChanged();
+    }
+
+    private void CloseDatePicker()
+    {
+        showDatePicker = false;
+        datePickerDate = null;
+        StateHasChanged();
+    }
+
+    private void SetDate()
+    {
+        if (datePickerDate.HasValue)
+        {
+            if (datePickerType == "from")
+            {
+                filterFromDate = datePickerDate.Value;
+            }
+            else
+            {
+                filterToDate = datePickerDate.Value;
+            }
+        }
+        else
+        {
+            if (datePickerType == "from")
+            {
+                filterFromDate = null;
+            }
+            else
+            {
+                filterToDate = null;
+            }
+        }
+
+        CloseDatePicker();
+        StateHasChanged();
+    }
+
+    // Journal actions
+    private void EditJournal(Entities.Journal journal)
+    {
+        Navigation.NavigateTo($"/journal/{journal.EntryDate:yyyy-MM-dd}");
+    }
+
+    private void DeleteJournal(Entities.Journal journal)
+    {
+        journalToDelete = journal;
+        showDeleteDialog = true;
+        StateHasChanged();
+    }
+
+    private void CloseDeleteDialog()
+    {
+        showDeleteDialog = false;
+        journalToDelete = null;
+        StateHasChanged();
+    }
+
+    private async Task ConfirmDelete()
+    {
+        if (journalToDelete == null) return;
+
+        try
+        {
+            var result = await JournalService.DeleteJournalAsync(journalToDelete.Id, currentUserId);
+            if (result.Success)
+            {
+                await LoadJournals();
+                CloseDeleteDialog();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting journal: {ex.Message}");
+        }
+    }
+
+    private void NavigateToJournal()
+    {
+        Navigation.NavigateTo("/journal");
+    }
+
+    // Helper methods
+    private bool IsRecentJournal(Entities.Journal journal)
+    {
+        if (journal == null || journal.CreatedAt == default) return false;
+
+        return (DateTime.UtcNow - journal.CreatedAt).TotalHours <= 24;
+    }
+
+    private string GetMoodColorClass(string mood)
+    {
+        if (string.IsNullOrEmpty(mood)) return "gray-bg";
+
+        return mood.ToLower() switch
+        {
+            "positive" => "green-bg",
+            "negative" => "red-bg",
+            _ => "gray-bg"
+        };
+    }
+
+    private string GetContentPreview(string htmlContent)
+    {
+        if (string.IsNullOrEmpty(htmlContent)) return string.Empty;
+
+        // Strip HTML tags for preview
+        var text = System.Text.RegularExpressions.Regex.Replace(htmlContent, "<.*?>", " ");
+        text = System.Text.RegularExpressions.Regex.Replace(text, "\\s+", " ").Trim();
+
+        // Take first 200 characters
+        if (text.Length > 200)
+        {
+            text = text.Substring(0, 200) + "...";
+        }
+
+        return text;
+    }
+
+    private string GetRelativeTime(DateTime date)
+    {
+        var timeSpan = DateTime.UtcNow - date;
+
+        if (timeSpan.TotalMinutes < 1)
+            return "Just Now";
+        if (timeSpan.TotalHours < 1)
+            return $"{(int)timeSpan.TotalMinutes} minute{(timeSpan.TotalMinutes >= 2 ? "s" : "")} ago";
+        if (timeSpan.TotalDays < 1)
+            return $"{(int)timeSpan.TotalHours} hour{(timeSpan.TotalHours >= 2 ? "s" : "")} ago";
+        if (timeSpan.TotalDays < 7)
+            return $"{(int)timeSpan.TotalDays} day{(timeSpan.TotalDays >= 2 ? "s" : "")} ago";
+
+        return date.ToLocalTime().ToString("MM/dd/yyyy");
+    }
+
+    private void OnSearchKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            ApplyFilters();
+        }
+    }
+
+    public void Dispose()
+    {
+        // Clean up if needed
+    }
+
+    // Helper class for user info
+    private class UserInfo
+    {
+        public int Id { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+    }
+}
