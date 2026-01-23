@@ -397,16 +397,14 @@ public class JournalService : IJournalService
         }
     }
 
-    // Helper method to clean HTML content by removing image tags and base64 data
+
     private string CleanHtmlContent(string html)
     {
         if (string.IsNullOrEmpty(html))
             return html;
 
-        // Remove image tags from HTML
         var cleaned = Regex.Replace(html, @"<img[^>]*>", "", RegexOptions.IgnoreCase);
 
-        // Also remove any base64 data URIs (embedded images)
         cleaned = Regex.Replace(cleaned, @"data:image/[^;]+;base64,[^""']+", "", RegexOptions.IgnoreCase);
 
         return cleaned;
