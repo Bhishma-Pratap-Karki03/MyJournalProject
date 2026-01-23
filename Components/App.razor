@@ -2,67 +2,109 @@
 @using MyJournalProject.Components.Shared
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
+@inject IThemeService ThemeService
 
 @if (ShouldShowLayout)
 {
-    <div class="app-container">
-        <div class="sidebar-fixed">
+    <!--
+        Main application layout (shown for dashboard, journal, calendar, etc.)
+        Uses sidebar-header-footer layout structure
+    -->
+    <div class="app-container theme-transition">
+        <!-- Fixed sidebar on the left side -->
+        <div class="sidebar-fixed theme-transition">
             <Sidebar />
         </div>
-        <div class="main-content">
-            <div class="header-fixed">
+
+        <!-- Main content area on the right side -->
+        <div class="main-content theme-transition">
+            <!-- Fixed header at the top -->
+            <div class="header-fixed theme-transition">
                 <Header />
             </div>
-            <main class="content-area">
+
+            <!-- Main content area where page content is rendered -->
+            <main class="content-area theme-transition">
                 @Body
             </main>
+
+            <!-- Footer at the bottom -->
             <Footer />
         </div>
     </div>
 }
 else
 {
-    @Body
+    <!--
+        Authentication layout (shown for login and register pages)
+        Simplified layout without sidebar, header, or footer
+    -->
+    <div class="auth-layout theme-transition">
+        @Body
+    </div>
 }
 
 @code {
+    // Determines whether to show the main layout or auth layout
     private bool ShouldShowLayout => !IsAuthPage();
 
+    // To track if theme has been initialized
+    private bool _themeInitialized = false;
+
+    // Checks if current page is an authentication page (login or register)
     private bool IsAuthPage()
     {
+        // Get current relative path
         var path = Navigation.ToBaseRelativePath(Navigation.Uri).ToLower();
 
-        // Check for auth pages
+        // Check for auth pages - exact matches or paths starting with auth keywords
         return path == "login" ||
                path == "register" ||
                path.StartsWith("login") ||
                path.StartsWith("register");
     }
 
+    // Called when component is initialized (when page loads)
     protected override async Task OnInitializedAsync()
     {
+        // Check if user is authenticated when accessing protected pages
         await CheckAuthentication();
     }
 
+    // Called after component is rendered to the DOM
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Initialize theme on first render only
+        if (firstRender && !_themeInitialized)
+        {
+            await InitializeTheme();
+            _themeInitialized = true;
+        }
+    }
+
+    // Checks if user is authenticated when accessing protected pages
     private async Task CheckAuthentication()
     {
+        // Get current relative path
         var path = Navigation.ToBaseRelativePath(Navigation.Uri).ToLower();
 
-        // Skip check for auth pages
+        // Skip authentication check for login/register pages
         if (path == "login" || path == "register") return;
 
-        // List of protected pages
+        // List of protected pages that require authentication
         var protectedPages = new[] { "dashboard", "journal", "calendar", "myjournallist", "analytics", "export" };
         var isProtectedPage = protectedPages.Any(page => path.StartsWith(page));
 
-        // If trying to access protected page without login, redirect to login
+        // If accessing a protected page, check if user is logged in
         if (isProtectedPage)
         {
             try
             {
+                // Check localStorage for user session
                 var userJson = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "currentUser");
                 Console.WriteLine($"Auth check - User JSON: {userJson}");
 
+                // If no user found in localStorage, redirect to login
                 if (string.IsNullOrEmpty(userJson))
                 {
                     Console.WriteLine("No user found, redirecting to login");
@@ -71,9 +113,25 @@ else
             }
             catch (Exception ex)
             {
+                // If error occurs during auth check, redirect to login for safety
                 Console.WriteLine($"Auth check error: {ex.Message}");
                 Navigation.NavigateTo("/login");
             }
+        }
+    }
+
+    // Initializes application theme (light/dark mode)
+    private async Task InitializeTheme()
+    {
+        try
+        {
+            // Apply saved theme or system preference
+            await ThemeService.InitializeThemeAsync();
+        }
+        catch (Exception ex)
+        {
+            // Log theme initialization errors but don't crash the app
+            Console.WriteLine($"Error initializing theme: {ex.Message}");
         }
     }
 }

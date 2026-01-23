@@ -1,7 +1,7 @@
-﻿/* Analytics Page Styles */
+﻿/* Analytics Page Styles - Theme Compatible */
 .analytics-page {
     padding: 40px 0;
-    background-color: #f5f7f8;
+    background-color: var(--bg-secondary);
     min-height: calc(100vh - 60px);
 }
 
@@ -19,20 +19,20 @@
 .analytics-title {
     font-size: 32px;
     font-weight: 600;
-    color: #3e434e;
+    color: var(--text-primary);
     margin-bottom: 8px;
 }
 
 .analytics-subtitle {
     font-size: 16px;
-    color: #244666;
+    color: var(--text-secondary);
     line-height: 1.5;
 }
 
 /* Date Filter Section */
 .date-filter-section {
-    background: #ffffff;
-    border: 1px solid #c9d5e0;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 30px;
@@ -54,7 +54,7 @@
 .filter-title {
     font-size: 16px;
     font-weight: 600;
-    color: #3e434e;
+    color: var(--text-primary);
 }
 
 .date-range-inputs {
@@ -73,7 +73,7 @@
 .input-label {
     font-size: 14px;
     font-weight: 500;
-    color: #234461;
+    color: var(--text-secondary);
 }
 
 .date-input-wrapper {
@@ -82,26 +82,26 @@
     align-items: center;
 }
 
-.date-input {
+.date-input-analytics {
     width: 100%;
     padding: 12px 16px;
-    border: 1px solid #c9d5e0;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     font-size: 14px;
-    color: #3e434e;
-    background-color: #f7fafc;
+    color: var(--input-text);
+    background-color: var(--input-bg);
     transition: all 0.2s;
     font-family: "Inter", sans-serif;
 }
 
     .date-input:hover {
-        border-color: #007fe8;
+        border-color: var(--primary-color);
     }
 
     .date-input:focus {
         outline: none;
-        border-color: #007fe8;
-        box-shadow: 0 0 0 2px rgba(0, 127, 232, 0.1);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px var(--primary-light);
     }
 
 .calendar-icon {
@@ -132,26 +132,26 @@
 }
 
 .filter-btn-primary {
-    background-color: #007fe8;
-    color: white;
-    border-color: #007fe8;
+    background-color: var(--primary-color);
+    color: var(--btn-primary-text);
+    border-color: var(--primary-color);
 }
 
     .filter-btn-primary:hover {
-        background-color: #0066c5;
-        border-color: #0066c5;
+        background-color: var(--primary-hover);
+        border-color: var(--primary-hover);
     }
 
 .filter-btn-secondary {
-    background-color: white;
-    color: #334a5f;
-    border-color: #c9d5e0;
+    background-color: var(--bg-primary);
+    color: var(--btn-secondary-text);
+    border-color: var(--btn-secondary-border);
 }
 
     .filter-btn-secondary:hover {
-        background-color: #f5f7f8;
-        border-color: #007fe8;
-        color: #007fe8;
+        background-color: var(--bg-secondary);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
     }
 
 /* Stats Overview Section */
@@ -162,7 +162,7 @@
 .section-title {
     font-size: 20px;
     font-weight: 600;
-    color: #3e434e;
+    color: var(--text-primary);
     margin-bottom: 20px;
 }
 
@@ -173,14 +173,15 @@
 }
 
 .stat-card {
-    background: #ffffff;
-    border: 1px solid #c9d5e0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 20px;
     height: 140px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transition: all 0.3s ease;
 }
 
 .stat-icon-wrapper {
@@ -199,13 +200,13 @@
 .stat-value {
     font-size: 32px;
     font-weight: 700;
-    color: #000000;
+    color: var(--text-primary);
     line-height: 1;
 }
 
 .stat-label {
     font-size: 14px;
-    color: #264969;
+    color: var(--text-secondary);
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -226,13 +227,14 @@
 }
 
 .chart-card {
-    background: #ffffff;
-    border: 1px solid #c9d5e0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 25px;
     height: 400px;
     display: flex;
     flex-direction: column;
+    transition: all 0.3s ease;
 }
 
 .chart-header {
@@ -245,17 +247,17 @@
 .chart-title {
     font-size: 18px;
     font-weight: 600;
-    color: #3e434e;
+    color: var(--text-primary);
     margin: 0;
 }
 
 .chart-period-select {
-    background-color: #f7fafc;
-    border: 1px solid #c9d5e0;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     padding: 8px 12px;
     font-size: 14px;
-    color: #334a5f;
+    color: var(--input-text);
     cursor: pointer;
     outline: none;
     font-family: 'Inter', sans-serif;
@@ -263,12 +265,12 @@
 }
 
     .chart-period-select:hover {
-        border-color: #007fe8;
+        border-color: var(--primary-color);
     }
 
     .chart-period-select:focus {
-        border-color: #007fe8;
-        box-shadow: 0 0 0 2px rgba(0, 127, 232, 0.1);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px var(--primary-light);
     }
 
 .chart-container {
@@ -294,8 +296,8 @@
 }
 
 .tags-bar-chart {
-    background: #ffffff;
-    border: 1px solid #c9d5e0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 25px;
     height: 400px;
@@ -304,8 +306,8 @@
 }
 
 .tags-breakdown-card {
-    background: #ffffff;
-    border: 1px solid #c9d5e0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 25px;
     display: flex;
@@ -327,7 +329,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid var(--border-light);
 }
 
     .tag-breakdown-item:last-child {
@@ -336,19 +338,19 @@
 
 .tag-name-breakdown {
     font-size: 14px;
-    color: #334a5f;
+    color: var(--text-secondary);
     font-weight: 500;
 }
 
 .tag-count-breakdown {
     font-size: 14px;
-    color: #007fe8;
+    color: var(--primary-color);
     font-weight: 600;
 }
 
 .tag-category {
     font-size: 12px;
-    color: #78828b;
+    color: var(--text-muted);
     margin-top: 2px;
 }
 
@@ -359,7 +361,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(var(--bg-primary-rgb), 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -377,8 +379,8 @@
 .analytics-spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #007fe8;
+    border: 3px solid var(--border-light);
+    border-top: 3px solid var(--primary-color);
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-bottom: 16px;
@@ -395,7 +397,7 @@
 }
 
 .loading-spinner p {
-    color: #5b7d9d;
+    color: var(--text-tertiary);
     font-size: 16px;
 }
 
@@ -418,12 +420,12 @@
 
     .empty-state h3 {
         font-size: 20px;
-        color: #3e434e;
+        color: var(--text-primary);
         margin-bottom: 10px;
     }
 
     .empty-state p {
-        color: #78828b;
+        color: var(--text-muted);
         margin-bottom: 20px;
         max-width: 400px;
     }
@@ -441,7 +443,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 8px 0;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid var(--border-light);
 }
 
     .category-item:last-child {
@@ -450,14 +452,32 @@
 
 .category-name {
     font-size: 14px;
-    color: #334a5f;
+    color: var(--text-secondary);
     font-weight: 500;
 }
 
 .category-percentage {
     font-size: 14px;
     font-weight: 600;
-    color: #007fe8;
+    color: var(--primary-color);
+}
+
+/* Add subtle hover effects for interactive elements */
+.stat-card:hover,
+.chart-card:hover,
+.tags-bar-chart:hover,
+.tags-breakdown-card:hover {
+    box-shadow: 0 4px 12px var(--shadow-color);
+    transform: translateY(-2px);
+}
+
+/* Ensure all cards have theme transition */
+.stat-card,
+.chart-card,
+.tags-bar-chart,
+.tags-breakdown-card,
+.date-filter-section {
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 /* Responsive Design */

@@ -1,6 +1,6 @@
 ﻿.export-page {
     padding: 40px 0;
-    background-color: #f5f7f8;
+    background-color: var(--bg-secondary);
     min-height: calc(100vh - 60px);
 }
 
@@ -19,14 +19,14 @@
 .page-title {
     font-size: 32px;
     font-weight: 700;
-    color: #3e434e;
+    color: var(--text-primary);
     margin-bottom: 8px;
 }
 
 .page-subtitle {
     font-size: 16px;
     line-height: 1.5;
-    color: #244666;
+    color: var(--text-secondary);
 }
 
 /* Content Layout */
@@ -51,8 +51,8 @@
 
 /* Config Card Styles */
 .config-card {
-    background: #ffffff;
-    border: 1px solid #c9d5e0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 32px;
 }
@@ -75,21 +75,21 @@
 }
 
 .date-range-card .card-icon {
-    background-color: #e5f2fd;
+    background-color: var(--primary-light);
 }
 
 .filter-card .card-icon {
-    background-color: #f4e8fe;
+    background-color: #f4e8fe; /* Keep this specific color or create a variable */
 }
 
 .content-options-card .card-icon {
-    background-color: #FFEDD6;
+    background-color: #FFEDD6; /* Keep this specific color or create a variable */
 }
 
 .card-title {
     font-size: 20px;
     font-weight: 600;
-    color: #234461;
+    color: var(--text-secondary);
     margin: 0;
 }
 
@@ -110,12 +110,12 @@
 .input-label {
     font-size: 14px;
     font-weight: 500;
-    color: #234461;
+    color: var(--text-secondary);
 }
 
 .date-input {
-    background-color: #f7fafc;
-    border: 1px solid #c9d5e0;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
     border-radius: 4px;
     height: 48px;
     display: flex;
@@ -123,13 +123,13 @@
     gap: 12px;
     padding: 0 16px;
     font-size: 14px;
-    color: #3e464e;
+    color: var(--input-text);
     cursor: pointer;
     transition: border-color 0.2s;
 }
 
     .date-input:hover {
-        border-color: #007fe8;
+        border-color: var(--primary-color);
     }
 
     .date-input img {
@@ -143,7 +143,7 @@
     align-items: center;
     gap: 8px;
     font-size: 14px;
-    color: #6f818b;
+    color: var(--text-muted);
     margin-top: 8px;
 }
 
@@ -161,7 +161,7 @@
     display: block;
     font-size: 14px;
     font-weight: 500;
-    color: #234461;
+    color: var(--text-secondary);
     margin-bottom: 12px;
 }
 
@@ -175,26 +175,26 @@
     align-items: center;
     gap: 8px;
     padding: 8px 16px;
-    background: #ffffff;
-    border: 1px solid #c9d5e0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     font-size: 14px;
     font-weight: 500;
-    color: #5d6a7b;
+    color: var(--text-tertiary);
     cursor: pointer;
     transition: all 0.2s;
     white-space: nowrap;
 }
 
     .mood-filter-btn:hover {
-        border-color: #007fe8;
-        color: #007fe8;
+        border-color: var(--primary-color);
+        color: var(--primary-color);
     }
 
     .mood-filter-btn.active {
-        background-color: #e5f2fd;
-        border-color: #007fe8;
-        color: #007fe8;
+        background-color: var(--primary-light);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
     }
 
     .mood-filter-btn img {
@@ -216,8 +216,8 @@
 }
 
 .dropdown-select {
-    background-color: #f7fafc;
-    border: 1px solid #c9d5e0;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
     border-radius: 4px;
     height: 48px;
     padding: 0 16px;
@@ -225,13 +225,13 @@
     align-items: center;
     justify-content: space-between;
     font-size: 14px;
-    color: #536171;
+    color: var(--text-light);
     cursor: pointer;
     transition: border-color 0.2s;
 }
 
     .dropdown-select:hover {
-        border-color: #007fe8;
+        border-color: var(--primary-color);
     }
 
     .dropdown-select img {
@@ -241,8 +241,8 @@
     }
 
 .tags-input {
-    background-color: #f7fafc;
-    border: 1px solid #c9d5e0;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
     border-radius: 4px;
     height: 48px;
     padding: 0 16px;
@@ -254,19 +254,19 @@
 }
 
     .tags-input:hover {
-        border-color: #007fe8;
+        border-color: var(--primary-color);
     }
 
 .selected-tag {
-    background: #ffffff;
-    border: 1px solid #929ca6;
+    background: var(--bg-card);
+    border: 1px solid var(--border-dark);
     border-radius: 4px;
     padding: 4px 8px;
     display: flex;
     align-items: center;
     gap: 8px;
     font-size: 12px;
-    color: #536171;
+    color: var(--text-light);
 }
 
     .selected-tag img {
@@ -282,7 +282,7 @@
         }
 
 .placeholder-text {
-    color: #536171;
+    color: var(--text-light);
     font-size: 14px;
     opacity: 0.7;
 }
@@ -295,15 +295,15 @@
 }
 
 .content-option {
-    background: #ffffff;
-    border: 1px solid #c9d5e0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 20px;
     transition: border-color 0.2s;
 }
 
     .content-option:hover {
-        border-color: #007fe8;
+        border-color: var(--primary-color);
     }
 
 .option-header {
@@ -326,27 +326,27 @@
     cursor: pointer;
     font-size: 14px;
     font-weight: 600;
-    color: #234461;
+    color: var(--text-secondary);
 }
 
 .checkmark {
     width: 24px;
     height: 24px;
-    border: 1px solid #c9d5e0;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
-    background: #ffffff;
+    background: var(--bg-card);
     position: relative;
     transition: all 0.2s;
     flex-shrink: 0;
 }
 
 .checkbox-label:hover .checkmark {
-    border-color: #007fe8;
+    border-color: var(--primary-color);
 }
 
 .custom-checkbox input:checked + .checkbox-label .checkmark {
-    background-color: #007fe8;
-    border-color: #007fe8;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
     .custom-checkbox input:checked + .checkbox-label .checkmark:after {
@@ -367,7 +367,7 @@
 
 .option-description {
     font-size: 12px;
-    color: #536171;
+    color: var(--text-light);
     line-height: 1.4;
     margin-left: 36px;
     margin-top: 4px;
@@ -375,8 +375,8 @@
 
 /* Summary Card */
 .summary-card {
-    background: #ffffff;
-    border: 1px solid #c9d5e0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     overflow: hidden;
 }
@@ -416,17 +416,17 @@
 
 .summary-label-text {
     font-size: 14px;
-    color: #234461;
+    color: var(--text-secondary);
 }
 
 .summary-value {
     font-size: 14px;
     font-weight: 500;
-    color: #334a5f;
+    color: var(--text-light);
 }
 
     .summary-value.highlight {
-        color: #007fe8;
+        color: var(--primary-color);
         font-size: 24px;
         font-weight: 700;
     }
@@ -435,7 +435,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #334a5f;
+    color: var(--text-light);
 }
 
     .format-info img {
@@ -452,8 +452,8 @@
 }
 
 .btn-primary {
-    background: #007fe8;
-    color: #ffffff;
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
     height: 54px;
     border: none;
     border-radius: 4px;
@@ -469,14 +469,14 @@
 }
 
     .btn-primary:hover {
-        background: #006ac2;
+        background: var(--primary-hover);
     }
 
 .btn-secondary {
-    background: #ffffff;
-    color: #234461;
+    background: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
     height: 46px;
-    border: 1px solid #c9d5e0;
+    border: 1px solid var(--btn-secondary-border);
     border-radius: 4px;
     font-size: 14px;
     font-weight: 500;
@@ -486,7 +486,7 @@
 }
 
     .btn-secondary:hover {
-        background: #f5f7f8;
+        background: var(--bg-secondary);
     }
 
     .btn-primary img,
@@ -588,4 +588,73 @@
     .btn-secondary {
         height: 48px;
     }
+}
+/* Auth Layout Styles */
+.auth-layout {
+    min-height: 100vh;
+    background-color: var(--bg-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Ensure auth pages also use theme variables */
+.login-page,
+.register-page {
+    background-color: var(--bg-secondary) !important;
+}
+
+.login-card-content,
+.register-card-content {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+.login-main-title,
+.register-main-title {
+    color: var(--text-primary) !important;
+}
+
+.login-subtitle,
+.register-subtitle {
+    color: var(--text-secondary) !important;
+}
+
+.login-form-input,
+.register-form-input {
+    background-color: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+    color: var(--input-text) !important;
+}
+
+    .login-form-input::placeholder,
+    .register-form-input::placeholder {
+        color: var(--input-placeholder) !important;
+    }
+
+.login-input-label,
+.register-input-label {
+    color: var(--text-secondary) !important;
+}
+
+.login-btn,
+.register-btn {
+    background-color: var(--btn-primary-bg) !important;
+    color: var(--btn-primary-text) !important;
+}
+
+.login-security-text,
+.register-security-text {
+    color: var(--text-secondary) !important;
+}
+
+.login-forgot-password-link,
+.register-login-link {
+    color: var(--primary-color) !important;
+}
+
+.login-prompt-text,
+.register-prompt-text {
+    color: var(--text-secondary) !important;
 }

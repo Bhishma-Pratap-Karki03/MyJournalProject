@@ -31,19 +31,19 @@
 .nav-text {
     font-size: 16px;
     font-weight: 500;
-    color: #234461;
+    color: var(--text-secondary);
 }
 
 .nav-item.active {
-    background-color: #e5f2fd;
+    background-color: var(--primary-light);
 }
 
     .nav-item.active .nav-text {
-        color: #007fec;
+        color: var(--primary-color);
     }
 
 .nav-item:hover:not(.active) {
-    background-color: #f8fafc;
+    background-color: var(--bg-secondary);
 }
 
 /* Logout button specific styles */
@@ -53,15 +53,15 @@
 }
 
     .logout-item:hover {
-        background-color: #f8fafc;
+        background-color: var(--bg-secondary);
     }
 
     .logout-item .nav-text {
-        color: #dc2626; /* Red color for logout */
+        color: var(--mood-negative);
     }
 
     .logout-item:hover .nav-text {
-        color: #b91c1c;
+        color: var(--primary-hover);
     }
 
 /* Responsive */

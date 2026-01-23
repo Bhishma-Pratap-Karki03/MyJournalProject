@@ -2,7 +2,8 @@
 @inject IJSRuntime JSRuntime
 
 <nav class="sidebar-nav">
-    <!-- Dashboard link -->
+
+    <!-- Dashboard link - shows as active when exactly on /dashboard -->
     <NavLink href="/dashboard" class="nav-item" ActiveClass="active" Match="NavLinkMatch.All">
         <div class="nav-content">
             <img src="images/dashboard-icon.png" alt="Dashboard" class="nav-icon">
@@ -10,20 +11,23 @@
         </div>
     </NavLink>
 
+    <!-- Journal Entries link - for creating/editing journal entries -->
     <NavLink href="/journal" class="nav-item" ActiveClass="active">
         <div class="nav-content">
-            <img src="images/journal-icon.svg" alt="Journal Entries" class="nav-icon">
+            <img src="images/journal-entry-icon.png" alt="Journal Entries" class="nav-icon">
             <span class="nav-text">Journal Entries</span>
         </div>
     </NavLink>
 
+    <!-- Calendar View link - for calendar-based journal navigation -->
     <NavLink href="/calendar" class="nav-item" ActiveClass="active">
         <div class="nav-content">
-            <img src="images/calendar-nav-icon.svg" alt="Calendar View" class="nav-icon">
+            <img src="images/Calendar-nav.png" alt="Calendar View" class="nav-icon">
             <span class="nav-text">Calendar View</span>
         </div>
     </NavLink>
 
+    <!-- My Journal List link - for listing/viewing all journals -->
     <NavLink href="/myjournallist" class="nav-item" ActiveClass="active">
         <div class="nav-content">
             <img src="images/Journal-List-icon.png" alt="My Journal List" class="nav-icon">
@@ -31,36 +35,41 @@
         </div>
     </NavLink>
 
+    <!-- Analytics link - for viewing journal statistics and insights -->
     <NavLink href="/analytics" class="nav-item" ActiveClass="active">
         <div class="nav-content">
-            <img src="images/analytics-icon.svg" alt="Export" class="nav-icon">
+            <img src="images/analytics-icon.png" alt="Export" class="nav-icon">
             <span class="nav-text">Analytics</span>
         </div>
     </NavLink>
 
+    <!-- Export link - for exporting journals to PDF -->
     <NavLink href="/export" class="nav-item" ActiveClass="active">
         <div class="nav-content">
-            <img src="images/export-icon.svg" alt="Export" class="nav-icon">
+            <img src="images/export-icon.png" alt="Export" class="nav-icon">
             <span class="nav-text">Export</span>
         </div>
     </NavLink>
 
-    <!-- Simple Logout button -->
+    <!-- Logout button - not a NavLink, uses click event handler -->
     <div class="nav-item logout-item" @onclick="Logout">
         <div class="nav-content">
-            <img src="images/log-out.svg" alt="Logout" class="nav-icon">
+            <img src="images/log-out.png" alt="Logout" class="nav-icon">
             <span class="nav-text">Logout</span>
         </div>
     </div>
+
 </nav>
 
 @code {
+    // Handles user logout process
     private async Task Logout()
     {
-        // Clear user data from localStorage
+        // Clear user data from localStorage to end the session
         await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "currentUser");
 
         // Navigate to login page
+        // forceLoad: true ensures the page reloads completely
         Navigation.NavigateTo("/login", forceLoad: true);
     }
 }

@@ -4,15 +4,23 @@
 @using Microsoft.AspNetCore.Components
 @using System.ComponentModel.DataAnnotations
 
+<!--
+    Registration page component
+    Allows new users to create an account for the journal application
+-->
+
 <div class="register-page">
-    <div class="register-wrapper">
+    <div class="register-wrapper">f
         <div class="register-card-container">
+            <!-- Decorative element -->
             <div class="register-card-decoration"></div>
 
+            <!-- Main registration form content -->
             <div class="register-card-content">
                 <header class="register-card-header">
+                    <!-- Logo and title section -->
                     <div class="register-logo-title-wrapper">
-                        <img src="images/logo.png" alt="My Journal Logo" class="register-logo-image">
+                        <img src="images/logo.svg" alt="My Journal Logo" class="register-logo-image">
                         <h1 class="register-main-title">Create Your Journal Account</h1>
                     </div>
                     <p class="register-subtitle">Begin your secure journal today.</p>
@@ -34,7 +42,9 @@
                     </div>
                 }
 
+                <!-- Registration Form -->
                 <form @onsubmit="HandleSubmit" class="register-form">
+
                     <!-- Full Name Field -->
                     <div class="register-form-group">
                         <label for="fullname" class="register-input-label">Full Name *</label>
@@ -94,6 +104,7 @@
                         }
                     </div>
 
+                    <!-- Submit Button -->
                     <button type="submit" class="register-btn" disabled="@isLoading">
                         @if (isLoading)
                         {
@@ -106,15 +117,19 @@
                     </button>
                 </form>
 
+                <!-- Visual divider -->
                 <img src="images/Seprator.png" alt="" class="register-divider">
 
+                <!-- Login prompt for existing users -->
                 <div class="register-login-prompt">
                     <span class="register-prompt-text">Already have an account?</span>
                     <a href="/login" class="register-login-link">Login</a>
                 </div>
 
+                <!-- Another visual divider -->
                 <img src="images/Seprator.png" alt="" class="register-divider">
 
+                <!-- Security information footer -->
                 <div class="register-security-footer">
                     <img src="images/verified-badge-regster.png" alt="Verified" class="register-security-icon">
                     <span class="register-security-text">Your journal data is stored securely with password hashing</span>
@@ -125,33 +140,42 @@
 </div>
 
 @code {
+    // Registration form data model
     private RegisterModel registerModel = new();
+
+    // Error and success messages for user feedback
     private string? errorMessage;
     private string? successMessage;
+
+    // Loading state to prevent multiple submissions
     private bool isLoading = false;
 
+    // Field-specific validation error messages
     private string? fullNameError;
     private string? emailError;
     private string? passwordError;
     private string? confirmPasswordError;
 
+    // Dependency injection for navigation and authentication services
     [Inject]
     private NavigationManager Navigation { get; set; } = null!;
 
     [Inject]
     private IAuthService AuthService { get; set; } = null!;
 
+    // Handles form submission
     private async Task HandleSubmit()
     {
         // Clear previous errors
         ClearErrors();
 
-        // Validate
+        // Validate form inputs
         if (!ValidateForm())
         {
             return;
         }
 
+        // Set loading state and clear messages
         isLoading = true;
         errorMessage = null;
         successMessage = null;
@@ -174,20 +198,24 @@
             }
             else
             {
+                // Show error message from service
                 errorMessage = result.ErrorMessage ?? "Registration failed. Please try again.";
             }
         }
         catch (Exception ex)
         {
+            // Handle unexpected errors
             errorMessage = $"An error occurred: {ex.Message}";
             Console.WriteLine($"Registration error: {ex}");
         }
         finally
         {
+            // Reset loading state
             isLoading = false;
         }
     }
 
+    // Clears all error messages
     private void ClearErrors()
     {
         fullNameError = null;
@@ -197,6 +225,7 @@
         errorMessage = null;
     }
 
+    // Validates form inputs and sets error messages
     private bool ValidateForm()
     {
         bool isValid = true;

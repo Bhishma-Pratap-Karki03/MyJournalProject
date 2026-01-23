@@ -69,6 +69,14 @@
       "PackagePath": "staticwebassets\\css\\global.css"
     },
     {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\theme.css",
+      "PackagePath": "staticwebassets\\css\\theme.css"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\Calendar-nav.png",
+      "PackagePath": "staticwebassets\\images\\Calendar-nav.png"
+    },
+    {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\Categorization-icon.png",
       "PackagePath": "staticwebassets\\images\\Categorization-icon.png"
     },
@@ -85,6 +93,10 @@
       "PackagePath": "staticwebassets\\images\\Journal-List-icon.png"
     },
     {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\Missed-days.png",
+      "PackagePath": "staticwebassets\\images\\Missed-days.png"
+    },
+    {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\NewEntry-icon.png",
       "PackagePath": "staticwebassets\\images\\NewEntry-icon.png"
     },
@@ -97,8 +109,8 @@
       "PackagePath": "staticwebassets\\images\\ViewDetails.png"
     },
     {
-      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\analytics-icon.svg",
-      "PackagePath": "staticwebassets\\images\\analytics-icon.svg"
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\analytics-icon.png",
+      "PackagePath": "staticwebassets\\images\\analytics-icon.png"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\arrow-down.png",
@@ -119,10 +131,6 @@
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\calendar-icon.svg",
       "PackagePath": "staticwebassets\\images\\calendar-icon.svg"
-    },
-    {
-      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\calendar-nav-icon.svg",
-      "PackagePath": "staticwebassets\\images\\calendar-nav-icon.svg"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\check-icon.png",
@@ -165,10 +173,6 @@
       "PackagePath": "staticwebassets\\images\\dashboard-icon.png"
     },
     {
-      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\dashboard-icon.svg",
-      "PackagePath": "staticwebassets\\images\\dashboard-icon.svg"
-    },
-    {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\date-separator.png",
       "PackagePath": "staticwebassets\\images\\date-separator.png"
     },
@@ -187,6 +191,10 @@
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\export-calendar.svg",
       "PackagePath": "staticwebassets\\images\\export-calendar.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\export-icon.png",
+      "PackagePath": "staticwebassets\\images\\export-icon.png"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\export-icon.svg",
@@ -225,8 +233,8 @@
       "PackagePath": "staticwebassets\\images\\information-export-icon.png"
     },
     {
-      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\instagram-icon.svg",
-      "PackagePath": "staticwebassets\\images\\instagram-icon.svg"
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\instagram-icon.png",
+      "PackagePath": "staticwebassets\\images\\instagram-icon.png"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\italic-icon.png",
@@ -237,24 +245,28 @@
       "PackagePath": "staticwebassets\\images\\journal-calender.svg"
     },
     {
-      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\journal-icon.png",
-      "PackagePath": "staticwebassets\\images\\journal-icon.png"
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\journal-entry-icon.png",
+      "PackagePath": "staticwebassets\\images\\journal-entry-icon.png"
     },
     {
-      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\journal-icon.svg",
-      "PackagePath": "staticwebassets\\images\\journal-icon.svg"
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\journal-icon.png",
+      "PackagePath": "staticwebassets\\images\\journal-icon.png"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\linkedin-icon.png",
       "PackagePath": "staticwebassets\\images\\linkedin-icon.png"
     },
     {
-      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\log-out.svg",
-      "PackagePath": "staticwebassets\\images\\log-out.svg"
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\log-out.png",
+      "PackagePath": "staticwebassets\\images\\log-out.png"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\logo.png",
       "PackagePath": "staticwebassets\\images\\logo.png"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\logo.svg",
+      "PackagePath": "staticwebassets\\images\\logo.svg"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\mood-icon.png",
@@ -277,8 +289,8 @@
       "PackagePath": "staticwebassets\\images\\next-arrow-icon.png"
     },
     {
-      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\notifications-icon.svg",
-      "PackagePath": "staticwebassets\\images\\notifications-icon.svg"
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\notifications-icon.png",
+      "PackagePath": "staticwebassets\\images\\notifications-icon.png"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\orderlist.png",
@@ -325,16 +337,24 @@
       "PackagePath": "staticwebassets\\images\\streak-icon.png"
     },
     {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\theme-dark-icon.svg",
+      "PackagePath": "staticwebassets\\images\\theme-dark-icon.svg"
+    },
+    {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\theme-icon.svg",
       "PackagePath": "staticwebassets\\images\\theme-icon.svg"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\theme-light-icon.svg",
+      "PackagePath": "staticwebassets\\images\\theme-light-icon.svg"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\to-calendar-icon.png",
       "PackagePath": "staticwebassets\\images\\to-calendar-icon.png"
     },
     {
-      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\trophy-icon.svg",
-      "PackagePath": "staticwebassets\\images\\trophy-icon.svg"
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\trophy-icon.png",
+      "PackagePath": "staticwebassets\\images\\trophy-icon.png"
     },
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\images\\twitter-icon.png",
@@ -375,6 +395,10 @@
     {
       "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\js\\quill-editor.js",
       "PackagePath": "staticwebassets\\js\\quill-editor.js"
+    },
+    {
+      "Id": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\js\\theme.js",
+      "PackagePath": "staticwebassets\\js\\theme.js"
     },
     {
       "Id": "obj\\Debug\\net9.0-android\\staticwebassets\\msbuild.MyJournalProject.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",

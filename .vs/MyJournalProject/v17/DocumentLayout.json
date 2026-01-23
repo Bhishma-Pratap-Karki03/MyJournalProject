@@ -3,8 +3,36 @@
   "WorkspaceRootPath": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\wwwroot\\css\\components\\analytics.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:wwwroot\\css\\components\\analytics.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\components\\pages\\journal.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:components\\pages\\journal.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\entities\\journal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:entities\\journal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\models\\journalmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:models\\journalmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\services\\ijournalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:services\\ijournalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\services\\journalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:services\\journalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\wwwroot\\js\\quill-editor.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:wwwroot\\js\\quill-editor.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|c:\\users\\nissa\\source\\repos\\myjournalproject\\wwwroot\\css\\components\\journal.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{3AD0BEE5-86E7-4B3E-92F5-5CC1195A734D}|MyJournalProject.csproj|solutionrelative:wwwroot\\css\\components\\journal.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,7 +42,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -26,16 +54,104 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "analytics.css",
-              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\analytics.css",
-              "RelativeDocumentMoniker": "wwwroot\\css\\components\\analytics.css",
-              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\analytics.css",
-              "RelativeToolTip": "wwwroot\\css\\components\\analytics.css",
-              "ViewState": "AgIAAA8CAAAAAAAAAAAIwC4CAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2026-01-22T03:50:57.545Z",
+              "DocumentIndex": 4,
+              "Title": "JournalService.cs",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Services\\JournalService.cs",
+              "RelativeDocumentMoniker": "Services\\JournalService.cs",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Services\\JournalService.cs",
+              "RelativeToolTip": "Services\\JournalService.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAQwCQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-23T03:54:54.501Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IJournalService.cs",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Services\\IJournalService.cs",
+              "RelativeDocumentMoniker": "Services\\IJournalService.cs",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Services\\IJournalService.cs",
+              "RelativeToolTip": "Services\\IJournalService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-23T03:54:43.194Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "JournalModel.cs",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Models\\JournalModel.cs",
+              "RelativeDocumentMoniker": "Models\\JournalModel.cs",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Models\\JournalModel.cs",
+              "RelativeToolTip": "Models\\JournalModel.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAQwC0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-23T03:54:30.484Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Journal.cs",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Entities\\Journal.cs",
+              "RelativeDocumentMoniker": "Entities\\Journal.cs",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Entities\\Journal.cs",
+              "RelativeToolTip": "Entities\\Journal.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-23T03:54:09.787Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Journal.razor",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Components\\Pages\\Journal.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\Journal.razor",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Components\\Pages\\Journal.razor",
+              "RelativeToolTip": "Components\\Pages\\Journal.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAMoFAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-23T03:53:48.219Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "Data\\AppDbContext.cs",
+              "ViewState": "AgIAAGcAAAAAAAAAAAAswIMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-23T03:53:59.83Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "quill-editor.js",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\js\\quill-editor.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\quill-editor.js",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\js\\quill-editor.js",
+              "RelativeToolTip": "wwwroot\\js\\quill-editor.js",
+              "ViewState": "AgIAANAAAAAAAAAAAAAswOwAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-01-23T03:53:33.429Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "journal.css",
+              "DocumentMoniker": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\journal.css",
+              "RelativeDocumentMoniker": "wwwroot\\css\\components\\journal.css",
+              "ToolTip": "C:\\Users\\nissa\\source\\repos\\MyJournalProject\\wwwroot\\css\\components\\journal.css",
+              "RelativeToolTip": "wwwroot\\css\\components\\journal.css",
+              "ViewState": "AgIAAFcFAAAAAAAAAAAiwHQFAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-01-23T03:53:23.223Z"
             }
           ]
         }

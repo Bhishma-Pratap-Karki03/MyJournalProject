@@ -6,27 +6,34 @@ using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Text.RegularExpressions;
 
-// iTextSharp 5.5.13.3 namespaces - use full namespace to avoid conflict
 using iText = iTextSharp.text;
 using iTextPdf = iTextSharp.text.pdf;
 
 namespace MyJournalProject.Services;
 
+// Service for exporting journal entries (currently PDF)
+// Handles filtering, formatting, and PDF generation for user's journal data
 public class ExportService : IExportService
 {
+    // Database context for accessing journal data
     private readonly AppDbContext _context;
+
+    // Journal service for additional journal operations
     private readonly IJournalService _journalService;
 
+    // Constructor - injects database context and journal service dependencies
     public ExportService(AppDbContext context, IJournalService journalService)
     {
         _context = context;
         _journalService = journalService;
     }
 
+    // Helper method to retrieve journals based on export filters
     public async Task<ServiceResult<List<Journal>>> GetJournalsForExportAsync(int userId, ExportFilterModel filters)
     {
         try
         {
+            // Start with base query for the user's journals
             var query = _context.Journals
                 .Where(j => j.UserId == userId)
                 .AsQueryable();
@@ -54,7 +61,7 @@ public class ExportService : IExportService
                 query = query.Where(j => j.Category == filters.Category);
             }
 
-            // Apply tags filter
+            // Apply tags filter - check if journal contains any of the selected tags
             if (filters.Tags != null && filters.Tags.Any())
             {
                 foreach (var tag in filters.Tags)
@@ -63,6 +70,7 @@ public class ExportService : IExportService
                 }
             }
 
+            // Execute query and return results ordered by date (newest first)
             var journals = await query
                 .OrderByDescending(j => j.EntryDate)
                 .ToListAsync();
@@ -76,6 +84,7 @@ public class ExportService : IExportService
         }
     }
 
+    // Generates preview data for export without creating the actual PDF file
     public async Task<ServiceResult<ExportPreviewData>> GetExportPreviewAsync(int userId, ExportRequest request)
     {
         try
@@ -84,6 +93,7 @@ public class ExportService : IExportService
             Console.WriteLine($"Filters: FromDate={request.Filters.FromDate}, ToDate={request.Filters.ToDate}, PrimaryMood={request.Filters.PrimaryMood}, Category={request.Filters.Category}");
             Console.WriteLine($"Tags count: {request.Filters.Tags?.Count ?? 0}");
 
+            // Get journals based on filters
             var journalsResult = await GetJournalsForExportAsync(userId, request.Filters);
 
             if (!journalsResult.Success)
@@ -94,21 +104,24 @@ public class ExportService : IExportService
             var journals = journalsResult.Data;
             Console.WriteLine($"Found {journals.Count} journals for preview");
 
+            // Create preview data object
             var preview = new ExportPreviewData
             {
                 EntryCount = journals.Count,
                 TotalWordCount = journals.Sum(j => j.WordCount)
             };
 
-            // Set date range
+            // Set date range for display
             if (journals.Any())
             {
+                // Use actual dates from filtered journals
                 var minDate = journals.Min(j => j.EntryDate);
                 var maxDate = journals.Max(j => j.EntryDate);
                 preview.DateRange = $"{minDate:MM/dd/yyyy} - {maxDate:MM/dd/yyyy}";
             }
             else
             {
+                // No journals found, use filter dates if provided
                 if (request.Filters.FromDate.HasValue && request.Filters.ToDate.HasValue)
                 {
                     preview.DateRange = $"{request.Filters.FromDate.Value:MM/dd/yyyy} - {request.Filters.ToDate.Value:MM/dd/yyyy}";
@@ -127,7 +140,7 @@ public class ExportService : IExportService
                 }
             }
 
-            // Set applied filters
+            // Build list of applied filters for display
             var filters = new List<string>();
 
             if (!string.IsNullOrEmpty(request.Filters.PrimaryMood))
@@ -155,12 +168,14 @@ public class ExportService : IExportService
         }
     }
 
+    // Generates a PDF document containing filtered journal entries
     public async Task<ServiceResult<byte[]>> GeneratePdfAsync(int userId, ExportRequest request)
     {
         try
         {
             Console.WriteLine($"Generating PDF for user {userId}");
 
+            // Get journals based on filters
             var journalsResult = await GetJournalsForExportAsync(userId, request.Filters);
 
             if (!journalsResult.Success)
@@ -170,18 +185,20 @@ public class ExportService : IExportService
 
             var journals = journalsResult.Data;
 
+            // Check if any journals were found
             if (!journals.Any())
             {
                 return ServiceResult<byte[]>.FailureResult("No journals found for the selected filters");
             }
 
+            // Create PDF document in memory stream
             using var memoryStream = new MemoryStream();
-            var document = new iText.Document(iText.PageSize.A4, 50, 50, 50, 50);
+            var document = new iText.Document(iText.PageSize.A4, 50, 50, 50, 50); // A4 page with margins
             var writer = iTextPdf.PdfWriter.GetInstance(document, memoryStream);
 
             document.Open();
 
-            // Add title
+            // Add title to PDF
             var titleFont = iText.FontFactory.GetFont(iText.FontFactory.HELVETICA_BOLD, 24, iText.BaseColor.BLACK);
             var title = new iText.Paragraph("My Journal Entries", titleFont)
             {
@@ -190,7 +207,7 @@ public class ExportService : IExportService
             title.SpacingAfter = 20f;
             document.Add(title);
 
-            // Add export info
+            // Add export date/time information
             var infoFont = iText.FontFactory.GetFont(iText.FontFactory.HELVETICA, 10, iText.BaseColor.DARK_GRAY);
             var info = new iText.Paragraph($"Exported on: {DateTime.Now:MMMM dd, yyyy hh:mm tt}", infoFont)
             {
@@ -199,7 +216,7 @@ public class ExportService : IExportService
             info.SpacingAfter = 10f;
             document.Add(info);
 
-            // Add summary
+            // Add summary statistics
             var summaryFont = iText.FontFactory.GetFont(iText.FontFactory.HELVETICA, 11, iText.BaseColor.BLACK);
             var summary = new iText.Paragraph($"Total Entries: {journals.Count} | Total Words: {journals.Sum(j => j.WordCount):N0}", summaryFont)
             {
@@ -208,7 +225,7 @@ public class ExportService : IExportService
             summary.SpacingAfter = 15f;
             document.Add(summary);
 
-            // Add filters summary if any
+            // Add filters summary section if any filters were applied
             if (request.Filters.FromDate.HasValue || request.Filters.ToDate.HasValue ||
                 !string.IsNullOrEmpty(request.Filters.PrimaryMood) ||
                 !string.IsNullOrEmpty(request.Filters.Category) ||
@@ -244,7 +261,7 @@ public class ExportService : IExportService
                 document.Add(filterParagraph);
             }
 
-            // Add content options info
+            // Add content options info (what metadata is included)
             var optionsText = new List<string>();
 
             if (request.Options.IncludeMoodDetails)
@@ -279,18 +296,18 @@ public class ExportService : IExportService
                 document.Add(optionsParagraph);
             }
 
-            // Add each journal entry
+            // Add each journal entry to the PDF
             for (int i = 0; i < journals.Count; i++)
             {
                 var journal = journals[i];
 
-                // Add page break if not first entry
+                // Add page break for each entry after the first
                 if (i > 0)
                 {
                     document.NewPage();
                 }
 
-                // Add entry header with background
+                // Add entry header with dark background
                 var headerTable = new iTextPdf.PdfPTable(1)
                 {
                     WidthPercentage = 100,
@@ -316,7 +333,7 @@ public class ExportService : IExportService
                 entryHeader.Alignment = iText.Element.ALIGN_CENTER;
                 document.Add(entryHeader);
 
-                // Entry metadata table
+                // Entry metadata table with two columns
                 var metadataTable = new iTextPdf.PdfPTable(2)
                 {
                     WidthPercentage = 100,
@@ -324,19 +341,20 @@ public class ExportService : IExportService
                     SpacingAfter = 15f
                 };
 
+                // Set column widths: 30% for labels, 70% for values
                 float[] columnWidths = { 30f, 70f };
                 metadataTable.SetWidths(columnWidths);
 
                 // Entry Date (always included as it's essential)
                 AddMetadataRow(metadataTable, "Entry Date:", journal.EntryDate.ToString("MMMM dd, yyyy"));
 
-                // Category
+                // Category (if included in options)
                 if (request.Options.IncludeCategory)
                 {
                     AddMetadataRow(metadataTable, "Category:", journal.Category);
                 }
 
-                // Mood Details
+                // Mood Details (if included in options)
                 if (request.Options.IncludeMoodDetails)
                 {
                     var moodText = journal.PrimaryMood;
@@ -353,19 +371,19 @@ public class ExportService : IExportService
                     AddMetadataRow(metadataTable, "Mood:", moodText);
                 }
 
-                // Tags
+                // Tags (if included in options and journal has tags)
                 if (request.Options.IncludeTags && journal.Tags.Any())
                 {
                     AddMetadataRow(metadataTable, "Tags:", string.Join(", ", journal.Tags.Select(t => $"#{t}")));
                 }
 
-                // Word Count
+                // Word Count (if included in options)
                 if (request.Options.IncludeWordCount)
                 {
                     AddMetadataRow(metadataTable, "Word Count:", $"{journal.WordCount:N0} words");
                 }
 
-                // Timestamps
+                // Timestamps (if included in options)
                 if (request.Options.IncludeTimestamps)
                 {
                     AddMetadataRow(metadataTable, "Created:", journal.CreatedAt.ToLocalTime().ToString("MMMM dd, yyyy hh:mm tt"));
@@ -374,11 +392,11 @@ public class ExportService : IExportService
 
                 document.Add(metadataTable);
 
-                // Add separator
+                // Add visual separator
                 document.Add(new iText.Chunk(new iText.pdf.draw.LineSeparator(1f, 100f, iText.BaseColor.LIGHT_GRAY, iText.Element.ALIGN_CENTER, -1)));
                 document.Add(new iText.Paragraph(" "));
 
-                // Journal content
+                // Journal content section
                 var contentTitle = new iText.Paragraph("Journal Content:",
                     iText.FontFactory.GetFont(iText.FontFactory.HELVETICA_BOLD, 14, iText.BaseColor.DARK_GRAY));
                 contentTitle.SpacingBefore = 10f;
@@ -389,10 +407,10 @@ public class ExportService : IExportService
                 contentParagraph.SpacingBefore = 5f;
                 contentParagraph.SpacingAfter = 20f;
 
-                // Strip HTML tags and add plain text with proper formatting
+                // Strip HTML tags and get plain text content
                 var plainText = StripHtmlTags(journal.Content);
 
-                // Add the content with proper paragraph formatting
+                // Add the content with proper font
                 var contentFont = iText.FontFactory.GetFont(iText.FontFactory.HELVETICA, 12, iText.BaseColor.BLACK);
                 var contentChunk = new iText.Phrase(plainText, contentFont);
                 contentParagraph.Add(contentChunk);
@@ -400,9 +418,10 @@ public class ExportService : IExportService
                 document.Add(contentParagraph);
             }
 
-            // Add footer with page numbers
+            // Add footer with page numbers to all pages
             writer.PageEvent = new PdfFooter();
 
+            // Close document - this completes PDF generation
             document.Close();
 
             Console.WriteLine($"PDF generated successfully with {journals.Count} entries");
@@ -416,6 +435,7 @@ public class ExportService : IExportService
         }
     }
 
+    // Helper method to add a row to the metadata table
     private void AddMetadataRow(iTextPdf.PdfPTable table, string label, string value)
     {
         var labelCell = new iTextPdf.PdfPCell(new iText.Phrase(label,
@@ -438,6 +458,7 @@ public class ExportService : IExportService
         table.AddCell(valueCell);
     }
 
+    // Helper method to strip HTML tags from journal content
     private string StripHtmlTags(string html)
     {
         if (string.IsNullOrEmpty(html))
@@ -445,7 +466,7 @@ public class ExportService : IExportService
 
         try
         {
-            // First decode HTML entities
+            // First decode HTML entities (&lt;, &gt;, etc.)
             var decoded = System.Net.WebUtility.HtmlDecode(html);
 
             // Remove HTML tags but preserve some basic formatting
@@ -473,10 +494,12 @@ public class ExportService : IExportService
         }
     }
 
+    // Gets all unique categories available for a user
     public async Task<ServiceResult<List<string>>> GetAvailableCategoriesAsync(int userId)
     {
         try
         {
+            // Use journal service to get categories
             var result = await _journalService.GetUserCategoriesAsync(userId);
             if (result.Success)
             {
@@ -492,10 +515,12 @@ public class ExportService : IExportService
         }
     }
 
+    // Gets all unique tags available for a user
     public async Task<ServiceResult<List<string>>> GetAvailableTagsAsync(int userId)
     {
         try
         {
+            // Use journal service to get tags
             var result = await _journalService.GetUserTagsAsync(userId);
             if (result.Success)
             {
@@ -512,7 +537,7 @@ public class ExportService : IExportService
     }
 }
 
-// Custom PDF footer class for page numbers
+// Custom PDF footer class that adds page numbers to each page
 public class PdfFooter : iTextPdf.PdfPageEventHelper
 {
     private iText.Font footerFont;
@@ -522,6 +547,7 @@ public class PdfFooter : iTextPdf.PdfPageEventHelper
         footerFont = iText.FontFactory.GetFont(iText.FontFactory.HELVETICA, 8, iText.BaseColor.GRAY);
     }
 
+    // Called at the end of each page to add footer
     public override void OnEndPage(iTextPdf.PdfWriter writer, iText.Document document)
     {
         var footer = new iText.Paragraph($"Page {writer.PageNumber}", footerFont)
@@ -529,6 +555,7 @@ public class PdfFooter : iTextPdf.PdfPageEventHelper
             Alignment = iText.Element.ALIGN_CENTER
         };
 
+        // Create a table for the footer to ensure proper positioning
         var footerTable = new iTextPdf.PdfPTable(1)
         {
             TotalWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin
@@ -541,6 +568,8 @@ public class PdfFooter : iTextPdf.PdfPageEventHelper
         };
 
         footerTable.AddCell(cell);
+
+        // Write the footer at the bottom margin
         footerTable.WriteSelectedRows(0, -1, document.LeftMargin, document.BottomMargin, writer.DirectContent);
     }
 }

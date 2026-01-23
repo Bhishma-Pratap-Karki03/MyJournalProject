@@ -9,49 +9,57 @@
 @inject IJournalService JournalService
 @implements IDisposable
 
+
 <div class="exportpdfhero-page">
     <div class="exportpdfhero-container">
+        <!-- Page Header -->
         <div class="exportpdfhero-header">
             <h1 class="exportpdfhero-page-title">Export Journals</h1>
             <p class="exportpdfhero-page-subtitle">Select your journal entries based on date, mood, or category and export them as a professionally formatted PDF document.</p>
         </div>
 
+        <!-- Two-column layout: Configuration on left, Preview on right -->
         <div class="exportpdfhero-content-layout">
+            <!-- Left Column: Configuration Options -->
             <div class="exportpdfhero-config-column">
-                <!-- Date Range Selection -->
+                <!-- Date Range Selection Card -->
                 <div class="exportpdfhero-config-card exportpdfhero-date-range-card">
                     <div class="exportpdfhero-card-header">
                         <div class="exportpdfhero-card-icon">
-                            <img src="images/DateRangeSelection.svg" alt="Calendar" />
+                            <img src="images/export-calendar.svg" alt="Calendar" />
                         </div>
                         <h2 class="exportpdfhero-card-title">Date Range Selection</h2>
                     </div>
 
+                    <!-- From and To date inputs -->
                     <div class="exportpdfhero-date-inputs-row">
                         <div class="exportpdfhero-date-input-group">
                             <label class="exportpdfhero-input-label">From Date</label>
+                            <!-- Clickable date input for "From" date -->
                             <div class="exportpdfhero-date-input" @onclick='() => ShowDatePicker("from")'>
-                                <img src="images/export-calendar.svg" alt="Calendar" />
+                                <img src="images/from-calendar-icon.png" alt="Calendar" />
                                 <span>@(exportRequest.Filters.FromDate?.ToString("MM/dd/yyyy") ?? "Select date")</span>
                             </div>
                         </div>
 
                         <div class="exportpdfhero-date-input-group">
                             <label class="exportpdfhero-input-label">To Date</label>
+                            <!-- Clickable date input for "To" date -->
                             <div class="exportpdfhero-date-input" @onclick='() => ShowDatePicker("to")'>
-                                <img src="images/export-calendar.svg" alt="Calendar" />
+                                <img src="images/to-calendar-icon.png" alt="Calendar" />
                                 <span>@(exportRequest.Filters.ToDate?.ToString("MM/dd/yyyy") ?? "Select date")</span>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Informational note about date selection -->
                     <div class="exportpdfhero-info-note">
                         <img src="images/info-icon.svg" alt="Info" />
                         <span>Select the start and end days for your export period.</span>
                     </div>
                 </div>
 
-                <!-- Filter Options -->
+                <!-- Filter Options Card -->
                 <div class="exportpdfhero-config-card exportpdfhero-filter-card">
                     <div class="exportpdfhero-card-header">
                         <div class="exportpdfhero-card-icon">
@@ -60,25 +68,30 @@
                         <h2 class="exportpdfhero-card-title">Filter Options</h2>
                     </div>
 
-                    <!-- Primary Mood Filter -->
+                    <!-- Primary Mood Filter Section -->
                     <div class="exportpdfhero-filter-section">
                         <label class="exportpdfhero-section-label">Primary Mood</label>
+                        <!-- Mood selection buttons -->
                         <div class="exportpdfhero-mood-buttons">
+                            <!-- Positive mood button -->
                             <button class="exportpdfhero-mood-btn @(exportRequest.Filters.PrimaryMood == "Positive" ? "exportpdfhero-mood-btn-active" : "")"
                                     @onclick='() => SelectPrimaryMood("Positive")'>
                                 <img src="images/postive-mood-filter.png" alt="Positive" />
                                 <span>Positive</span>
                             </button>
+                            <!-- Negative mood button -->
                             <button class="exportpdfhero-mood-btn @(exportRequest.Filters.PrimaryMood == "Negative" ? "exportpdfhero-mood-btn-active" : "")"
                                     @onclick='() => SelectPrimaryMood("Negative")'>
                                 <img src="images/negative-mood-filter.png" alt="Negative" />
                                 <span>Negative</span>
                             </button>
+                            <!-- Neutral mood button -->
                             <button class="exportpdfhero-mood-btn @(exportRequest.Filters.PrimaryMood == "Neutral" ? "exportpdfhero-mood-btn-active" : "")"
                                     @onclick='() => SelectPrimaryMood("Neutral")'>
                                 <img src="images/negative-mood-filter.png" alt="Neutral" />
                                 <span>Neutral</span>
                             </button>
+                            <!-- All moods button (clears filter) -->
                             <button class="exportpdfhero-mood-btn @(string.IsNullOrEmpty(exportRequest.Filters.PrimaryMood) ? "exportpdfhero-mood-btn-active" : "")"
                                     @onclick='() => SelectPrimaryMood(null)'>
                                 <span>All Moods</span>
@@ -86,18 +99,23 @@
                         </div>
                     </div>
 
+                    <!-- Category and Tags Filter Section (split into two columns) -->
                     <div class="exportpdfhero-filter-row-split">
                         <!-- Category Filter -->
                         <div class="exportpdfhero-filter-group">
                             <label class="exportpdfhero-section-label">Category</label>
+                            <!-- Category dropdown field -->
                             <div class="exportpdfhero-dropdown-field" @onclick="ToggleCategoryDropdown">
                                 <span>@(string.IsNullOrEmpty(exportRequest.Filters.Category) ? "All Categories" : exportRequest.Filters.Category)</span>
                                 <img src="images/arrow-down.png" alt="Dropdown" />
                             </div>
+                            <!-- Category dropdown menu -->
                             @if (showCategoryDropdown)
                             {
                                 <div class="exportpdfhero-dropdown-menu" style="position: absolute; width: 200px; z-index: 1000;">
+                                    <!-- Option to clear category filter -->
                                     <div class="exportpdfhero-dropdown-item" @onclick='() => SelectCategory(null)'>All Categories</div>
+                                    <!-- List of available categories -->
                                     @foreach (var category in availableCategories)
                                     {
                                         <div class="exportpdfhero-dropdown-item" @onclick='() => SelectCategory(category)'>
@@ -111,16 +129,20 @@
                         <!-- Tags Filter -->
                         <div class="exportpdfhero-filter-group">
                             <label class="exportpdfhero-section-label">Tags</label>
+                            <!-- Tags dropdown field -->
                             <div class="exportpdfhero-dropdown-field" @onclick="ToggleTagsDropdown">
+                                <!-- Display selected tags if any -->
                                 @if (exportRequest.Filters.Tags.Any())
                                 {
                                     <div style="display: flex; align-items: center; gap: 8px;">
+                                        <!-- First tag with remove button -->
                                         <div class="exportpdfhero-tag-chip">
                                             <span>@exportRequest.Filters.Tags.First()</span>
                                             <img src="images/close-icon.png" alt="Remove"
                                                  @onclick='() => RemoveTag(exportRequest.Filters.Tags.First())'
                                                  @onclick:stopPropagation />
                                         </div>
+                                        <!-- Indicator for additional tags -->
                                         @if (exportRequest.Filters.Tags.Count > 1)
                                         {
                                             <span>+@(exportRequest.Filters.Tags.Count - 1) more</span>
@@ -129,17 +151,21 @@
                                 }
                                 else
                                 {
+                                    <!-- Placeholder when no tags selected -->
                                     <span class="exportpdfhero-placeholder-text">Add Tags...</span>
                                 }
                                 <img src="images/arrow-down.png" alt="Dropdown" />
                             </div>
+                            <!-- Tags dropdown menu -->
                             @if (showTagsDropdown)
                             {
                                 <div class="exportpdfhero-dropdown-menu" style="position: absolute; width: 200px; z-index: 1000; max-height: 200px; overflow-y: auto;">
+                                    <!-- List of available tags with checkmarks for selected ones -->
                                     @foreach (var tag in availableTags)
                                     {
                                         <div class="exportpdfhero-dropdown-item" @onclick='() => ToggleTag(tag)'>
                                             <span>#@tag</span>
+                                            <!-- Checkmark for selected tags -->
                                             @if (exportRequest.Filters.Tags.Contains(tag))
                                             {
                                                 <span style="color: #007fe8; font-weight: bold;">✓</span>
@@ -152,7 +178,7 @@
                     </div>
                 </div>
 
-                <!-- Export Content Options -->
+                <!-- Export Content Options Card -->
                 <div class="exportpdfhero-config-card exportpdfhero-content-options-card">
                     <div class="exportpdfhero-card-header">
                         <div class="exportpdfhero-card-icon">
@@ -161,7 +187,9 @@
                         <h2 class="exportpdfhero-card-title">Export Content Options</h2>
                     </div>
 
+                    <!-- Grid of content options (checkboxes) -->
                     <div class="exportpdfhero-options-grid">
+                        <!-- Include Mood Details Option -->
                         <div class="exportpdfhero-option-item">
                             <div class="exportpdfhero-option-header">
                                 <div class="exportpdfhero-custom-checkbox">
@@ -176,6 +204,7 @@
                             <p class="exportpdfhero-checkbox-desc">Adds mood details to each entry</p>
                         </div>
 
+                        <!-- Include Tags Option -->
                         <div class="exportpdfhero-option-item">
                             <div class="exportpdfhero-option-header">
                                 <div class="exportpdfhero-custom-checkbox">
@@ -190,6 +219,7 @@
                             <p class="exportpdfhero-checkbox-desc">Displays associated tags</p>
                         </div>
 
+                        <!-- Include Word Count Option -->
                         <div class="exportpdfhero-option-item">
                             <div class="exportpdfhero-option-header">
                                 <div class="exportpdfhero-custom-checkbox">
@@ -204,6 +234,7 @@
                             <p class="exportpdfhero-checkbox-desc">Shows total words per entry.</p>
                         </div>
 
+                        <!-- Include Timestamps Option -->
                         <div class="exportpdfhero-option-item">
                             <div class="exportpdfhero-option-header">
                                 <div class="exportpdfhero-custom-checkbox">
@@ -221,7 +252,7 @@
                 </div>
             </div>
 
-            <!-- Summary Column -->
+            <!-- Right Column: Export Summary and Preview -->
             <div class="exportpdfhero-summary-column">
                 <div class="exportpdfhero-summary-card">
                     <div class="exportpdfhero-summary-header">
@@ -229,7 +260,9 @@
                         <h2 class="exportpdfhero-summary-title">Preview</h2>
                     </div>
 
+                    <!-- Summary details -->
                     <div class="exportpdfhero-summary-body">
+                        <!-- Number of selected entries -->
                         <div class="exportpdfhero-summary-row">
                             <span class="exportpdfhero-row-label">Selected Entries</span>
                             <span class="exportpdfhero-row-value exportpdfhero-highlight">
@@ -237,11 +270,13 @@
                             </span>
                         </div>
 
+                        <!-- Date range display -->
                         <div class="exportpdfhero-summary-row">
                             <span class="exportpdfhero-row-label">Date Range:</span>
                             <span class="exportpdfhero-row-value">@(GetDateRangeDisplay())</span>
                         </div>
 
+                        <!-- Applied filters display -->
                         <div class="exportpdfhero-summary-row">
                             <span class="exportpdfhero-row-label">Filters:</span>
                             <span class="exportpdfhero-row-value">
@@ -249,11 +284,13 @@
                             </span>
                         </div>
 
+                        <!-- Total word count -->
                         <div class="exportpdfhero-summary-row">
                             <span class="exportpdfhero-row-label">Word Count:</span>
                             <span class="exportpdfhero-row-value">@(previewData?.TotalWordCount.ToString("N0") ?? "0") words</span>
                         </div>
 
+                        <!-- Export format (always PDF) -->
                         <div class="exportpdfhero-summary-row">
                             <span class="exportpdfhero-row-label">Format:</span>
                             <div class="exportpdfhero-format-value">
@@ -263,18 +300,23 @@
                         </div>
                     </div>
 
+                    <!-- Action buttons -->
                     <div class="exportpdfhero-summary-footer">
+                        <!-- Primary export button -->
                         <button class="exportpdfhero-btn-primary" @onclick="ExportToPdf" disabled="@isExporting">
                             @if (isExporting)
                             {
+                                <!-- Loading state -->
                                 <span>Exporting...</span>
                             }
                             else
                             {
+                                <!-- Normal state with icon -->
                                 <img src="images/download-pdf-icon.svg" alt="Export" />
                                 <span>Export to PDF</span>
                             }
                         </button>
+                        <!-- Reset filters button -->
                         <button class="exportpdfhero-btn-secondary" @onclick="ResetFilters">
                             <span>Reset Filters</span>
                         </button>
@@ -285,7 +327,7 @@
     </div>
 </div>
 
-<!-- Date Picker Modal -->
+<!-- Date Picker Modal (shown when clicking date inputs) -->
 @if (showDatePicker)
 {
     <div class="exportpdfhero-date-picker-modal" @onclick="CloseDatePicker">
@@ -295,6 +337,7 @@
                 <button class="exportpdfhero-close-btn" @onclick="CloseDatePicker">×</button>
             </div>
             <div class="exportpdfhero-date-picker-body">
+                <!-- HTML5 date input -->
                 <input type="date"
                        @bind="datePickerValue"
                        @bind:format="yyyy-MM-dd"
@@ -309,7 +352,7 @@
     </div>
 }
 
-<!-- Error/Success Messages -->
+<!-- Error Message Toast (appears at top-right when there's an error) -->
 @if (!string.IsNullOrEmpty(errorMessage))
 {
     <div style="position: fixed; top: 20px; right: 20px; background-color: #f44336; color: white; padding: 15px; border-radius: 5px; z-index: 1000;">
@@ -318,6 +361,7 @@
     </div>
 }
 
+<!-- Success Message Toast (appears at top-right when export succeeds) -->
 @if (!string.IsNullOrEmpty(successMessage))
 {
     <div style="position: fixed; top: 20px; right: 20px; background-color: #4CAF50; color: white; padding: 15px; border-radius: 5px; z-index: 1000;">
@@ -327,36 +371,37 @@
 }
 
 @code {
-    // Current user
+    // Current user ID (loaded from localStorage)
     private int currentUserId = 0;
 
-    // Export data
-    private ExportRequest exportRequest = new();
-    private ExportPreviewData? previewData;
+    // Export configuration model
+    private ExportRequest exportRequest = new(); // Contains filters and options
+    private ExportPreviewData? previewData; // Preview data from service
 
-    // Available options
-    private List<string> availableCategories = new();
-    private List<string> availableTags = new();
+    // Available filter options (loaded from user's journals)
+    private List<string> availableCategories = new(); // User's existing categories
+    private List<string> availableTags = new(); // User's existing tags
 
-    // UI states
-    private bool showCategoryDropdown = false;
-    private bool showTagsDropdown = false;
-    private bool showDatePicker = false;
-    private bool isExporting = false;
-    private string errorMessage = string.Empty;
-    private string successMessage = string.Empty;
+    // UI state variables
+    private bool showCategoryDropdown = false; // Category dropdown visibility
+    private bool showTagsDropdown = false; // Tags dropdown visibility
+    private bool showDatePicker = false; // Date picker modal visibility
+    private bool isExporting = false; // Export in progress flag
+    private string errorMessage = string.Empty; // Error message for user feedback
+    private string successMessage = string.Empty; // Success message for user feedback
 
-    // Date picker
-    private string datePickerType = "from";
-    private DateTime? datePickerValue = null;
+    // Date picker state
+    private string datePickerType = "from"; // Which date field is being edited ("from" or "to")
+    private DateTime? datePickerValue = null; // Current value in date picker
 
-    // Timer for auto-update preview
+    // Timer for auto-updating preview (debounces rapid filter changes)
     private System.Timers.Timer? previewTimer;
 
+    // Component initialization
     protected override async Task OnInitializedAsync()
     {
-        await LoadCurrentUser();
-        await LoadAvailableOptions();
+        await LoadCurrentUser(); // Load user from localStorage
+        await LoadAvailableOptions(); // Load user's categories and tags
 
         // Initialize with default date range (last 30 days)
         exportRequest.Filters.FromDate = DateTime.Today.AddDays(-30);
@@ -365,22 +410,24 @@
         // Initialize export options with ALL checkboxes checked by default
         exportRequest.Options = new ExportOptionsModel
         {
-            IncludeMoodDetails = true,
-            IncludeTags = true,
-            IncludeWordCount = true,  // This was missing!
-            IncludeTimestamps = true,
-            IncludeEntryDate = true,
-            IncludeCategory = true
+            IncludeMoodDetails = true, // Include mood information
+            IncludeTags = true, // Include journal tags
+            IncludeWordCount = true, // Include word count (THIS WAS MISSING!)
+            IncludeTimestamps = true, // Include creation/update timestamps
+            IncludeEntryDate = true, // Include entry date (always included)
+            IncludeCategory = true // Include category
         };
 
-        // Setup auto-update timer
+        // Setup auto-update timer with 500ms debounce
         previewTimer = new System.Timers.Timer(500);
         previewTimer.Elapsed += async (sender, e) => await UpdatePreview();
-        previewTimer.AutoReset = false;
+        previewTimer.AutoReset = false; // Only trigger once per interval
 
+        // Get initial preview
         await UpdatePreview();
     }
 
+    // Loads current user information from localStorage
     private async Task LoadCurrentUser()
     {
         try
@@ -398,22 +445,25 @@
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading user: {ex.Message}");
-            Navigation.NavigateTo("/login");
+            Navigation.NavigateTo("/login"); // Redirect to login if no user
         }
     }
 
+    // Loads available categories and tags from user's previous journals
     private async Task LoadAvailableOptions()
     {
         if (currentUserId == 0) return;
 
         try
         {
+            // Load user's categories from export service
             var categoriesResult = await ExportService.GetAvailableCategoriesAsync(currentUserId);
             if (categoriesResult.Success)
             {
                 availableCategories = categoriesResult.Data;
             }
 
+            // Load user's tags from export service
             var tagsResult = await ExportService.GetAvailableTagsAsync(currentUserId);
             if (tagsResult.Success)
             {
@@ -426,17 +476,19 @@
         }
     }
 
+    // Updates the preview summary based on current filters
     private async Task UpdatePreview()
     {
         if (currentUserId == 0) return;
 
         try
         {
+            // Call export service to get preview data
             var result = await ExportService.GetExportPreviewAsync(currentUserId, exportRequest);
             if (result.Success)
             {
                 previewData = result.Data;
-                StateHasChanged();
+                StateHasChanged(); // Refresh UI with new preview data
             }
         }
         catch (Exception ex)
@@ -445,13 +497,16 @@
         }
     }
 
+    // Triggers preview update with debouncing
     private void TriggerPreviewUpdate()
     {
-        previewTimer?.Stop();
-        previewTimer?.Start();
+        previewTimer?.Stop(); // Cancel any pending update
+        previewTimer?.Start(); // Start new timer (will trigger after 500ms)
     }
 
-    // Helper methods for display
+    // Helper methods for display formatting
+
+    // Formats date range for display
     private string GetDateRangeDisplay()
     {
         if (!exportRequest.Filters.FromDate.HasValue && !exportRequest.Filters.ToDate.HasValue)
@@ -466,6 +521,7 @@
         return $"To {exportRequest.Filters.ToDate!.Value:MM/dd/yyyy}";
     }
 
+    // Formats applied filters for display
     private string GetAppliedFiltersDisplay()
     {
         var filters = new List<string>();
@@ -483,10 +539,13 @@
     }
 
     // Date picker methods
+
+    // Shows date picker modal for "from" or "to" date
     private void ShowDatePicker(string type)
     {
         datePickerType = type;
 
+        // Set initial value based on current filter
         if (type == "from" && exportRequest.Filters.FromDate.HasValue)
         {
             datePickerValue = exportRequest.Filters.FromDate.Value;
@@ -504,6 +563,7 @@
         StateHasChanged();
     }
 
+    // Closes date picker without applying changes
     private void CloseDatePicker()
     {
         showDatePicker = false;
@@ -511,6 +571,7 @@
         StateHasChanged();
     }
 
+    // Applies selected date to the appropriate filter
     private void ApplyDateSelection()
     {
         if (datePickerValue.HasValue)
@@ -524,7 +585,7 @@
                 exportRequest.Filters.ToDate = datePickerValue.Value;
             }
 
-            // Ensure FromDate is not after ToDate
+            // Ensure FromDate is not after ToDate (swap if necessary)
             if (exportRequest.Filters.FromDate.HasValue && exportRequest.Filters.ToDate.HasValue &&
                 exportRequest.Filters.FromDate > exportRequest.Filters.ToDate)
             {
@@ -535,22 +596,26 @@
         }
 
         CloseDatePicker();
-        TriggerPreviewUpdate();
+        TriggerPreviewUpdate(); // Update preview with new date range
     }
 
     // Filter methods
+
+    // Selects or clears primary mood filter
     private void SelectPrimaryMood(string? mood)
     {
         exportRequest.Filters.PrimaryMood = mood;
         TriggerPreviewUpdate();
     }
 
+    // Toggles category dropdown visibility
     private void ToggleCategoryDropdown()
     {
         showCategoryDropdown = !showCategoryDropdown;
-        showTagsDropdown = false;
+        showTagsDropdown = false; // Close tags dropdown if open
     }
 
+    // Selects or clears category filter
     private void SelectCategory(string? category)
     {
         exportRequest.Filters.Category = category;
@@ -558,12 +623,14 @@
         TriggerPreviewUpdate();
     }
 
+    // Toggles tags dropdown visibility
     private void ToggleTagsDropdown()
     {
         showTagsDropdown = !showTagsDropdown;
-        showCategoryDropdown = false;
+        showCategoryDropdown = false; // Close category dropdown if open
     }
 
+    // Toggles tag selection (adds/removes tag from filter)
     private void ToggleTag(string tag)
     {
         if (exportRequest.Filters.Tags.Contains(tag))
@@ -579,17 +646,19 @@
         TriggerPreviewUpdate();
     }
 
+    // Removes a tag from filter
     private void RemoveTag(string tag)
     {
         exportRequest.Filters.Tags.Remove(tag);
         TriggerPreviewUpdate();
     }
 
-    // Export method
+    // Main export method: Generates and downloads PDF
     private async Task ExportToPdf()
     {
         if (currentUserId == 0) return;
 
+        // Set loading state and clear messages
         isExporting = true;
         errorMessage = string.Empty;
         successMessage = string.Empty;
@@ -597,16 +666,17 @@
 
         try
         {
+            // Call export service to generate PDF
             var result = await ExportService.GeneratePdfAsync(currentUserId, exportRequest);
 
             if (result.Success && result.Data != null)
             {
-                // Generate filename
+                // Generate filename with timestamp
                 var fileName = $"Journal_Export_{DateTime.Now:yyyyMMdd_HHmmss}.pdf";
 
-                // Download the file
+                // Download the file using JavaScript interop
                 await JSRuntime.InvokeVoidAsync("downloadFile",
-                    Convert.ToBase64String(result.Data),
+                    Convert.ToBase64String(result.Data), // Convert byte array to base64
                     fileName,
                     "application/pdf");
 
@@ -628,14 +698,15 @@
         }
     }
 
+    // Resets all filters to default values
     private void ResetFilters()
     {
         exportRequest = new ExportRequest
         {
             Filters = new ExportFilterModel
             {
-                FromDate = DateTime.Today.AddDays(-30),
-                ToDate = DateTime.Today
+                FromDate = DateTime.Today.AddDays(-30), // Last 30 days
+                ToDate = DateTime.Today // Today
             },
             Options = new ExportOptionsModel
             {
@@ -651,18 +722,21 @@
         TriggerPreviewUpdate();
     }
 
+    // Clears error message from UI
     private void ClearErrorMessage()
     {
         errorMessage = string.Empty;
         StateHasChanged();
     }
 
+    // Clears success message from UI
     private void ClearSuccessMessage()
     {
         successMessage = string.Empty;
         StateHasChanged();
     }
 
+    // Cleanup method (implements IDisposable)
     public void Dispose()
     {
         previewTimer?.Stop();
@@ -670,7 +744,7 @@
         previewTimer = null;
     }
 
-    // Helper class for user info
+    // Helper class for user info deserialization
     private class UserInfo
     {
         public int Id { get; set; }

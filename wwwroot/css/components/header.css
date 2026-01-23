@@ -1,6 +1,6 @@
 ﻿.header {
-    background-color: #ffffff;
-    border-bottom: 1px solid #c9d5e0;
+    background-color: var(--bg-header);
+    border-bottom: 1px solid var(--border-color);
     height: 92px;
     display: flex;
     align-items: center;
@@ -43,7 +43,7 @@
 .divider {
     width: 1px;
     height: 27px;
-    background-color: #c9d5e0;
+    background-color: var(--border-color);
 }
 
 .user-profile {
@@ -62,7 +62,7 @@
 .user-name {
     font-size: 16px;
     font-weight: 500;
-    color: #274666;
+    color: var(--text-secondary);
 }
 
 /* Responsive */
@@ -89,4 +89,38 @@
         width: 20px;
         height: 20px;
     }
+}
+/* Theme Toggle Button */
+.theme-toggle-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, transform 0.2s;
+    width: 40px;
+    height: 40px;
+}
+
+    .theme-toggle-btn:hover {
+        background-color: var(--primary-light);
+        transform: scale(1.05);
+    }
+
+    .theme-toggle-btn:active {
+        transform: scale(0.95);
+    }
+
+.theme-icon {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) saturate(100%) invert(46%) sepia(89%) saturate(1557%) hue-rotate(186deg) brightness(98%) contrast(101%);
+    transition: filter 0.3s ease;
+}
+
+[data-theme="dark"] .theme-icon {
+    filter: brightness(0) saturate(100%) invert(93%) sepia(94%) saturate(7497%) hue-rotate(329deg) brightness(101%) contrast(101%);
 }

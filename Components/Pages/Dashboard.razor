@@ -6,13 +6,13 @@
 
 <div class="dashboard">
     <div class="dashboard-content">
-        <!-- Hero Section -->
+        <!-- Hero Section: Page title and welcome message -->
         <div class="dashboard-hero">
             <h1 class="page-title">Dashboard Overview</h1>
             <p class="page-subtitle">Welcome back. Here is your activity summary.</p>
         </div>
 
-        <!-- Loading State -->
+        <!-- Loading State: Shows spinner while data is loading -->
         @if (isLoading)
         {
             <div class="loading-overlay">
@@ -23,17 +23,19 @@
             </div>
         }
 
-        <!-- Stats Grid -->
+        <!-- Stats Grid: 4 main statistics cards -->
         <div class="stats-grid">
             <!-- Card 1: Current Streak -->
             <div class="stat-card">
                 <div class="stat-header">
                     <span class="stat-label">CURRENT STREAK</span>
                     <div class="stat-value-group">
+                        <!-- Current streak days count -->
                         <span class="stat-number">@dashboardStats.CurrentStreak</span>
                         <span class="stat-unit">Days</span>
                     </div>
                 </div>
+                <!-- Fire icon representing streak -->
                 <img src="images/streak-icon.png" alt="Fire Icon" class="stat-icon">
             </div>
 
@@ -42,11 +44,13 @@
                 <div class="stat-header">
                     <span class="stat-label">LONGEST STREAK</span>
                     <div class="stat-value-group">
+                        <!-- Longest streak record -->
                         <span class="stat-number">@dashboardStats.LongestStreak</span>
                         <span class="stat-unit">Days</span>
                     </div>
                 </div>
-                <img src="images/trophy-icon.svg" alt="Trophy Icon" class="stat-icon">
+                <!-- Trophy icon for record achievement -->
+                <img src="images/trophy-icon.png" alt="Trophy Icon" class="stat-icon">
             </div>
 
             <!-- Card 3: Missed Days -->
@@ -54,19 +58,24 @@
                 <div class="stat-header">
                     <span class="stat-label">MISSED DAYS</span>
                     <div class="stat-value-group">
+                        <!-- Missed days in current month -->
                         <span class="stat-number">@dashboardStats.MissedDaysThisMonth</span>
                         <span class="stat-unit">This Month</span>
                     </div>
                 </div>
-                <img src="images/calendar-icon.svg" alt="Calendar Icon" class="stat-icon">
+                <!-- Calendar icon for missed days -->
+                <img src="images/Missed-days.png" alt="Calendar Icon" class="stat-icon">
             </div>
 
             <!-- Card 4: Current Mood -->
             <div class="stat-card">
                 <div class="stat-header">
                     <span class="stat-label">CURRENT MOOD</span>
+                    <!-- Mood badge with icon and text -->
                     <div class="mood-badge">
+                        <!-- Mood icon wrapper with dynamic color class -->
                         <div class="mood-icon-wrapper @GetMoodColorClass(currentMood.Mood)">
+                            <!-- Dynamic mood icon based on current mood -->
                             @if (currentMood.Icon == "happy")
                             {
                                 <img src="images/happy-icon.svg" alt="Happy" class="mood-icon">
@@ -80,6 +89,7 @@
                                 <img src="images/neutral-icon.svg" alt="Neutral" class="mood-icon">
                             }
                         </div>
+                        <!-- Mood text with dynamic color class -->
                         <span class="mood-text @GetMoodTextClass(currentMood.Mood)">
                             @GetMoodDisplayText(currentMood.Mood)
                         </span>
@@ -97,8 +107,8 @@
                         </div>
                     }
                 </div>
-                
-                <!-- Dynamic Smiley Icon based on mood -->
+
+                <!-- Large smiley icon matching the mood -->
                 @if (currentMood.Icon == "happy")
                 {
                     <img src="images/smiley-happy.png" alt="Happy" class="stat-icon smiley-icon">
@@ -114,12 +124,13 @@
             </div>
         </div>
 
-        <!-- Charts Grid -->
+        <!-- Charts Grid: Two chart cards for mood and word count trends -->
         <div class="charts-grid">
             <!-- Mood Distribution Chart Card -->
             <div class="chart-card">
                 <div class="chart-header">
                     <h3 class="chart-title">Mood Distribution</h3>
+                    <!-- Period dropdown for mood chart -->
                     <div class="chart-dropdown">
                         <select id="moodPeriod" @bind="moodPeriod" @bind:event="onchange">
                             <option value="7">Last 7 Days</option>
@@ -128,6 +139,7 @@
                         </select>
                     </div>
                 </div>
+                <!-- Canvas for Chart.js mood chart -->
                 <div class="chart-container">
                     <canvas id="moodChart" width="400" height="400"></canvas>
                 </div>
@@ -137,6 +149,7 @@
             <div class="chart-card">
                 <div class="chart-header">
                     <h3 class="chart-title">Word Count Trend</h3>
+                    <!-- Period dropdown for word count chart -->
                     <div class="chart-dropdown">
                         <select id="wordCountPeriod" @bind="wordCountPeriod" @bind:event="onchange">
                             <option value="7">Last 7 Days</option>
@@ -145,33 +158,38 @@
                         </select>
                     </div>
                 </div>
+                <!-- Canvas for Chart.js word count chart -->
                 <div class="chart-container">
                     <canvas id="wordCountChart" width="400" height="400"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Widgets Grid -->
+        <!-- Widgets Grid: Additional information and motivation widgets -->
         <div class="widgets-grid">
-            <!-- Most Used Tags -->
+            <!-- Most Used Tags Widget -->
             <div class="widget-card tags-widget">
                 <h3 class="widget-title">Most Used Tags</h3>
                 <div class="tags-list">
                     @if (!topTags.Any())
                     {
+                        <!-- Empty state when no tags exist -->
                         <div style="text-align: center; padding: 20px; color: #78828b;">
                             No tags yet
                         </div>
                     }
                     else
                     {
+                        <!-- List of top 3 tags with usage counts and progress bars -->
                         @foreach (var tag in topTags)
                         {
                             <div class="tag-item">
+                                <!-- Tag name and count -->
                                 <div class="tag-info">
                                     <span class="tag-name">#@tag.Name</span>
                                     <span class="tag-count">@tag.Count @(tag.Count == 1 ? "entry" : "entries")</span>
                                 </div>
+                                <!-- Visual progress bar showing tag usage percentage -->
                                 <div class="progress-track">
                                     <div class="progress-fill" style="width: @(tag.Percentage)%;"></div>
                                 </div>
@@ -181,15 +199,17 @@
                 </div>
             </div>
 
-            <!-- Keep it up -->
+            <!-- Motivation Widget -->
             <div class="widget-card motivation-widget">
                 <div class="motivation-content">
                     <img src="images/write-icon.png" alt="Write Icon" class="motivation-icon">
                     <h3 class="motivation-title">Keep it up!</h3>
+                    <!-- Dynamic motivation message based on current streak -->
                     @if (dashboardStats.CurrentStreak > 0)
                     {
                         <p class="motivation-text">
                             Your current streak is @dashboardStats.CurrentStreak days!
+                            <!-- Encouragement message comparing to longest streak -->
                             @if (dashboardStats.CurrentStreak < dashboardStats.LongestStreak)
                             {
                                 <span>Beat your record of @dashboardStats.LongestStreak days!</span>
@@ -202,6 +222,7 @@
                     }
                     else
                     {
+                        <!-- Encouragement for new users or broken streaks -->
                         <p class="motivation-text">
                             Start a new streak today! Consistency is key to building good journaling habits.
                         </p>
@@ -213,14 +234,16 @@
 </div>
 
 @code {
-    private bool isInitialized = false;
-    private bool isLoading = false;
-    private IJSObjectReference? chartModule;
-    private DashboardStats dashboardStats = new();
-    private CurrentMoodInfo currentMood = new();
-    private List<TopTag> topTags = new();
+    // Component state variables
+    private bool isInitialized = false; // Whether component has been initialized
+    private bool isLoading = false; // Loading state for data fetching
+    private IJSObjectReference? chartModule;  // Reference to JavaScript chart module
+    private DashboardStats dashboardStats = new(); // Dashboard statistics data
+    private CurrentMoodInfo currentMood = new(); // Current mood information
+    private List<TopTag> topTags = new(); // Top tags used by the user
 
-    private string _moodPeriod = "30";
+    // Mood chart period with property setter for auto-refresh
+    private string _moodPeriod = "30"; // Default: Last 30 days
     private string moodPeriod
     {
         get => _moodPeriod;
@@ -231,13 +254,15 @@
                 _moodPeriod = value;
                 if (isInitialized)
                 {
+                    // Reload mood chart when period changes
                     _ = LoadMoodChart();
                 }
             }
         }
     }
 
-    private string _wordCountPeriod = "7";
+    // Word count chart period with property setter for auto-refresh
+    private string _wordCountPeriod = "7"; // Default: Last 7 days
     private string wordCountPeriod
     {
         get => _wordCountPeriod;
@@ -248,35 +273,44 @@
                 _wordCountPeriod = value;
                 if (isInitialized)
                 {
+                    // Reload word count chart when period changes
                     _ = LoadWordCountChart();
                 }
             }
         }
     }
 
+    // Current user ID (loaded from localStorage)
     private int currentUserId = 0;
 
+    // Component lifecycle: Called when component is initialized
     protected override async Task OnInitializedAsync()
     {
+        // Load current user from localStorage
         await LoadCurrentUser();
     }
 
+    // Component lifecycle: Called after component is rendered
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && !isInitialized)
         {
+            // Initialize dashboard on first render
             await InitializeDashboard();
             isInitialized = true;
         }
     }
 
+    // Loads current user information from localStorage
     private async Task LoadCurrentUser()
     {
         try
         {
+            // Get user data from localStorage
             var userJson = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "currentUser");
             if (!string.IsNullOrEmpty(userJson))
             {
+                // Deserialize user information
                 var user = System.Text.Json.JsonSerializer.Deserialize<UserInfo>(userJson);
                 if (user != null)
                 {
@@ -284,11 +318,13 @@
                 }
                 else
                 {
+                    // Redirect to login if user data is invalid
                     Navigation.NavigateTo("/login");
                 }
             }
             else
             {
+                // Redirect to login if no user found
                 Navigation.NavigateTo("/login");
             }
         }
@@ -299,6 +335,7 @@
         }
     }
 
+    // Initializes the dashboard by loading all required data
     private async Task InitializeDashboard()
     {
         if (currentUserId == 0)
@@ -307,16 +344,18 @@
             return;
         }
 
+        // Show loading state
         isLoading = true;
         StateHasChanged();
 
         try
         {
+            // Load all dashboard data in parallel
             await Task.WhenAll(
-                LoadDashboardStats(),
-                LoadCurrentMood(),
-                LoadTopTags(),
-                InitializeCharts()
+                LoadDashboardStats(), // Load statistics
+                LoadCurrentMood(), // Load current mood
+                LoadTopTags(), // Load top tags
+                InitializeCharts() // Initialize charts
             );
         }
         catch (Exception ex)
@@ -325,11 +364,13 @@
         }
         finally
         {
+            // Hide loading state
             isLoading = false;
             StateHasChanged();
         }
     }
 
+    // Loads dashboard statistics (streaks, missed days, etc.)
     private async Task LoadDashboardStats()
     {
         var result = await DashboardService.GetDashboardStatsAsync(currentUserId);
@@ -339,6 +380,7 @@
         }
     }
 
+    // Loads user's current mood information
     private async Task LoadCurrentMood()
     {
         var result = await DashboardService.GetCurrentMoodAsync(currentUserId);
@@ -348,13 +390,15 @@
         }
     }
 
+    // Loads top 3 most used tags
     private async Task LoadTopTags()
     {
         var result = await DashboardService.GetTopTagsAsync(currentUserId, 3);
         if (result.Success && result.Data != null)
         {
             topTags = result.Data;
-            
+
+            // Calculate percentage for each tag's usage
             var total = topTags.Sum(t => t.Count);
             if (total > 0)
             {
@@ -366,21 +410,27 @@
         }
     }
 
+    // Initializes Chart.js charts by loading the JavaScript module
     private async Task InitializeCharts()
     {
+        // Import the charts.js module
         chartModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/charts.js");
 
+        // Load both charts
         await LoadMoodChart();
         await LoadWordCountChart();
     }
 
+    // Loads mood distribution chart with current period
     private async Task LoadMoodChart()
     {
         if (chartModule != null)
         {
+            // Get mood distribution data from service
             var result = await DashboardService.GetMoodDistributionAsync(currentUserId, moodPeriod);
             if (result.Success && result.Data != null)
             {
+                // Create chart with data
                 await chartModule.InvokeVoidAsync("createMoodChart",
                     new
                     {
@@ -392,13 +442,16 @@
         }
     }
 
+    // Loads word count trend chart with current period
     private async Task LoadWordCountChart()
     {
         if (chartModule != null)
         {
+            // Get word count trend data from service
             var result = await DashboardService.GetWordCountTrendAsync(currentUserId, wordCountPeriod);
             if (result.Success && result.Data != null)
             {
+                // Create chart with data
                 await chartModule.InvokeVoidAsync("createWordCountChart",
                     new
                     {
@@ -410,6 +463,8 @@
     }
 
     // Helper methods for mood display
+
+    // Converts mood value to display text (e.g., "Positive" -> "Happy")
     private string GetMoodDisplayText(string mood)
     {
         return mood.ToLower() switch
@@ -421,28 +476,31 @@
         };
     }
 
+    // Returns CSS class for mood icon background color
     private string GetMoodColorClass(string mood)
     {
         return mood.ToLower() switch
         {
-            "positive" => "mood-positive",
-            "negative" => "mood-negative",
-            "neutral" => "mood-neutral",
+            "positive" => "mood-positive", // Green background
+            "negative" => "mood-negative", // Red background
+            "neutral" => "mood-neutral", // Gray background
             _ => "mood-neutral"
         };
     }
 
+    // Returns CSS class for mood text color
     private string GetMoodTextClass(string mood)
     {
         return mood.ToLower() switch
         {
-            "positive" => "text-positive",
-            "negative" => "text-negative",
-            "neutral" => "text-neutral",
+            "positive" => "text-positive", // Green text
+            "negative" => "text-negative", // Red text
+            "neutral" => "text-neutral", // Gray text
             _ => "text-neutral"
         };
     }
 
+    // Helper class for user info deserialization
     private class UserInfo
     {
         public int Id { get; set; }

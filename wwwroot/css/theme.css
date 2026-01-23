@@ -1,0 +1,152 @@
+﻿/* CSS Variables for Light Theme (Default) */
+:root {
+    /* Primary Colors */
+    --primary-color: #007fe8;
+    --primary-hover: #0066c5;
+    --primary-light: #e5f2fd;
+    /* Background Colors */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f7f8;
+    --bg-tertiary: #f8fbfd;
+    --bg-card: #ffffff;
+    --bg-header: #ffffff;
+    --bg-sidebar: #ffffff;
+    --bg-footer: #f5f7f8;
+    /* Text Colors */
+    --text-primary: #3e434e;
+    --text-secondary: #244666;
+    --text-tertiary: #5d6a7b;
+    --text-muted: #78828b;
+    --text-light: #536171;
+    /* Border Colors */
+    --border-color: #c9d5e0;
+    --border-light: #e9ecef;
+    --border-dark: #94a3b8;
+    /* Mood Colors */
+    --mood-positive: #22c55e;
+    --mood-positive-light: rgba(0, 218, 159, 0.12);
+    --mood-positive-text: #0a622e;
+    --mood-neutral: #94a3b8;
+    --mood-neutral-light: rgba(148, 163, 184, 0.12);
+    --mood-neutral-text: #0c0e33;
+    --mood-negative: #ef4444;
+    --mood-negative-light: rgba(239, 68, 68, 0.12);
+    --mood-negative-text: #890000;
+    /* Chart Colors */
+    --chart-blue: #007fe8;
+    --chart-green: #22c55e;
+    --chart-red: #ef4444;
+    --chart-gray: #94a3b8;
+    --chart-light-blue: rgba(0, 127, 232, 0.1);
+    /* Form Colors */
+    --input-bg: #f7fafc;
+    --input-border: #c9d5e0;
+    --input-text: #3e434e;
+    --input-placeholder: #6f7e8b;
+    /* Button Colors */
+    --btn-primary-bg: #007fe8;
+    --btn-primary-text: #ffffff;
+    --btn-secondary-bg: #ffffff;
+    --btn-secondary-text: #334a5f;
+    --btn-secondary-border: #c9d5e0;
+    /* Shadow */
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    /* Status Colors */
+    --status-success: #d4edda;
+    --status-success-text: #155724;
+    --status-error: #f8d7da;
+    --status-error-text: #721c24;
+    --status-warning: #fff3cd;
+    --status-warning-text: #856404;
+    --status-info: #e6f7ff;
+    --status-info-text: #0050b3;
+
+
+    --purple-light: #f4e8fe;
+    --orange-light: #FFEDD6;
+    --summary-header-gradient: linear-gradient(165deg, #6F99A0 0%, #407184 100%);
+    --summary-text-white: #ffffff;
+}
+
+/* CSS Variables for Dark Theme */
+[data-theme="dark"] {
+    /* Primary Colors */
+    --primary-color: #3b82f6;
+    --primary-hover: #2563eb;
+    --primary-light: #1e3a8a;
+    /* Background Colors */
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    --bg-card: #1e293b;
+    --bg-header: #1e293b;
+    --bg-sidebar: #1e293b;
+    --bg-footer: #0f172a;
+    /* Text Colors */
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    /* Border Colors */
+    --border-color: #475569;
+    --border-light: #334155;
+    --border-dark: #64748b;
+    /* Mood Colors */
+    --mood-positive: #10b981;
+    --mood-positive-light: rgba(16, 185, 129, 0.2);
+    --mood-positive-text: #a7f3d0;
+    --mood-neutral: #94a3b8;
+    --mood-neutral-light: rgba(148, 163, 184, 0.2);
+    --mood-neutral-text: #e2e8f0;
+    --mood-negative: #ef4444;
+    --mood-negative-light: rgba(239, 68, 68, 0.2);
+    --mood-negative-text: #fecaca;
+    /* Chart Colors */
+    --chart-blue: #3b82f6;
+    --chart-green: #10b981;
+    --chart-red: #ef4444;
+    --chart-gray: #94a3b8;
+    --chart-light-blue: rgba(59, 130, 246, 0.2);
+    /* Form Colors */
+    --input-bg: #334155;
+    --input-border: #475569;
+    --input-text: #f1f5f9;
+    --input-placeholder: #94a3b8;
+    /* Button Colors */
+    --btn-primary-bg: #3b82f6;
+    --btn-primary-text: #ffffff;
+    --btn-secondary-bg: #334155;
+    --btn-secondary-text: #cbd5e1;
+    --btn-secondary-border: #475569;
+    /* Shadow */
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    /* Status Colors */
+    --status-success: #064e3b;
+    --status-success-text: #a7f3d0;
+    --status-error: #7f1d1d;
+    --status-error-text: #fecaca;
+    --status-warning: #78350f;
+    --status-warning-text: #fef3c7;
+    --status-info: #1e3a8a;
+    --status-info-text: #bfdbfe;
+
+
+    --purple-light: rgba(147, 51, 234, 0.2);
+    --orange-light: rgba(249, 115, 22, 0.2);
+    --summary-header-gradient: linear-gradient(165deg, #0f766e 0%, #134e4a 100%);
+    --summary-text-white: #ffffff;
+
+}
+
+/* Apply theme variables globally */
+body {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Utility classes for theme transitions */
+.theme-transition {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}

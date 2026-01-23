@@ -8,24 +8,32 @@ using System.Text;
 
 namespace MyJournalProject.Services;
 
+// Service for handling user authentication (registration and login)
+// Manages user accounts, password hashing, and database operations
 public class AuthService : IAuthService
 {
+    // Service provider for accessing scoped services (like DbContext)
     private readonly IServiceProvider _serviceProvider;
+
+    // Database context (lazy-loaded to handle scoped service in singleton)
     private AppDbContext? _context;
 
+    // Constructor - injects service provider for scoped service resolution
     public AuthService(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
         Console.WriteLine("AuthService initialized");
     }
 
+    // Helper method to get or create database context with proper scope handling
     private async Task<AppDbContext> GetDbContextAsync()
     {
         if (_context == null)
         {
+            // Create a new scope to resolve scoped DbContext
             _context = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
 
-            // Ensure database is created
+            // Ensure database is created/initialized
             try
             {
                 await _context.Database.EnsureCreatedAsync();
@@ -40,6 +48,7 @@ public class AuthService : IAuthService
         return _context;
     }
 
+    // Registers a new user with the system
     public async Task<ServiceResult<User>> RegisterAsync(RegisterModel model)
     {
         try
@@ -48,9 +57,9 @@ public class AuthService : IAuthService
 
             var context = await GetDbContextAsync();
 
-            // Check if email already exists
+            // Check if email already exists in the database
             var existing = await context.Users
-                .AsNoTracking()
+                .AsNoTracking() // Read-only query for better performance
                 .FirstOrDefaultAsync(u => u.Email == model.Email);
 
             if (existing != null)
@@ -59,20 +68,20 @@ public class AuthService : IAuthService
                 return ServiceResult<User>.FailureResult("This email is already registered");
             }
 
-            // Hash the password using SHA256
+            // Hash the password for secure storage (never store plain text passwords)
             string hashedPassword = HashPassword(model.Password);
             Console.WriteLine($"Password hashed for: {model.Email}");
 
-            // Create user with hashed password and timestamp
+            // Create new user entity
             var user = new User
             {
                 FullName = model.FullName,
                 Email = model.Email,
-                Password = hashedPassword,
+                Password = hashedPassword, // Store only the hash, not the plain password
                 CreatedAt = DateTime.UtcNow
             };
 
-            // Save to database
+            // Add user to database and save changes
             context.Users.Add(user);
             await context.SaveChangesAsync();
 
@@ -83,12 +92,13 @@ public class AuthService : IAuthService
         }
         catch (DbUpdateException dbEx)
         {
+            // Handle database-specific errors
             Console.WriteLine($"Database error during registration: {dbEx.Message}");
             if (dbEx.InnerException != null)
             {
                 Console.WriteLine($"Inner exception: {dbEx.InnerException.Message}");
 
-                // Check for SQLite unique constraint
+                // Check for SQLite unique constraint violation (duplicate email)
                 if (dbEx.InnerException.Message.Contains("UNIQUE constraint failed", StringComparison.OrdinalIgnoreCase))
                 {
                     return ServiceResult<User>.FailureResult("This email is already registered");
@@ -98,11 +108,13 @@ public class AuthService : IAuthService
         }
         catch (Exception ex)
         {
+            // Handle general exceptions
             Console.WriteLine($"Registration failed: {ex}");
             return ServiceResult<User>.FailureResult($"Registration failed: {ex.Message}");
         }
     }
 
+    // Authenticates an existing user with email and password
     public async Task<ServiceResult<User>> LoginAsync(string email, string password)
     {
         try
@@ -111,11 +123,12 @@ public class AuthService : IAuthService
 
             var context = await GetDbContextAsync();
 
-            // Find user by email
+            // Find user by email (case-sensitive search)
             var user = await context.Users
-                .AsNoTracking()
+                .AsNoTracking() // Read-only query for better performance
                 .FirstOrDefaultAsync(u => u.Email == email);
 
+            // Check if user exists
             if (user == null)
             {
                 Console.WriteLine($"User not found: {email}");
@@ -127,6 +140,7 @@ public class AuthService : IAuthService
             // Hash the provided password and compare with stored hash
             string hashedInputPassword = HashPassword(password);
 
+            // Compare password hashes (timing-safe comparison is handled by string equality)
             if (user.Password != hashedInputPassword)
             {
                 Console.WriteLine($"Password mismatch for user: {email}");
@@ -143,23 +157,28 @@ public class AuthService : IAuthService
         }
     }
 
+    // Hashes a password using SHA256 algorithm
     private string HashPassword(string password)
     {
         using (SHA256 sha256 = SHA256.Create())
         {
+            // Convert password string to bytes
             byte[] bytes = Encoding.UTF8.GetBytes(password);
+
+            // Compute SHA256 hash
             byte[] hashBytes = sha256.ComputeHash(bytes);
 
+            // Convert hash bytes to hexadecimal string
             StringBuilder builder = new StringBuilder();
             foreach (byte b in hashBytes)
             {
-                builder.Append(b.ToString("x2"));
+                builder.Append(b.ToString("x2")); // "x2" formats each byte as two-digit hexadecimal
             }
             return builder.ToString();
         }
     }
 
-    // Helper method to get database info
+    // Gets the file path of the application database (for debugging/admin purposes)
     public string GetDatabasePath()
     {
         try

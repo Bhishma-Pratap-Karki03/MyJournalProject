@@ -1,4 +1,5 @@
-﻿.dashboard-content {
+﻿/* dashboard.css - Updated with Theme Variables */
+.dashboard-content {
     max-width: 1110px;
     margin: 0 auto;
 }
@@ -10,13 +11,13 @@
 .page-title {
     font-size: 32px;
     font-weight: 600;
-    color: #3e434e;
+    color: var(--text-primary);
     margin-bottom: 4px;
 }
 
 .page-subtitle {
     font-size: 16px;
-    color: #007fe8;
+    color: var(--primary-color);
 }
 
 /* Stats Grid */
@@ -28,8 +29,8 @@
 }
 
 .stat-card {
-    background: #ffffff;
-    border: 1px solid #c9d5e0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 18px 20px;
     height: 140px;
@@ -38,6 +39,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .stat-header {
@@ -49,7 +51,7 @@
 .stat-label {
     font-size: 12px;
     font-weight: 700;
-    color: #264969;
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -63,13 +65,13 @@
 .stat-number {
     font-size: 40px;
     font-weight: 700;
-    color: #000000;
+    color: var(--text-primary);
     line-height: 1;
 }
 
 .stat-unit {
     font-size: 14px;
-    color: #000000;
+    color: var(--text-primary);
 }
 
 .stat-icon {
@@ -93,7 +95,7 @@
 }
 
 .mood-icon-wrapper {
-    /* NO background-color here - it will be set by mood classes */
+    /* NO background-color here - it will be set by theme variables */
     border-radius: 37px;
     padding: 8px;
     display: flex;
@@ -104,22 +106,22 @@
     border-radius: 50%;
 }
 
-    /* Mood Color Classes - FIXED */
+    /* Mood Color Classes - Using Theme Variables */
     .mood-icon-wrapper.mood-positive {
-        background-color: rgba(0, 218, 159, 0.12) !important;
+        background-color: var(--mood-positive-light) !important;
     }
 
     .mood-icon-wrapper.mood-negative {
-        background-color: rgba(239, 68, 68, 0.12) !important;
+        background-color: var(--mood-negative-light) !important;
     }
 
     .mood-icon-wrapper.mood-neutral {
-        background-color: rgba(148, 163, 184, 0.12) !important;
+        background-color: var(--mood-neutral-light) !important;
     }
 
     /* Default color if no mood class is applied */
     .mood-icon-wrapper:not(.mood-positive):not(.mood-negative):not(.mood-neutral) {
-        background-color: rgba(148, 163, 184, 0.12);
+        background-color: var(--mood-neutral-light);
     }
 
 .mood-icon {
@@ -130,20 +132,20 @@
 .mood-text {
     font-size: 24px;
     font-weight: 600;
-    color: #000000;
+    color: var(--text-primary);
 }
 
-/* Mood Text Colors */
+/* Mood Text Colors - Using Theme Variables */
 .text-positive {
-    color: #0a622e !important;
+    color: var(--mood-positive-text) !important;
 }
 
 .text-negative {
-    color: #890000 !important;
+    color: var(--mood-negative-text) !important;
 }
 
 .text-neutral {
-    color: #0c0e33 !important;
+    color: var(--mood-neutral-text) !important;
 }
 
 /* Charts Grid */
@@ -156,8 +158,8 @@
 }
 
 .chart-card {
-    background: #ffffff;
-    border: 1px solid #c9d5e0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 25px;
     height: 400px;
@@ -165,6 +167,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .chart-header {
@@ -177,30 +180,31 @@
 .chart-title {
     font-size: 20px;
     font-weight: 600;
-    color: #3e434e;
+    color: var(--text-primary);
     margin: 0;
 }
 
 .chart-dropdown select {
-    background-color: #f7fafc;
-    border: 1px solid #c9d5e0;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
     border-radius: 6px;
     padding: 8px 12px;
     font-size: 14px;
-    color: #334a5f;
+    color: var(--input-text);
     cursor: pointer;
     outline: none;
     font-family: 'Inter', sans-serif;
     min-width: 140px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
     .chart-dropdown select:hover {
-        border-color: #007fe8;
+        border-color: var(--primary-color);
     }
 
     .chart-dropdown select:focus {
-        border-color: #007fe8;
-        box-shadow: 0 0 0 2px rgba(0, 127, 232, 0.1);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px var(--primary-light);
     }
 
 .chart-container {
@@ -222,17 +226,18 @@
     padding: 25px;
     height: 260px;
     box-sizing: border-box;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .tags-widget {
-    background: #ffffff;
-    border: 1px solid #c9d5e0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
 }
 
 .widget-title {
     font-size: 20px;
     font-weight: 600;
-    color: #3e434e;
+    color: var(--text-primary);
     margin-bottom: 20px;
 }
 
@@ -252,31 +257,31 @@
     display: flex;
     justify-content: space-between;
     font-size: 14px;
-    color: #264969;
+    color: var(--text-secondary);
 }
 
 .progress-track {
     width: 100%;
     height: 12px;
-    background-color: #f5f7f8;
+    background-color: var(--bg-secondary);
     border-radius: 143px;
     overflow: hidden;
 }
 
 .progress-fill {
     height: 100%;
-    background-color: #007fe8;
+    background-color: var(--primary-color);
     border-radius: 143px;
     transition: width 0.3s ease;
 }
 
 .motivation-widget {
-    background-color: #e6f0f7;
+    background-color: var(--primary-light);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    border: 1px solid #c9d5e0;
+    border: 1px solid var(--border-color);
 }
 
 .motivation-content {
@@ -295,13 +300,13 @@
 .motivation-title {
     font-size: 20px;
     font-weight: 600;
-    color: #007fe8;
+    color: var(--text-primary);
     margin: 0;
 }
 
 .motivation-text {
     font-size: 14px;
-    color: #264969;
+    color: var(--text-secondary);
     line-height: 1.5;
 }
 
@@ -319,6 +324,10 @@
     z-index: 1000;
 }
 
+[data-theme="dark"] .loading-overlay {
+    background-color: rgba(15, 23, 42, 0.8);
+}
+
 .loading-spinner {
     display: flex;
     flex-direction: column;
@@ -329,15 +338,15 @@
     .loading-spinner .spinner {
         width: 40px;
         height: 40px;
-        border: 3px solid #f3f3f3;
-        border-top: 3px solid #007fe8;
+        border: 3px solid var(--bg-secondary);
+        border-top: 3px solid var(--primary-color);
         border-radius: 50%;
         animation: spin 1s linear infinite;
         margin-bottom: 16px;
     }
 
     .loading-spinner p {
-        color: #5b7d9d;
+        color: var(--text-tertiary);
         font-size: 16px;
     }
 

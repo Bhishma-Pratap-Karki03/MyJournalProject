@@ -8,14 +8,17 @@
 @inject IJournalService JournalService
 @implements IDisposable
 
+
 <div class="calendar-page">
-    <!-- Header Section -->
+    <!-- Header Section: Month navigation and filters -->
     <section class="calendar-header-section">
         <div class="container">
-            <!-- Top Bar -->
+            <!-- Top Bar: Month title and navigation controls -->
             <div class="calendar-header-top">
                 <div class="calendar-header-left">
+                    <!-- Current month and year display -->
                     <h1 class="calendar-month-title">@currentMonth.ToString("MMMM yyyy")</h1>
+                    <!-- Previous/Next month navigation arrows -->
                     <div class="calendar-nav-controls">
                         <div class="calendar-nav-arrow" @onclick="NavigateToPreviousMonth">
                             <img src="images/prev-arrow-icon.png" alt="Previous Month" />
@@ -30,21 +33,24 @@
                 </div>
 
                 <div class="calendar-header-right">
-                    <!-- Month/Year Selection -->
+                    <!-- Month/Year Selection Dropdowns -->
                     <div class="calendar-month-year-selector">
                         <div class="calendar-selector-group">
+                            <!-- Month dropdown (January-December) -->
                             <select class="calendar-month-select" @bind="selectedMonth">
                                 @foreach (var month in months)
                                 {
                                     <option value="@month.Value">@month.Text</option>
                                 }
                             </select>
+                            <!-- Year dropdown (2024-2026) -->
                             <select class="calendar-year-select" @bind="selectedYear">
                                 @foreach (var year in years)
                                 {
                                     <option value="@year">@year</option>
                                 }
                             </select>
+                            <!-- Apply button to update calendar view -->
                             <button class="calendar-btn-apply" @onclick="ApplyMonthYearSelection">
                                 Apply
                             </button>
@@ -53,30 +59,36 @@
                 </div>
             </div>
 
-            <!-- Filter Bar -->
+            <!-- Filter Bar: Visual indicators for filtering calendar -->
             <div class="calendar-filter-bar">
                 <span class="calendar-filter-label">Indicators</span>
+                <!-- Filter chips for different journal states -->
                 <div class="calendar-filter-chips">
+                    <!-- Positive mood filter -->
                     <div class="calendar-chip calendar-chip--positive @(activeFilters.Contains("positive") ? "active" : "")"
                          @onclick='() => ToggleFilter("positive")'>
                         <img src="images/chip-positive.png" alt="Positive" />
                         <span>Positive</span>
                     </div>
+                    <!-- Negative mood filter -->
                     <div class="calendar-chip calendar-chip--negative @(activeFilters.Contains("negative") ? "active" : "")"
                          @onclick='() => ToggleFilter("negative")'>
                         <img src="images/chip-negative.png" alt="Negative" />
                         <span>Negative</span>
                     </div>
+                    <!-- Neutral mood filter -->
                     <div class="calendar-chip calendar-chip--neutral @(activeFilters.Contains("neutral") ? "active" : "")"
                          @onclick='() => ToggleFilter("neutral")'>
                         <img src="images/chip-neutral.png" alt="Neutral" />
                         <span>Neutral</span>
                     </div>
+                    <!-- Has entry filter -->
                     <div class="calendar-chip calendar-chip--has-entry @(activeFilters.Contains("hasEntry") ? "active" : "")"
                          @onclick='() => ToggleFilter("hasEntry")'>
                         <img src="images/chip-has-entry.png" alt="Has Entry" />
                         <span>Has Entry</span>
                     </div>
+                    <!-- Missed days filter -->
                     <div class="calendar-chip calendar-chip--missed @(activeFilters.Contains("missed") ? "active" : "")"
                          @onclick='() => ToggleFilter("missed")'>
                         <img src="images/chip-has-missed.png" alt="Missed" />
@@ -87,11 +99,11 @@
         </div>
     </section>
 
-    <!-- Calendar Section -->
+    <!-- Calendar Section: Main calendar grid -->
     <section class="calendar-section">
         <div class="container">
             <div class="calendar-wrapper">
-                <!-- Calendar Header -->
+                <!-- Calendar Header: Day names -->
                 <div class="calendar-days-header">
                     @foreach (var day in dayNames)
                     {
@@ -99,8 +111,9 @@
                     }
                 </div>
 
-                <!-- Calendar Grid -->
+                <!-- Calendar Grid: 6x7 grid of days -->
                 <div class="calendar-grid">
+                    <!-- Loading overlay -->
                     @if (isLoading)
                     {
                         <div class="calendar-loading-overlay">
@@ -111,11 +124,14 @@
                         </div>
                     }
 
+                    <!-- Calendar days (42 cells = 6 weeks) -->
                     @foreach (var day in calendarDays)
                     {
                         <div class="calendar-day-cell @(day.IsCurrentMonth ? "" : "calendar-prev-month") @(day.IsToday ? "calendar-today" : "") @(day.IsSelected ? "calendar-selected-day" : "")">
+                            <!-- Day number header -->
                             <div class="calendar-day-header">
                                 <span class="calendar-date-number">@day.Date.Day</span>
+                                <!-- View details icon for recent journals -->
                                 @if (day.HasJournal && day.Journal != null && IsRecentJournal(day.Journal))
                                 {
                                     <img src="images/ViewDetails.png"
@@ -125,15 +141,20 @@
                                 }
                             </div>
 
+                            <!-- Journal entry card (if exists) -->
                             @if (day.HasJournal && day.Journal != null)
                             {
                                 var journal = day.Journal;
                                 var moodColor = GetMoodColor(journal.PrimaryMood);
 
+                                <!-- Journal event card with mood color -->
                                 <div class="calendar-event-card @($"calendar-event-{moodColor}")" @onclick="() => ViewJournalDetails(journal)">
+                                    <!-- Color bar indicating mood -->
                                     <div class="calendar-event-bar"></div>
                                     <div class="calendar-event-content">
+                                        <!-- Journal title -->
                                         <div class="calendar-event-title">@journal.Title</div>
+                                        <!-- Secondary mood (if exists) -->
                                         @if (!string.IsNullOrEmpty(journal.SecondaryMood1))
                                         {
                                             <div class="calendar-event-detail">
@@ -141,6 +162,7 @@
                                                 @journal.SecondaryMood1
                                             </div>
                                         }
+                                        <!-- Word count -->
                                         <div class="calendar-event-detail">
                                             <div class="calendar-dot @($"calendar-dot-{moodColor}")"></div>
                                             @journal.WordCount words
@@ -150,6 +172,7 @@
                             }
                             else if (day.IsMissedDay)
                             {
+                                <!-- Missed day indicator -->
                                 <div class="calendar-missed-pill">
                                     <img src="images/chip-has-missed.png" alt="Missed" />
                                     <span>Missed Day</span>
@@ -157,12 +180,14 @@
                             }
                             else if (day.IsCurrentMonth && day.IsToday && !day.HasJournal)
                             {
+                                <!-- Clickable "No entries" for today (allows creating new journal) -->
                                 <div class="calendar-no-events" @onclick="() => NavigateToJournalForDate(day.Date)">
                                     No entries
                                 </div>
                             }
                             else if (day.IsCurrentMonth)
                             {
+                                <!-- Non-clickable "No entries" for other days -->
                                 <div class="calendar-no-events">
                                     No entries
                                 </div>
@@ -175,31 +200,37 @@
     </section>
 </div>
 
-<!-- Journal Details Dialog -->
+<!-- Journal Details Dialog (shown when clicking on a journal) -->
 @if (showJournalDetails && selectedJournal != null)
 {
     <div class="dialog-overlay" @onclick="CloseJournalDetails">
         <div class="dialog-container journal-details-dialog" @onclick:stopPropagation="true">
+            <!-- Dialog header -->
             <div class="dialog-header">
                 <h3 class="dialog-title">Journal Details</h3>
                 <button class="dialog-close" @onclick="CloseJournalDetails">×</button>
             </div>
+            <!-- Dialog body with journal details -->
             <div class="dialog-body">
                 <div class="journal-details">
+                    <!-- Entry date -->
                     <div class="detail-row">
                         <span class="detail-label">Date:</span>
                         <span class="detail-value">@selectedJournal.EntryDate.ToString("dd MMMM yyyy")</span>
                     </div>
+                    <!-- Journal title -->
                     <div class="detail-row">
                         <span class="detail-label">Title:</span>
                         <span class="detail-value">@selectedJournal.Title</span>
                     </div>
+                    <!-- Primary mood with color coding -->
                     <div class="detail-row">
                         <span class="detail-label">Primary Mood:</span>
                         <span class="detail-value @GetMoodTextClass(selectedJournal.PrimaryMood)">
                             @selectedJournal.PrimaryMood
                         </span>
                     </div>
+                    <!-- Secondary moods (if any) -->
                     @if (!string.IsNullOrEmpty(selectedJournal.SecondaryMood1) || !string.IsNullOrEmpty(selectedJournal.SecondaryMood2))
                     {
                         <div class="detail-row">
@@ -214,18 +245,22 @@
                             </span>
                         </div>
                     }
+                    <!-- Category -->
                     <div class="detail-row">
                         <span class="detail-label">Category:</span>
                         <span class="detail-value">@selectedJournal.Category</span>
                     </div>
+                    <!-- Word count -->
                     <div class="detail-row">
                         <span class="detail-label">Word Count:</span>
                         <span class="detail-value">@selectedJournal.WordCount words</span>
                     </div>
+                    <!-- Character count -->
                     <div class="detail-row">
                         <span class="detail-label">Character Count:</span>
                         <span class="detail-value">@selectedJournal.CharacterCount characters</span>
                     </div>
+                    <!-- Tags (if any) -->
                     @if (selectedJournal.Tags != null && selectedJournal.Tags.Any())
                     {
                         <div class="detail-row">
@@ -238,6 +273,7 @@
                             </div>
                         </div>
                     }
+                    <!-- Content preview (first 200 characters) -->
                     <div class="detail-row">
                         <span class="detail-label">Content Preview:</span>
                         <div class="content-preview">
@@ -246,6 +282,7 @@
                     </div>
                 </div>
             </div>
+            <!-- Dialog footer with action buttons -->
             <div class="dialog-footer">
                 <button class="dialog-button secondary" @onclick="CloseJournalDetails">Close</button>
                 <button class="dialog-button primary" @onclick="EditSelectedJournal">Edit Journal</button>
@@ -255,42 +292,44 @@
 }
 
 @code {
-    // Current user
+    // Current user information
     private int currentUserId = 0;
     private string currentUserFullName = string.Empty;
 
     // Calendar state
-    private DateTime currentMonth = DateTime.Today;
-    private DateTime selectedDate = DateTime.Today;
-    private List<CalendarDay> calendarDays = new();
+    private DateTime currentMonth = DateTime.Today; // Currently displayed month
+    private DateTime selectedDate = DateTime.Today; // Currently selected date
+    private List<CalendarDay> calendarDays = new(); // Days for current calendar view
     private readonly string[] dayNames = { "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT" };
 
-    // Month/Year selection
-    private int selectedMonth = DateTime.Today.Month;
-    private int selectedYear = DateTime.Today.Year;
-    private List<(int Value, string Text)> months = new();
-    private List<int> years = new();
+    // Month/Year selection state
+    private int selectedMonth = DateTime.Today.Month; // Selected month in dropdown
+    private int selectedYear = DateTime.Today.Year; // Selected year in dropdown
+    private List<(int Value, string Text)> months = new(); // List of months for dropdown
+    private List<int> years = new(); // List of years for dropdown (2024-2026 only)
 
-    // Data
-    private List<MyJournalProject.Entities.Journal> userJournals = new();
-    private MyJournalProject.Entities.Journal? selectedJournal = null;
-    private bool isLoading = false;
-    private bool showJournalDetails = false;
+    // Data state
+    private List<MyJournalProject.Entities.Journal> userJournals = new(); // User's journal entries
+    private MyJournalProject.Entities.Journal? selectedJournal = null; // Currently selected journal for details
+    private bool isLoading = false; // Loading state for data fetching
+    private bool showJournalDetails = false; // Whether journal details dialog is shown
 
-    // Filters
-    private HashSet<string> activeFilters = new();
+    // Filters state
+    private HashSet<string> activeFilters = new(); // Active filter chips
 
+    // Component initialization
     protected override async Task OnInitializedAsync()
     {
-        await LoadCurrentUser();
-        await LoadUserJournals();
-        InitializeMonthYearLists();
-        GenerateCalendar();
+        await LoadCurrentUser(); // Load user from localStorage
+        await LoadUserJournals(); // Load user's journals from database
+        InitializeMonthYearLists(); // Initialize month/year dropdowns
+        GenerateCalendar(); // Generate calendar view
     }
 
+    // Initializes month and year dropdown lists
     private void InitializeMonthYearLists()
     {
-        // Initialize months list
+        // Initialize months list (1-12 with full names)
         months = new List<(int, string)>
         {
             (1, "January"), (2, "February"), (3, "March"), (4, "April"),
@@ -298,7 +337,7 @@
             (9, "September"), (10, "October"), (11, "November"), (12, "December")
         };
 
-        // Initialize years list - ONLY 2024, 2025, 2026
+        // Initialize years list - ONLY 2024, 2025, 2026 (restricted range)
         years = new List<int> { 2024, 2025, 2026 };
 
         // Set initial selected values
@@ -317,6 +356,7 @@
         }
     }
 
+    // Loads current user information from localStorage
     private async Task LoadCurrentUser()
     {
         try
@@ -338,6 +378,7 @@
         }
     }
 
+    // Loads user's journals from the database
     private async Task LoadUserJournals()
     {
         if (currentUserId == 0)
@@ -368,6 +409,7 @@
         }
     }
 
+    // Generates the calendar grid for current month
     private void GenerateCalendar()
     {
         calendarDays.Clear();
@@ -377,24 +419,24 @@
         var daysInMonth = DateTime.DaysInMonth(currentMonth.Year, currentMonth.Month);
 
         // Calculate days from previous month to show
-        var startDayOfWeek = (int)firstDayOfMonth.DayOfWeek;
-        var daysFromPreviousMonth = startDayOfWeek; // 0 = Sunday, 6 = Saturday
+        var startDayOfWeek = (int)firstDayOfMonth.DayOfWeek; // 0 = Sunday, 6 = Saturday
+        var daysFromPreviousMonth = startDayOfWeek;
 
-        // Add days from previous month
+        // Add days from previous month (to fill first week)
         var previousMonth = currentMonth.AddMonths(-1);
         var daysInPreviousMonth = DateTime.DaysInMonth(previousMonth.Year, previousMonth.Month);
 
         for (int i = daysFromPreviousMonth - 1; i >= 0; i--)
         {
             var date = new DateTime(previousMonth.Year, previousMonth.Month, daysInPreviousMonth - i);
-            calendarDays.Add(CreateCalendarDay(date, false));
+            calendarDays.Add(CreateCalendarDay(date, false)); // false = not current month
         }
 
         // Add days from current month
         for (int day = 1; day <= daysInMonth; day++)
         {
             var date = new DateTime(currentMonth.Year, currentMonth.Month, day);
-            calendarDays.Add(CreateCalendarDay(date, true));
+            calendarDays.Add(CreateCalendarDay(date, true)); // true = current month
         }
 
         // Add days from next month to complete grid (6 rows * 7 days = 42 cells)
@@ -405,36 +447,39 @@
         for (int i = 1; i <= totalCells - daysAdded; i++)
         {
             var date = new DateTime(nextMonth.Year, nextMonth.Month, i);
-            calendarDays.Add(CreateCalendarDay(date, false));
+            calendarDays.Add(CreateCalendarDay(date, false)); // false = not current month
         }
 
-        // Apply filters
+        // Apply any active filters
         ApplyFilters();
     }
 
+    // Creates a CalendarDay object for a specific date
     private CalendarDay CreateCalendarDay(DateTime date, bool isCurrentMonth)
-{
-    var journal = userJournals.FirstOrDefault(j => j.EntryDate.Date == date.Date);
-    var hasJournal = journal != null;
-    var isToday = date.Date == DateTime.Today;
-    var isSelected = date.Date == selectedDate.Date;
-
-    // FIXED: Only show missed days for past dates (excluding today)
-    // Today is not a missed day until tomorrow
-    var isMissedDay = isCurrentMonth && !hasJournal && date.Date < DateTime.Today.Date;
-
-    return new CalendarDay
     {
-        Date = date,
-        IsCurrentMonth = isCurrentMonth,
-        IsToday = isToday,
-        IsSelected = isSelected,
-        HasJournal = hasJournal,
-        Journal = journal,
-        IsMissedDay = isMissedDay
-    };
-}
+        // Find journal for this date
+        var journal = userJournals.FirstOrDefault(j => j.EntryDate.Date == date.Date);
+        var hasJournal = journal != null;
+        var isToday = date.Date == DateTime.Today;
+        var isSelected = date.Date == selectedDate.Date;
 
+        // FIXED: Only show missed days for past dates (excluding today)
+        // Today is not a missed day until tomorrow
+        var isMissedDay = isCurrentMonth && !hasJournal && date.Date < DateTime.Today.Date;
+
+        return new CalendarDay
+        {
+            Date = date,
+            IsCurrentMonth = isCurrentMonth,
+            IsToday = isToday,
+            IsSelected = isSelected,
+            HasJournal = hasJournal,
+            Journal = journal,
+            IsMissedDay = isMissedDay
+        };
+    }
+
+    // Applies active filters to calendar days
     private void ApplyFilters()
     {
         if (!activeFilters.Any()) return;
@@ -445,6 +490,7 @@
         }
     }
 
+    // Determines if a day should be shown based on active filters
     private bool ShouldShowDay(CalendarDay day)
     {
         if (!activeFilters.Any()) return true;
@@ -460,16 +506,18 @@
         {
             var mood = day.Journal.PrimaryMood.ToLower();
 
-            if (activeFilters.Contains("hasEntry")) return true;
+            if (activeFilters.Contains("hasEntry")) return true; // Show all entries
             if (activeFilters.Contains("positive") && mood == "positive") return true;
             if (activeFilters.Contains("negative") && mood == "negative") return true;
             if (activeFilters.Contains("neutral") && mood == "neutral") return true;
         }
 
-        return false;
+        return false; // Don't show if no filters match
     }
 
     // Navigation methods
+
+    // Navigates to previous month
     private void NavigateToPreviousMonth()
     {
         currentMonth = currentMonth.AddMonths(-1);
@@ -479,6 +527,7 @@
         StateHasChanged();
     }
 
+    // Navigates to next month
     private void NavigateToNextMonth()
     {
         currentMonth = currentMonth.AddMonths(1);
@@ -488,6 +537,7 @@
         StateHasChanged();
     }
 
+    // Navigates to today's date
     private void NavigateToToday()
     {
         currentMonth = DateTime.Today;
@@ -497,6 +547,7 @@
         StateHasChanged();
     }
 
+    // Applies selected month/year from dropdowns
     private void ApplyMonthYearSelection()
     {
         currentMonth = new DateTime(selectedYear, selectedMonth, 1);
@@ -504,16 +555,19 @@
         StateHasChanged();
     }
 
+    // Navigates to journal page for a specific date (only works for today)
     private void NavigateToJournalForDate(DateTime date)
     {
-        // Only navigate if it's today and has no journal
+        // Only navigate if it's today and has no journal (allows creating new entry)
         if (date.Date == DateTime.Today.Date && !userJournals.Any(j => j.EntryDate.Date == date.Date))
         {
             Navigation.NavigateTo($"/journal/{date:yyyy-MM-dd}");
         }
     }
 
-    // Day selection
+    // Journal details methods
+
+    // Shows journal details dialog for a specific journal
     private void ViewJournalDetails(MyJournalProject.Entities.Journal journal)
     {
         selectedJournal = journal;
@@ -521,6 +575,7 @@
         StateHasChanged();
     }
 
+    // Closes journal details dialog
     private void CloseJournalDetails()
     {
         showJournalDetails = false;
@@ -528,6 +583,7 @@
         StateHasChanged();
     }
 
+    // Navigates to edit page for selected journal
     private void EditSelectedJournal()
     {
         if (selectedJournal != null)
@@ -537,6 +593,8 @@
     }
 
     // Filter methods
+
+    // Toggles a filter on/off
     private void ToggleFilter(string filter)
     {
         if (activeFilters.Contains(filter))
@@ -553,28 +611,32 @@
     }
 
     // Helper methods
+
+    // Gets CSS color class for a mood
     private string GetMoodColor(string primaryMood)
     {
         return primaryMood.ToLower() switch
         {
-            "positive" => "positive",
-            "negative" => "negative",
-            "neutral" => "neutral",
+            "positive" => "positive",  // Green
+            "negative" => "negative",  // Red
+            "neutral" => "neutral",    // Gray
             _ => "neutral"
         };
     }
 
+    // Gets CSS text color class for a mood
     private string GetMoodTextClass(string primaryMood)
     {
         return primaryMood.ToLower() switch
         {
-            "positive" => "text-positive",
-            "negative" => "text-negative",
-            "neutral" => "text-neutral",
+            "positive" => "text-positive",  // Green text
+            "negative" => "text-negative",  // Red text
+            "neutral" => "text-neutral",    // Gray text
             _ => ""
         };
     }
 
+    // Creates a preview of journal content by stripping HTML tags
     private string GetContentPreview(string htmlContent)
     {
         if (string.IsNullOrEmpty(htmlContent)) return string.Empty;
@@ -589,10 +651,11 @@
             text = text.Substring(0, 200) + "...";
         }
 
-        // Escape HTML for display
+        // Escape HTML for safe display
         return text.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
     }
 
+    // Checks if a journal was created recently (within 24 hours)
     private bool IsRecentJournal(MyJournalProject.Entities.Journal journal)
     {
         if (journal == null || journal.CreatedAt == default) return false;
@@ -601,24 +664,28 @@
         return (DateTime.UtcNow - journal.CreatedAt).TotalHours <= 24;
     }
 
+    // Cleanup method
     public void Dispose()
     {
         // Clean up if needed
     }
 
     // Helper classes
+
+    // Represents a day in the calendar
     private class CalendarDay
     {
-        public DateTime Date { get; set; }
-        public bool IsCurrentMonth { get; set; }
-        public bool IsToday { get; set; }
-        public bool IsSelected { get; set; }
-        public bool HasJournal { get; set; }
-        public MyJournalProject.Entities.Journal? Journal { get; set; }
-        public bool IsMissedDay { get; set; }
-        public bool IsVisible { get; set; } = true;
+        public DateTime Date { get; set; } // Date of the day
+        public bool IsCurrentMonth { get; set; } // True if day is in current month
+        public bool IsToday { get; set; } // True if day is today
+        public bool IsSelected { get; set; } // True if day is selected
+        public bool HasJournal { get; set; } // True if day has a journal entry
+        public MyJournalProject.Entities.Journal? Journal { get; set; } // Journal entry (if exists)
+        public bool IsMissedDay { get; set; } // True if day is missed (past date, no journal)
+        public bool IsVisible { get; set; } = true; // True if day should be shown (based on filters)
     }
 
+    // User information structure for deserialization
     private class UserInfo
     {
         public int Id { get; set; }

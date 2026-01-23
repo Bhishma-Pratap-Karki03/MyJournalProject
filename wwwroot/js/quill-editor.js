@@ -1,4 +1,4 @@
-﻿// Quill Editor JavaScript Bridge - No Image Upload
+﻿// Quill Editor JavaScript Bridge
 window.QuillEditor = {
     editors: {},
 

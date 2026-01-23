@@ -9,13 +9,20 @@
 @inject IJournalService JournalService
 @implements IDisposable
 
+<!--
+    My Journal List page component
+    Displays all journal entries with filtering, sorting, and pagination capabilities
+    Users can search, filter by various criteria, and manage their journal entries
+-->
+
 <div class="journal-list-page">
-    <!-- Filters Section -->
+    <!-- Filters Section - Contains search, date range, and manual filter inputs -->
     <section class="filters-section">
         <div class="container">
             <div class="filter-card">
-                <!-- Top Row: Search and Date -->
+                <!-- Top Row: Search and Date Filters -->
                 <div class="filter-top">
+                    <!-- Search input for filtering journals by title -->
                     <div class="search-bar">
                         <img src="images/search-icon.png" alt="Search" class="icon-search" />
                         <input type="text"
@@ -26,33 +33,40 @@
                                @onkeypress="OnSearchKeyPress" />
                     </div>
 
+                    <!-- Date range filter with visual calendar icons -->
                     <div class="date-actions-group">
-                        <div class="date-range">
-                            <div class="date-input">
-                                <span class="label">From</span>
-                                <div class="date-value" @onclick='() => ShowDatePicker("from")'>
-                                    <img src="images/from-calendar-icon.png" alt="Calendar" />
-                                    <span class="@(filterFromDate.HasValue ? "date-text-green" : "")">
-                                        @(filterFromDate?.ToString("MM/dd/yyyy") ?? "Select date")
-                                    </span>
+                        <div class="date-range-wrapper">
+                            <div class="date-range">
+                                <!-- From date selector -->
+                                <div class="date-input from-date">
+                                    <span class="label">From</span>
+                                    <div class="date-value" @onclick='() => ShowDatePicker("from")'>
+                                        <img src="images/from-calendar-icon.png" alt="Calendar" />
+                                        <span class="@(filterFromDate.HasValue ? "date-text-green" : "")">
+                                            @(filterFromDate?.ToString("MM/dd/yyyy") ?? "Select date")
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="separator">
-                                <img src="images/date-separator.png" alt="Separator" />
-                            </div>
+                                <!-- Visual separator between dates -->
+                                <div class="separator">
+                                    <img src="images/date-separator.png" alt="Separator" />
+                                </div>
 
-                            <div class="date-input">
-                                <span class="label">To</span>
-                                <div class="date-value" @onclick='() => ShowDatePicker("to")'>
-                                    <img src="images/to-calendar-icon.png" alt="Calendar" />
-                                    <span class="@(filterToDate.HasValue ? "date-text-green" : "")">
-                                        @(filterToDate?.ToString("MM/dd/yyyy") ?? "Select date")
-                                    </span>
+                                <!-- To date selector -->
+                                <div class="date-input to-date">
+                                    <span class="label">To</span>
+                                    <div class="date-value" @onclick='() => ShowDatePicker("to")'>
+                                        <img src="images/to-calendar-icon.png" alt="Calendar" />
+                                        <span class="@(filterToDate.HasValue ? "date-text-green" : "")">
+                                            @(filterToDate?.ToString("MM/dd/yyyy") ?? "Select date")
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Filter action buttons -->
                         <div class="action-buttons">
                             <button class="btn-apply" @onclick="ApplyFilters">Apply</button>
                             <button class="btn-cancel" @onclick="ResetFilters">Clear</button>
@@ -60,7 +74,7 @@
                     </div>
                 </div>
 
-                <!-- Manual Tag and Category Inputs -->
+                <!-- Manual Tag and Category Inputs - For precise filtering -->
                 <div class="manual-filters">
                     <div class="manual-input-group">
                         <label>Enter Tag:</label>
@@ -81,7 +95,7 @@
                     </div>
                 </div>
 
-                <!-- Manual Primary and Secondary Mood Inputs -->
+                <!-- Manual Primary and Secondary Mood Inputs - For mood-based filtering -->
                 <div class="manual-mood-inputs">
                     <div class="manual-mood-input-group">
                         <label>Enter Primary Mood:</label>
@@ -105,12 +119,12 @@
         </div>
     </section>
 
-    <!-- REMOVED SORT SECTION COMPLETELY -->
-    <!-- Journal List Section -->
+    <!-- Journal List Section - Displays filtered and paginated journal entries -->
     <section class="journal-list-section">
         <div class="container">
             @if (isLoading)
             {
+                <!-- Loading spinner shown while fetching journals -->
                 <div class="loading-spinner">
                     <div class="spinner"></div>
                     <p>Loading journals...</p>
@@ -118,54 +132,65 @@
             }
             else if (!filteredJournals.Any())
             {
+                <!-- Empty state when no journals match filters -->
                 <div class="empty-state">
                     <img src="images/empty-journal.png" alt="No journals" />
                     <h3>No journals found</h3>
                     <p>@(HasActiveFilters ? "Try changing your filters or search" : "Start by creating your first journal entry!")</p>
                     @if (!HasActiveFilters)
                     {
+                        <!-- Create journal button shown when no filters are active -->
                         <button class="btn-primary" @onclick="NavigateToJournal">Create Journal</button>
                     }
                 </div>
             }
             else
             {
+                <!-- Journal cards grid displays paginated journals -->
                 <div class="journal-list">
                     @foreach (var journal in pagedJournals)
                     {
+                        <!-- Individual journal card -->
                         <article class="journal-card @(IsRecentJournal(journal) ? "featured" : "")">
+                            <!-- Date display section -->
                             <div class="card-date">
                                 <span class="day">@journal.EntryDate.Day.ToString("00")</span>
                                 <span class="month">@journal.EntryDate.ToString("MMM").ToUpper()</span>
                                 <span class="year">@journal.EntryDate.Year</span>
                             </div>
                             <div class="card-body">
+                                <!-- Card header with title and badges -->
                                 <div class="card-header">
                                     <div class="title-group">
                                         <h2>@journal.Title</h2>
                                         <span class="badge badge-gray">@journal.Category?.ToUpper()</span>
                                     </div>
                                     <div class="status-group">
+                                        <!-- Primary mood badge with color coding -->
                                         <div class="status-tag @GetMoodColorClass(journal.PrimaryMood)">
                                             <span>@journal.PrimaryMood.ToUpper()</span>
                                         </div>
                                         @if (!string.IsNullOrEmpty(journal.SecondaryMood1))
                                         {
+                                            <!-- Secondary mood 1 badge -->
                                             <div class="status-tag gray-bg">
                                                 <span>@journal.SecondaryMood1</span>
                                             </div>
                                         }
                                         @if (!string.IsNullOrEmpty(journal.SecondaryMood2))
                                         {
+                                            <!-- Secondary mood 2 badge -->
                                             <div class="status-tag gray-bg">
                                                 <span>@journal.SecondaryMood2</span>
                                             </div>
                                         }
                                     </div>
                                 </div>
+                                <!-- Content preview (strips HTML tags) -->
                                 <p class="card-description">
                                     @GetContentPreview(journal.Content)
                                 </p>
+                                <!-- Card footer with metadata and action buttons -->
                                 <div class="card-footer">
                                     <div class="meta-info">
                                         <div class="meta-item">
@@ -183,14 +208,17 @@
                                             }
                                             @if (journal.Tags.Count > 3)
                                             {
+                                                <!-- Indicate additional tags -->
                                                 <span>+@(journal.Tags.Count - 3) more</span>
                                             }
                                         </div>
                                     </div>
                                     <div class="actions">
+                                        <!-- Edit button -->
                                         <button class="btn-icon" @onclick="() => EditJournal(journal)">
                                             <img src="images/edit-icon.svg" alt="Edit" />
                                         </button>
+                                        <!-- Delete button -->
                                         <button class="btn-icon" @onclick="() => DeleteJournal(journal)">
                                             <img src="images/delete-icon.svg" alt="Delete" />
                                         </button>
@@ -201,27 +229,31 @@
                     }
                 </div>
 
-                <!-- Pagination Section -->
+                <!-- Pagination Section - Only shown when multiple pages exist -->
                 @if (totalPages > 1)
                 {
                     <div class="pagination-section">
                         <div class="pagination-bar">
+                            <!-- Showing X to Y of Z entries text -->
                             <span class="showing-text">
                                 Showing @((currentPage - 1) * pageSize + 1) to
                                 @Math.Min(currentPage * pageSize, totalItems) of @totalItems entries
                             </span>
                             <div class="pagination-controls">
+                                <!-- First page button -->
                                 <button class="page-btn arrow @(currentPage == 1 ? "disabled" : "")"
                                         @onclick="() => ChangePage(1)"
                                         disabled="@(currentPage == 1)">
                                     <img src="images/prev-arrow-icon.png" alt="First" />
                                 </button>
+                                <!-- Previous page button -->
                                 <button class="page-btn arrow @(currentPage == 1 ? "disabled" : "")"
                                         @onclick="() => ChangePage(currentPage - 1)"
                                         disabled="@(currentPage == 1)">
                                     <img src="images/prev-arrow-icon.png" alt="Prev" />
                                 </button>
 
+                                <!-- Page number buttons -->
                                 @for (int i = startPage; i <= endPage; i++)
                                 {
                                     <button class="page-btn @(i == currentPage ? "active" : "")"
@@ -230,11 +262,13 @@
                                     </button>
                                 }
 
+                                <!-- Next page button -->
                                 <button class="page-btn arrow @(currentPage == totalPages ? "disabled" : "")"
                                         @onclick="() => ChangePage(currentPage + 1)"
                                         disabled="@(currentPage == totalPages)">
                                     <img src="images/next-arrow-icon.png" alt="Next" />
                                 </button>
+                                <!-- Last page button -->
                                 <button class="page-btn arrow @(currentPage == totalPages ? "disabled" : "")"
                                         @onclick="() => ChangePage(totalPages)"
                                         disabled="@(currentPage == totalPages)">
@@ -249,7 +283,7 @@
     </section>
 </div>
 
-<!-- Date Picker Modal -->
+<!-- Date Picker Modal - Shown when user clicks on date input -->
 @if (showDatePicker)
 {
     <div class="date-picker-modal" @onclick="CloseDatePicker">
@@ -273,7 +307,7 @@
     </div>
 }
 
-<!-- Confirmation Dialog -->
+<!-- Confirmation Dialog for journal deletion -->
 @if (showDeleteDialog)
 {
     <div class="dialog-overlay" @onclick="CloseDeleteDialog">
@@ -295,61 +329,63 @@
 }
 
 @code {
-    // Current user
+    // Current user information
     private int currentUserId = 0;
     private string currentUserFullName = string.Empty;
 
-    // Data
-    private List<Entities.Journal> allJournals = new();
-    private List<Entities.Journal> filteredJournals = new();
-    private List<Entities.Journal> pagedJournals = new();
-    private Entities.Journal? journalToDelete = null;
+    // Data collections
+    private List<Entities.Journal> allJournals = new(); // All journals for the user
+    private List<Entities.Journal> filteredJournals = new(); // Journals after applying filters
+    private List<Entities.Journal> pagedJournals = new();// Journals for current page
+    private Entities.Journal? journalToDelete = null; // Journal selected for deletion
 
     // Filter states
-    private string searchText = string.Empty;
-    private DateTime? filterFromDate = null;
-    private DateTime? filterToDate = null;
-    private string? selectedPrimaryMood = null;
-    private string? selectedSecondaryMood = null;
-    private string? selectedTag = null;
-    private string? selectedCategory = null;
+    private string searchText = string.Empty; // Search text for title filtering
+    private DateTime? filterFromDate = null; // Start date for date range filter
+    private DateTime? filterToDate = null; // End date for date range filter
+    private string? selectedPrimaryMood = null; // Selected primary mood filter
+    private string? selectedSecondaryMood = null; // Selected secondary mood filter
+    private string? selectedTag = null; // Selected tag filter
+    private string? selectedCategory = null; // Selected category filter
 
-    // Manual input fields
-    private string manualTagInput = string.Empty;
-    private string manualCategoryInput = string.Empty;
-    private string manualPrimaryMoodInput = string.Empty;
-    private string manualSecondaryMoodInput = string.Empty;
+    // Manual input fields (alternative to dropdowns)
+    private string manualTagInput = string.Empty; // Manual tag input
+    private string manualCategoryInput = string.Empty; // Manual category input
+    private string manualPrimaryMoodInput = string.Empty; // Manual primary mood input
+    private string manualSecondaryMoodInput = string.Empty; // Manual secondary mood input
 
-    // Available options (still loaded but not used in dropdowns)
-    private List<string> availablePrimaryMoods = new();
-    private List<string> availableSecondaryMoods = new();
-    private List<string> availableTags = new();
-    private List<string> availableCategories = new();
+    // Available filter options (loaded from database)
+    private List<string> availablePrimaryMoods = new(); // List of available primary moods
+    private List<string> availableSecondaryMoods = new(); // List of available secondary moods
+    private List<string> availableTags = new(); // List of available tags
+    private List<string> availableCategories = new(); // List of available categories
 
     // UI states
-    private bool isLoading = true;
-    private bool showDatePicker = false;
-    private bool showDeleteDialog = false;
+    private bool isLoading = true; // Loading state for data fetching
+    private bool showDatePicker = false; // Date picker modal visibility
+    private bool showDeleteDialog = false; // Delete confirmation dialog visibility
 
-    // Date picker
-    private string datePickerType = "from";
-    private DateTime? datePickerDate = null;
+    // Date picker state
+    private string datePickerType = "from"; // Which date field is being edited
+    private DateTime? datePickerDate = null; // Date selected in date picker
 
     // Pagination
-    private const int pageSize = 7;
-    private int currentPage = 1;
-    private int totalItems = 0;
-    private int totalPages = 0;
-    private int startPage = 1;
-    private int endPage = 1;
+    private const int pageSize = 7; // Number of journals per page
+    private int currentPage = 1; // Current page number
+    private int totalItems = 0; // Total number of filtered journals
+    private int totalPages = 0; // Total number of pages
+    private int startPage = 1; // First page number to show in pagination
+    private int endPage = 1; // Last page number to show in pagination
 
+    // Component lifecycle method
     protected override async Task OnInitializedAsync()
     {
-        await LoadCurrentUser();
-        await LoadJournals();
-        await LoadAvailableOptions();
+        await LoadCurrentUser(); // Load current user from localStorage
+        await LoadJournals(); // Load user's journals from database
+        await LoadAvailableOptions(); // Load available filter options
     }
 
+    // Loads current user information from localStorage
     private async Task LoadCurrentUser()
     {
         try
@@ -371,16 +407,18 @@
         }
     }
 
+    // Loads all journals for the current user
     private async Task LoadJournals()
     {
         if (currentUserId == 0)
         {
+            // Redirect to login if no user is logged in
             Navigation.NavigateTo("/login");
             return;
         }
 
         isLoading = true;
-        StateHasChanged();
+        StateHasChanged(); // Update UI to show loading state
 
         try
         {
@@ -388,7 +426,7 @@
             if (result.Success && result.Data != null)
             {
                 allJournals = result.Data;
-                ApplyFiltersAndSort();
+                ApplyFiltersAndSort(); // Apply any active filters
             }
         }
         catch (Exception ex)
@@ -398,20 +436,21 @@
         finally
         {
             isLoading = false;
-            StateHasChanged();
+            StateHasChanged(); // Update UI to hide loading state
         }
     }
 
+    // Loads available filter options from the database
     private async Task LoadAvailableOptions()
     {
         if (currentUserId == 0) return;
 
         try
         {
-            // Load primary moods
+            // Load primary moods (fixed list)
             availablePrimaryMoods = new List<string> { "Positive", "Neutral", "Negative" };
 
-            // Load secondary moods
+            // Load secondary moods (combines user's moods with predefined list)
             var moodsResult = await JournalService.GetUserMoodsAsync(currentUserId);
             var predefinedMoods = new List<string>
             {
@@ -424,8 +463,8 @@
             if (moodsResult.Success && moodsResult.Data != null)
             {
                 availableSecondaryMoods = moodsResult.Data
-                    .Where(m => !availablePrimaryMoods.Contains(m))
-                    .Union(predefinedMoods)
+                    .Where(m => !availablePrimaryMoods.Contains(m)) // Exclude primary moods
+                    .Union(predefinedMoods) // Add predefined moods
                     .Distinct()
                     .OrderBy(m => m)
                     .ToList();
@@ -435,14 +474,14 @@
                 availableSecondaryMoods = predefinedMoods.OrderBy(m => m).ToList();
             }
 
-            // Load tags
+            // Load user's tags
             var tagsResult = await JournalService.GetUserTagsAsync(currentUserId);
             if (tagsResult.Success && tagsResult.Data != null)
             {
                 availableTags = tagsResult.Data;
             }
 
-            // Load categories
+            // Load user's categories
             var categoriesResult = await JournalService.GetUserCategoriesAsync(currentUserId);
             if (categoriesResult.Success && categoriesResult.Data != null)
             {
@@ -455,6 +494,7 @@
         }
     }
 
+    // Applies all active filters and sorting to the journal list
     private void ApplyFiltersAndSort()
     {
         // Start with all journals
@@ -505,22 +545,27 @@
         // Default sorting: Newest to Oldest (removed sort dropdown)
         query = query.OrderByDescending(j => j.EntryDate);
 
+        // Get filtered results
         filteredJournals = query.ToList();
         totalItems = filteredJournals.Count;
         totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
 
+        // Update pagination and current page data
         UpdatePagination();
         UpdatePageData();
     }
 
+    // Updates pagination calculations based on current filtered results
     private void UpdatePagination()
     {
         totalPages = Math.Max(1, (int)Math.Ceiling((double)totalItems / pageSize));
         currentPage = Math.Max(1, Math.Min(currentPage, totalPages));
 
+        // Calculate which page numbers to show in pagination controls
         startPage = Math.Max(1, currentPage - 2);
         endPage = Math.Min(totalPages, currentPage + 2);
 
+        // Ensure we show at least 5 page numbers if possible
         if (endPage - startPage < 4)
         {
             if (startPage == 1)
@@ -534,25 +579,27 @@
         }
     }
 
+    // Updates the journals shown on the current page
     private void UpdatePageData()
     {
         var skip = (currentPage - 1) * pageSize;
         pagedJournals = filteredJournals.Skip(skip).Take(pageSize).ToList();
     }
 
+    // Changes to a specific page
     private void ChangePage(int page)
     {
         if (page < 1 || page > totalPages || page == currentPage) return;
 
         currentPage = page;
         UpdatePageData();
-        StateHasChanged();
+        StateHasChanged(); // Update UI
     }
 
-    // Filter methods
+    // Applies all active filters from manual inputs
     private async Task ApplyFilters()
     {
-        currentPage = 1;
+        currentPage = 1; // Reset to first page when applying new filters
 
         // Apply manual inputs if they exist
         if (!string.IsNullOrWhiteSpace(manualTagInput))
@@ -584,8 +631,10 @@
         await Task.CompletedTask;
     }
 
+    // Resets all filters to their default state
     private async Task ResetFilters()
     {
+        // Clear all filter values
         searchText = string.Empty;
         filterFromDate = null;
         filterToDate = null;
@@ -604,6 +653,7 @@
         await Task.CompletedTask;
     }
 
+    // Checks if any filters are currently active
     private bool HasActiveFilters =>
         !string.IsNullOrWhiteSpace(searchText) ||
         filterFromDate.HasValue ||
@@ -617,7 +667,8 @@
         !string.IsNullOrWhiteSpace(manualPrimaryMoodInput) ||
         !string.IsNullOrWhiteSpace(manualSecondaryMoodInput);
 
-    // Manual input methods
+    // Manual input methods (handle Enter key for immediate filtering)
+
     private void OnManualTagKeyPress(KeyboardEventArgs e)
     {
         if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(manualTagInput))
@@ -658,11 +709,13 @@
         }
     }
 
-    // Date picker methods
+
+    // Shows the date picker modal for a specific date field
     private void ShowDatePicker(string type)
     {
         datePickerType = type;
 
+        // Set initial date for date picker
         if (type == "from" && filterFromDate.HasValue)
         {
             datePickerDate = filterFromDate.Value;
@@ -680,6 +733,7 @@
         StateHasChanged();
     }
 
+    // Closes the date picker modal without saving
     private void CloseDatePicker()
     {
         showDatePicker = false;
@@ -687,6 +741,7 @@
         StateHasChanged();
     }
 
+    // Applies the selected date from the date picker
     private void SetDate()
     {
         if (datePickerDate.HasValue)
@@ -702,6 +757,7 @@
         }
         else
         {
+            // Clear the date if none selected
             if (datePickerType == "from")
             {
                 filterFromDate = null;
@@ -716,12 +772,13 @@
         StateHasChanged();
     }
 
-    // Journal actions
+    // Navigates to the edit page for a specific journal
     private void EditJournal(Entities.Journal journal)
     {
         Navigation.NavigateTo($"/journal/{journal.EntryDate:yyyy-MM-dd}");
     }
 
+    // Shows delete confirmation dialog for a journal
     private void DeleteJournal(Entities.Journal journal)
     {
         journalToDelete = journal;
@@ -729,6 +786,7 @@
         StateHasChanged();
     }
 
+    // Closes the delete confirmation dialog without deleting
     private void CloseDeleteDialog()
     {
         showDeleteDialog = false;
@@ -736,6 +794,7 @@
         StateHasChanged();
     }
 
+    // Confirms and executes journal deletion
     private async Task ConfirmDelete()
     {
         if (journalToDelete == null) return;
@@ -745,7 +804,7 @@
             var result = await JournalService.DeleteJournalAsync(journalToDelete.Id, currentUserId);
             if (result.Success)
             {
-                await LoadJournals();
+                await LoadJournals(); // Reload the list after deletion
                 CloseDeleteDialog();
             }
         }
@@ -755,12 +814,13 @@
         }
     }
 
+    // Navigates to the journal creation page
     private void NavigateToJournal()
     {
         Navigation.NavigateTo("/journal");
     }
 
-    // Helper methods
+    // Checks if a journal was created recently (within 24 hours)
     private bool IsRecentJournal(Entities.Journal journal)
     {
         if (journal == null || journal.CreatedAt == default) return false;
@@ -768,18 +828,20 @@
         return (DateTime.UtcNow - journal.CreatedAt).TotalHours <= 24;
     }
 
+    // Returns CSS class for mood badge based on mood type
     private string GetMoodColorClass(string mood)
     {
         if (string.IsNullOrEmpty(mood)) return "gray-bg";
 
         return mood.ToLower() switch
         {
-            "positive" => "green-bg",
-            "negative" => "red-bg",
-            _ => "gray-bg"
+            "positive" => "green-bg", // Green for positive mood
+            "negative" => "red-bg", // Red for negative mood
+            _ => "gray-bg" // Gray for neutral or other
         };
     }
 
+    // Creates a preview of journal content by stripping HTML tags
     private string GetContentPreview(string htmlContent)
     {
         if (string.IsNullOrEmpty(htmlContent)) return string.Empty;
@@ -797,6 +859,7 @@
         return text;
     }
 
+    // Converts absolute time to relative time
     private string GetRelativeTime(DateTime date)
     {
         var timeSpan = DateTime.UtcNow - date;
@@ -813,6 +876,7 @@
         return date.ToLocalTime().ToString("MM/dd/yyyy");
     }
 
+    // Handles Enter key in search input
     private void OnSearchKeyPress(KeyboardEventArgs e)
     {
         if (e.Key == "Enter")
@@ -821,12 +885,13 @@
         }
     }
 
+    // IDisposable implementation for cleanup
     public void Dispose()
     {
         // Clean up if needed
     }
 
-    // Helper class for user info
+    // Helper class for user info deserialization
     private class UserInfo
     {
         public int Id { get; set; }

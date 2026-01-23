@@ -1,5 +1,4 @@
-﻿// wwwroot/js/charts.js
-let moodChart = null;
+﻿let moodChart = null;
 let wordCountChart = null;
 let analyticsMoodChart = null;
 let moodTrendChart = null;

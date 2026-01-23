@@ -1,15 +1,34 @@
 ﻿@using Microsoft.JSInterop
 @inject IJSRuntime JSRuntime
+@inject IThemeService ThemeService
+@implements IDisposable
+
 
 <div class="header">
     <div class="top-header">
         <div class="header-right">
             <div class="header-actions">
-                <img src="images/notifications-icon.svg" alt="Notifications" class="icon-btn">
+
+                <!-- Notifications icon -->
+                <img src="images/notifications-icon.png" alt="Notifications" class="icon-btn">
                 <div class="divider"></div>
-                <img src="images/theme-icon.svg" alt="Theme Toggle" class="icon-btn">
+
+                <!-- Theme Toggle Button - switches between light and dark modes -->
+                <button class="theme-toggle-btn" @onclick="ToggleTheme">
+                    @if (_currentTheme == "dark")
+                    {
+                        <!-- Show light mode icon when in dark mode -->
+                        <img src="images/theme-light-icon.svg" alt="Switch to Light Mode" class="theme-icon">
+                    }
+                    else
+                    {
+                        <!-- Show dark mode icon when in light mode -->
+                        <img src="images/theme-dark-icon.svg" alt="Switch to Dark Mode" class="theme-icon">
+                    }
+                </button>
             </div>
 
+            <!-- User profile section with avatar and name -->
             <div class="user-profile">
                 <img src="images/avatar.jpg" alt="User Avatar" class="avatar">
                 <span class="user-name">@userFullName</span>
@@ -19,13 +38,39 @@
 </div>
 
 @code {
+    // User's full name to display 
     private string userFullName = "Guest";
 
+    // Current theme (light/dark)
+    private string _currentTheme = "light";
+
+    // Reference for JavaScript interop (disposed properly)
+    private DotNetObjectReference<Header>? _dotNetObjectRef;
+
+    // Called when component is initialized
     protected override async Task OnInitializedAsync()
     {
+        // Load user data from localStorage
         await LoadUserData();
+
+        // Initialize theme from saved preference
+        await InitializeTheme();
     }
 
+    // Initializes theme from user's saved preference
+    private async Task InitializeTheme()
+    {
+        var themeResult = await ThemeService.GetCurrentThemeAsync();
+        if (themeResult.Success)
+        {
+            _currentTheme = themeResult.Data;
+
+            // Update UI to reflect theme change
+            StateHasChanged();
+        }
+    }
+
+    // Loads user data from localStorage to display user's name
     private async Task LoadUserData()
     {
         try
@@ -35,6 +80,7 @@
 
             if (!string.IsNullOrEmpty(userJson))
             {
+                // Deserialize JSON to UserData object
                 var userData = System.Text.Json.JsonSerializer.Deserialize<UserData>(userJson);
                 if (userData != null && !string.IsNullOrEmpty(userData.FullName))
                 {
@@ -44,12 +90,37 @@
         }
         catch
         {
-            // If error, keep default "Guest"
+            // If error occurs, keep default "Guest" name
             userFullName = "Guest";
         }
     }
 
-    // Helper class for deserialization
+    // Toggles between light and dark themes
+    private async Task ToggleTheme()
+    {
+        // Call theme service to toggle theme
+        var result = await ThemeService.ToggleThemeAsync();
+        if (result.Success)
+        {
+            // Get updated theme after toggle
+            var themeResult = await ThemeService.GetCurrentThemeAsync();
+            if (themeResult.Success)
+            {
+                _currentTheme = themeResult.Data;
+
+                // Update UI to reflect theme change
+                StateHasChanged();
+            }
+        }
+    }
+
+    // Cleanup method - disposes JavaScript interop reference
+    public void Dispose()
+    {
+        _dotNetObjectRef?.Dispose();
+    }
+
+    // Helper class for deserializing user data from localStorage
     private class UserData
     {
         public string FullName { get; set; } = string.Empty;

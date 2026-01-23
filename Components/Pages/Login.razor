@@ -5,69 +5,95 @@
 <div class="login-page">
     <div class="login-wrapper">
         <div class="login-card-container">
+
+            <!-- Decorative element for visual appeal -->
             <div class="login-card-decoration"></div>
 
+            <!-- Main login form content -->
             <div class="login-card-content">
+                <!-- Header section with logo and title -->
                 <header class="login-card-header">
                     <div class="login-logo-title-wrapper">
-                        <img src="images/logo.png" alt="My Journal Logo" class="login-logo-image">
+                        <!-- Application logo -->
+                        <img src="images/logo.svg" alt="My Journal Logo" class="login-logo-image">
+                        <!-- Main title -->
                         <h1 class="login-main-title">My Journal Journey</h1>
                     </div>
+                    <!-- Subtitle for additional context -->
                     <p class="login-subtitle">Secure access to your personal journey</p>
                 </header>
 
+                <!-- Display error message if login fails -->
                 @if (!string.IsNullOrEmpty(errorMessage))
                 {
                     <div class="login-message login-error">
+                        <!-- Error icon/text -->
                         <strong>Login Failed!</strong> @errorMessage
                     </div>
                 }
 
+                <!-- Login Form -->
                 <form class="login-form" @onsubmit="HandleSubmit">
+
+                    <!-- Email Field -->
                     <div class="login-form-group">
                         <label for="email" class="login-input-label">Email *</label>
                         <div class="login-input-wrapper">
+                            <!-- Email input with two-way binding -->
                             <input type="email" id="email" @bind="email" @bind:event="oninput"
                                    class="login-form-input"
                                    placeholder="Enter your email address">
                         </div>
                     </div>
 
+                    <!-- Password Field -->
                     <div class="login-form-group">
                         <div class="login-label-row">
                             <label for="password" class="login-input-label">Password *</label>
+                            <!-- Forgot password link (currently placeholder) -->
                             <a href="#" class="login-forgot-password-link">Forgot Password?</a>
                         </div>
                         <div class="login-input-wrapper">
+                            <!-- Password input with two-way binding -->
                             <input type="password" id="password" @bind="password" @bind:event="oninput"
                                    class="login-form-input"
                                    placeholder="Enter your password">
                         </div>
                     </div>
 
+                    <!-- Submit Button -->
                     <button type="submit" class="login-btn" disabled="@isLoading">
                         @if (isLoading)
                         {
+                            <!-- Loading state text -->
                             <span>Logging in...</span>
                         }
                         else
                         {
+                            <!-- Normal state text -->
                             <span>Login</span>
                         }
                     </button>
                 </form>
 
+                <!-- Visual divider between form and registration prompt -->
                 <img src="images/Seprator.png" alt="" class="login-divider">
 
+                <!-- Registration prompt for new users -->
                 <div class="login-register-prompt">
                     <span class="login-prompt-text">Don't have an account?</span>
+                    <!-- Link to registration page -->
                     <a href="/register" class="login-register-link">Register</a>
                 </div>
 
+                <!-- Another visual divider -->
                 <img src="images/Seprator.png" alt="" class="login-divider">
 
+                <!-- Security information footer -->
                 <div class="login-security-footer">
+                    <!-- Security badge icon -->
                     <img src="images/verified-badge-regster.png" alt="Verified" class="login-security-icon">
+                    <!-- Security assurance text -->
                     <span class="login-security-text">Your journal data is stored securely</span>
                 </div>
             </div>
@@ -76,26 +102,36 @@
 </div>
 
 @code {
-    private string email = "";
-    private string password = "";
+    // Login form fields
+    private string email = ""; // User's email address for login
+    private string password = ""; // User's password for authentication
+
+    // Error message for failed login attempts
     private string? errorMessage;
+
+    // Loading state to prevent multiple submissions and show progress
     private bool isLoading = false;
 
+    // Dependency injection for navigation, authentication, and JavaScript services
     [Inject]
-    private NavigationManager Navigation { get; set; } = null!;
+    private NavigationManager Navigation { get; set; } = null!; // For page navigation
 
     [Inject]
-    private IAuthService AuthService { get; set; } = null!;
+    private IAuthService AuthService { get; set; } = null!; // For user authentication
 
     [Inject]
-    private IJSRuntime JSRuntime { get; set; } = null!;
+    private IJSRuntime JSRuntime { get; set; } = null!; // For JavaScript interop (localStorage)
 
+    // Handles form submission when user clicks Login button or presses Enter
     private async Task HandleSubmit()
     {
+        // Set loading state to disable button and show progress
         isLoading = true;
+
+        // Clear any previous error messages
         errorMessage = null;
 
-        // Simple validation
+        // Simple client-side validation before making server call
         if (string.IsNullOrWhiteSpace(email))
         {
             errorMessage = "Please enter your email";
@@ -112,17 +148,21 @@
 
         try
         {
+            // Log login attempt for debugging purposes
             Console.WriteLine($"Attempting login for: {email}");
 
-            // Call AuthService to login
+            // Call AuthService to authenticate user with email and password
             var result = await AuthService.LoginAsync(email, password);
             Console.WriteLine($"Login result: Success={result.Success}, Error={result.ErrorMessage}");
 
+            // Check if login was successful
             if (result.Success && result.Data != null)
             {
+                // Login successful - log user details for debugging
                 Console.WriteLine($"User logged in: {result.Data.FullName}, ID: {result.Data.Id}");
 
-                // Store user data in localStorage
+                // Store user data in localStorage to maintain session
+                // This allows the user to stay logged in across page refreshes
                 await JSRuntime.InvokeVoidAsync("localStorage.setItem", "currentUser",
                     System.Text.Json.JsonSerializer.Serialize(new
                     {
@@ -131,22 +171,25 @@
                         Email = result.Data.Email
                     }));
 
-                // Login successful - redirect to dashboard
+                // Redirect to dashboard on successful login
                 Navigation.NavigateTo("/dashboard");
             }
             else
             {
+                // Login failed - show error message to user
                 errorMessage = result.ErrorMessage ?? "Invalid email or password";
                 Console.WriteLine($"Login failed: {errorMessage}");
             }
         }
         catch (Exception ex)
         {
+            // Handle unexpected errors (network issues, server errors, etc.)
             errorMessage = $"Login error: {ex.Message}";
             Console.WriteLine($"Login exception: {ex}");
         }
         finally
         {
+            // Reset loading state regardless of success or failure
             isLoading = false;
         }
     }

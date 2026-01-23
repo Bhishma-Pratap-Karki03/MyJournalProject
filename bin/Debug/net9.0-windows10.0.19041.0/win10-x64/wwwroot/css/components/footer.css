@@ -1,7 +1,7 @@
 ﻿.footer {
     grid-row: 3;
     padding: 0 40px 40px 40px;
-    background-color: #f5f7f8;
+    background-color: var(--bg-secondary);
 }
 
 .footer-content {
@@ -17,7 +17,7 @@
     align-items: center;
     gap: 12px;
     font-size: 14px;
-    color: #3e434e;
+    color: var(--text-primary);
 }
 
 .copyright-year {
@@ -38,7 +38,7 @@
 
 .footer-link {
     text-decoration: none;
-    color: #264969;
+    color: var(--text-secondary);
     font-size: 14px;
 }
 
