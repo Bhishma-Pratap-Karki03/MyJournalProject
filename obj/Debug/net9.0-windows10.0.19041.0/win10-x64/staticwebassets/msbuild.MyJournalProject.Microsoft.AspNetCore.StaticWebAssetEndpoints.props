@@ -492,6 +492,18 @@
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-2N8Ey991fBk07bo3naGyUWYVEvUv6pBU7P8ktoVxYOI="}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1267"},{"Name":"Content-Type","Value":"image/svg\u002Bxml"},{"Name":"ETag","Value":"\u00222N8Ey991fBk07bo3naGyUWYVEvUv6pBU7P8ktoVxYOI=\u0022"},{"Name":"Last-Modified","Value":"Sun, 18 Jan 2026 10:59:11 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="images/empty-journal.5xxj5hr40u.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\empty-journal.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"5xxj5hr40u"},{"Name":"integrity","Value":"sha256-hxQlltftI8fGrlAe5/Ykyv9fTyK7Jsas8VUHX3F3Auk="},{"Name":"label","Value":"images/empty-journal.jpg"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"292246"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022hxQlltftI8fGrlAe5/Ykyv9fTyK7Jsas8VUHX3F3Auk=\u0022"},{"Name":"Last-Modified","Value":"Mon, 26 Jan 2026 15:47:00 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="images/empty-journal.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\empty-journal.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-hxQlltftI8fGrlAe5/Ykyv9fTyK7Jsas8VUHX3F3Auk="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"292246"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022hxQlltftI8fGrlAe5/Ykyv9fTyK7Jsas8VUHX3F3Auk=\u0022"},{"Name":"Last-Modified","Value":"Mon, 26 Jan 2026 15:47:00 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="images/export-calendar.1yc0vpzbnp.svg">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\export-calendar.svg'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>

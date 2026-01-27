@@ -912,3 +912,4 @@ C:\Users\nissa\source\repos\MyJournalProject\obj\Debug\net9.0-windows10.0.19041.
 C:\Users\nissa\source\repos\MyJournalProject\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\compressed\publish\pzhn4t47cv-1whjamsebx.br
 C:\Users\nissa\source\repos\MyJournalProject\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\compressed\publish\n2eg9p2pmu-m9eug1tzxl.br
 C:\Users\nissa\source\repos\MyJournalProject\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\compressed\publish\xwb86449kt-th1pvb2gf5.br
+C:\Users\nissa\source\repos\MyJournalProject\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\wwwroot\images\empty-journal.jpg

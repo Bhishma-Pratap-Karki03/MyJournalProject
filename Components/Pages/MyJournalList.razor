@@ -9,11 +9,6 @@
 @inject IJournalService JournalService
 @implements IDisposable
 
-<!--
-    My Journal List page component
-    Displays all journal entries with filtering, sorting, and pagination capabilities
-    Users can search, filter by various criteria, and manage their journal entries
--->
 
 <div class="journal-list-page">
     <!-- Filters Section - Contains search, date range, and manual filter inputs -->
@@ -134,7 +129,7 @@
             {
                 <!-- Empty state when no journals match filters -->
                 <div class="empty-state">
-                    <img src="images/empty-journal.png" alt="No journals" />
+                    <img src="images/empty-journal.jpg" alt="No journals" />
                     <h3>No journals found</h3>
                     <p>@(HasActiveFilters ? "Try changing your filters or search" : "Start by creating your first journal entry!")</p>
                     @if (!HasActiveFilters)
