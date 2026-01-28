@@ -61,21 +61,23 @@ public class ExportService : IExportService
                 query = query.Where(j => j.Category == filters.Category);
             }
 
-            // Apply tags filter - check if journal contains any of the selected tags
-            if (filters.Tags != null && filters.Tags.Any())
-            {
-                foreach (var tag in filters.Tags)
-                {
-                    query = query.Where(j => j.Tags.Contains(tag));
-                }
-            }
-
-            // Execute query and return results ordered by date (newest first)
-            var journals = await query
+            // Execute query first to get all journals
+            var allJournals = await query
                 .OrderByDescending(j => j.EntryDate)
                 .ToListAsync();
 
-            return ServiceResult<List<Journal>>.SuccessResult(journals);
+            // Apply tags filter in memory (not in database query)
+            var filteredJournals = allJournals;
+
+            // Apply tags filter - check if journal contains ALL selected tags
+            if (filters.Tags != null && filters.Tags.Any())
+            {
+                filteredJournals = filteredJournals
+                    .Where(j => filters.Tags.All(tag => j.Tags.Contains(tag)))
+                    .ToList();
+            }
+
+            return ServiceResult<List<Journal>>.SuccessResult(filteredJournals);
         }
         catch (Exception ex)
         {

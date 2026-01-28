@@ -1,106 +1,131 @@
-0:49:31 Tab1 StartNav16 #renderer-user #link
-0:49:31 Tab1 FinishNav16
-0:51:19 Tab1 StartNav17 #renderer-user #link
-0:51:19 Tab1 FinishNav17
-0:51:20 Microsoft.Autofill.Password.SignIn.NoAutofillSuggestions
-0:55:28 Microsoft.UnloadController.IsUnclosableApp_IsNotWebApp
-0:00:00 Startup
-0:00:00 Microsoft.DeleteProfileHelper.CleanUpEphemeralProfiles
-0:00:00 Microsoft.DeleteProfileHelper.CleanUpDeletedProfiles
-0:00:00 Microsoft.NewBrowser_Popup
-0:00:00 Microsoft.BrowserList.AddBrowser
-0:00:00 Browser1 Insert active Tab1 at 0
-0:00:00 Tab1 StartNav1 #auto_toplevel
-0:00:00 Tab1 FinishNav1
-0:00:00 Tab1 PageLoad
-0:00:00 Tab1 StartNav2 #typed
-0:00:00 Tab1 FinishNav2
-0:00:00 Tab1 PageLoad
-0:00:01 Tab1 StartNav3 #renderer-user #link
-0:00:01 Tab1 FinishNav3
-0:00:02 Tab1 StartNav4 #renderer-user #link
-0:00:02 Tab1 FinishNav4
-0:00:03 Microsoft.Autofill.Password.SignIn.NoAutofillSuggestions
-0:00:03 Autofill_ShowedProfileSuggestions
-0:00:05 Widget Closed: PopupBaseView
-0:00:05 Autofill_ShowedProfileSuggestions
-0:00:06 Autofill_SelectedSuggestion
-0:00:06 Autofill_FilledProfileSuggestion
-0:00:06 Widget Closed: PopupBaseView
-0:00:10 Autofill_OnWillSubmitForm
-0:00:17 Tab1 StartNav5 #renderer-user #link
-0:00:17 Tab1 FinishNav5
-0:00:17 PasswordManager_LoginPassed
-0:00:18 Tab1 StartNav6 #renderer-user #link
-0:00:18 Tab1 FinishNav6
-0:00:20 Tab1 StartNav7 #renderer-user #link
-0:00:20 Tab1 FinishNav7
-0:00:30 Widget Closed: 
-0:00:52 Memory Pressure: Critical
-0:20:01 Widget Closed: BubbleDialogDelegateView
-0:20:02 Tab1 StartNav9 #renderer-user #link
-0:20:02 Tab1 FinishNav9
-0:20:09 Tab1 StartNav10 #renderer-user #link
-0:20:09 Tab1 FinishNav10
-0:20:20 Tab1 StartNav11 #renderer-user #link
-0:20:20 Tab1 FinishNav11
-0:20:30 Memory Pressure: Critical
-0:20:57 Tab1 StartNav12 #renderer-user #link
-0:20:57 Tab1 FinishNav12
-0:23:13 Tab1 StartNav13 #renderer-user #link
-0:23:13 Tab1 FinishNav13
-0:23:14 Tab1 StartNav14 #renderer-user #link
-0:23:14 Tab1 FinishNav14
-0:23:45 Tab1 StartNav15 #renderer-user #link
-0:23:45 Tab1 FinishNav15
-0:28:57 Memory Pressure: Critical
-0:35:34 Tab1 StartNav16 #renderer-user #link
-0:35:34 Tab1 FinishNav16
-0:35:37 Tab1 StartNav17 #renderer-user #link
-0:35:37 Tab1 FinishNav17
-0:35:37 Tab1 PageLoad
-0:35:37 Microsoft.Autofill.Password.SignIn.NoAutofillSuggestions
-0:35:39 Microsoft.Clipboard.WriteText
-0:35:40 Microsoft.Clipboard.WriteText
-0:35:40 Microsoft.Clipboard.WriteText
-0:35:40 Microsoft.Clipboard.WriteText
-0:35:40 Microsoft.Clipboard.WriteText
-0:35:41 Microsoft.Clipboard.WriteText
-0:35:41 Microsoft.Clipboard.WriteText
-0:35:42 Microsoft.Clipboard.WriteText
-0:35:43 Memory Pressure: Critical
-0:36:13 Memory Pressure: Critical
-0:36:18 Memory Pressure: Critical
-0:36:38 Memory Pressure: Critical
-0:36:48 Memory Pressure: Critical
-0:36:58 Memory Pressure: Critical
-0:37:08 Memory Pressure: Critical
-0:37:13 Memory Pressure: Critical
-0:47:39 Autofill_ShowedProfileSuggestions
-0:47:40 Autofill_SelectedSuggestion
-0:47:40 Autofill_FilledProfileSuggestion
-0:47:40 Widget Closed: PopupBaseView
-0:47:43 Autofill_OnWillSubmitForm
-0:47:43 Tab1 StartNav18 #renderer-user #link
-0:47:43 Tab1 FinishNav18
-0:47:43 PasswordManager_LoginPassed
-0:47:47 Tab1 StartNav19 #renderer-user #link
-0:47:47 Tab1 FinishNav19
-0:47:48 Tab1 StartNav20 #renderer-user #link
-0:47:48 Tab1 FinishNav20
-0:49:38 Tab1 StartNav21 #renderer-user #link
-0:49:38 Tab1 FinishNav21
-0:52:14 Tab1 StartNav22 #renderer-user #link
-0:52:14 Tab1 FinishNav22
-0:52:16 Memory Pressure: Critical
-0:54:26 Memory Pressure: Critical
-0:56:17 Tab1 StartNav23 #renderer-user #link
-0:56:17 Tab1 FinishNav23
-0:56:19 Tab1 StartNav24 #renderer-user #link
-0:56:19 Tab1 FinishNav24
-0:56:19 Tab1 PageLoad
-0:56:20 Microsoft.Autofill.Password.SignIn.NoAutofillSuggestions
-0:59:56 Tab1 StartNav25 #renderer-user #link
-0:59:56 Tab1 FinishNav25
-1:03:09 Memory Pressure: Critical
-1:19:26 Microsoft.UnloadController.IsUnclosableApp_IsNotWebApp
+1:18:36 Microsoft.Shutdown.TabStripModel.CloseWebContentses
+1:18:36 Microsoft.Shutdown.TabStripModel.CloseWebContentses_FastShutdown
+1:18:36 Microsoft.Shutdown.TabStripModel.ShouldRunUnloadListenerBeforeClosing_false
+1:18:36 Microsoft.Shutdown.TabStripModel.RunUnloadListenerBeforeClosing_false
+1:18:36 Microsoft.Shutdown.TabStripModel.InternalCloseTabsImpl_ClosedAll
+1:18:36 Microsoft.Shutdown.TabStripModel.SendDetachWebContentsNotifications
+1:18:36 Microsoft.UnloadController.ClearUnloadState
+1:18:36 Browser3 Close Tab3 at 0
+1:18:36 Tab3 WebContentsDestroyed
+1:18:36 Microsoft.UnloadController.TabStripEmpty
+1:18:36 Microsoft.UnloadController.IsUnclosableApp_IsNotWebApp
+1:18:36 Microsoft.UnloadController.HasCompletedUnloadProcessing_True
+1:18:36 Microsoft.Shutdown.OnWindowClosing
+1:18:36 Microsoft.UnloadController.IsUnclosableApp_IsNotWebApp
+1:18:36 Microsoft.UnloadController.HasCompletedUnloadProcessing_True
+1:18:36 Microsoft.Shutdown.OnWindowClosing_MaybeClearBrowsingDataOnExit
+1:18:36 Microsoft.Shutdown.OnWindowClosing_ClearBrowsingDataOnExitNotInProgress
+1:18:36 Microsoft.Shutdown.OnWindowClosingPostClearBrowsingData_NoBrowsingDataCleared
+1:18:36 Widget Closed: BrowserWidget
+1:18:36 Microsoft.UnloadController.HasCompletedUnloadProcessing_True
+1:18:36 Microsoft.Shutdown.OnWindowClosing
+1:18:36 Microsoft.Shutdown.OnWindowClosing_DeleteScheduled
+1:18:36 Microsoft.Browser_Removed
+1:20:09 Tab1 StartNav28 #renderer-user #link
+1:20:09 Tab1 FinishNav28
+1:20:09 Tab1 StartNav29 #renderer-user #link
+1:20:09 Tab1 FinishNav29
+1:20:12 Memory Pressure: Critical
+1:22:03 Tab1 StartNav30 #renderer-user #link
+1:22:03 Tab1 FinishNav30
+1:22:08 Tab1 StartNav31 #renderer-user #link
+1:22:08 Tab1 FinishNav31
+1:22:10 Tab1 StartNav32 #renderer-user #link
+1:22:10 Tab1 FinishNav32
+1:22:13 Memory Pressure: Critical
+1:30:06 Tab1 StartNav33 #renderer-user #link
+1:30:06 Tab1 FinishNav33
+1:30:07 Tab1 StartNav34 #renderer-user #link
+1:30:07 Tab1 FinishNav34
+1:30:08 Tab1 StartNav35 #renderer-user #link
+1:30:08 Tab1 FinishNav35
+1:30:09 Tab1 StartNav36 #renderer-user #link
+1:30:09 Tab1 FinishNav36
+1:30:27 Memory Pressure: Critical
+1:32:08 Memory Pressure: Critical
+1:33:08 Memory Pressure: Critical
+1:33:44 Tab1 StartNav37 #renderer-user #link
+1:33:44 Tab1 FinishNav37
+1:33:44 Tab1 StartNav38 #renderer-user #link
+1:33:44 Tab1 FinishNav38
+1:33:56 Memory Pressure: Critical
+1:58:32 Tab1 StartNav39 #renderer-user #link
+1:58:32 Tab1 FinishNav39
+2:01:57 Memory Pressure: Critical
+2:02:01 Tab1 StartNav40 #renderer-user #link
+2:02:01 Tab1 FinishNav40
+2:02:07 Tab1 StartNav41 #renderer-user #link
+2:02:07 Tab1 FinishNav41
+2:02:12 Tab1 StartNav42 #renderer-user #link
+2:02:12 Tab1 FinishNav42
+2:02:15 Tab1 StartNav43 #renderer-user #link
+2:02:15 Tab1 FinishNav43
+2:02:16 Tab1 StartNav44 #renderer-user #link
+2:02:16 Tab1 FinishNav44
+2:02:19 Widget Closed: 
+2:02:23 Tab1 StartNav45 #renderer-user #link
+2:02:23 Tab1 FinishNav45
+2:02:29 Tab1 StartNav46 #renderer-user #link
+2:02:29 Tab1 FinishNav46
+2:02:38 Tab1 StartNav47 #renderer-user #link
+2:02:38 Tab1 FinishNav47
+2:02:44 Widget Closed: 
+2:03:10 Widget Closed: BubbleDialogDelegateView
+2:03:32 Tab1 StartNav49 #renderer-user #link
+2:03:32 Tab1 FinishNav49
+2:03:46 Memory Pressure: Critical
+2:10:46 Widget Closed: 
+2:15:12 Widget Closed: 
+2:16:11 Memory Pressure: Critical
+2:16:28 Memory Pressure: Critical
+2:17:17 Memory Pressure: Critical
+2:18:07 Memory Pressure: Critical
+2:19:22 Memory Pressure: Critical
+2:32:03 Tab1 StartNav50 #renderer-user #link
+2:32:03 Tab1 FinishNav50
+2:32:05 Tab1 StartNav51 #renderer-user #link
+2:32:05 Tab1 FinishNav51
+2:32:05 Tab1 StartNav52 #renderer-user #link
+2:32:05 Tab1 FinishNav52
+2:32:05 Tab1 StartNav53 #renderer-user #link
+2:32:05 Tab1 FinishNav53
+2:32:06 Tab1 StartNav54 #renderer-user #link
+2:32:06 Tab1 FinishNav54
+2:32:06 Tab1 StartNav55 #renderer-user #link
+2:32:06 Tab1 FinishNav55
+2:32:07 Tab1 StartNav56 #renderer-user #link
+2:32:07 Tab1 FinishNav56
+2:32:07 Tab1 StartNav57 #renderer-user #link
+2:32:07 Tab1 FinishNav57
+2:32:09 Tab1 StartNav58 #renderer-user #link
+2:32:09 Tab1 FinishNav58
+2:32:09 Tab1 StartNav59 #renderer-user #link
+2:32:09 Tab1 FinishNav59
+2:32:13 Tab1 StartNav60 #renderer-user #link
+2:32:13 Tab1 FinishNav60
+2:32:16 Tab1 StartNav61 #renderer-user #link
+2:32:16 Tab1 FinishNav61
+2:32:18 Tab1 StartNav62 #renderer-user #link
+2:32:18 Tab1 FinishNav62
+2:32:20 Tab1 StartNav63 #renderer-user #link
+2:32:20 Tab1 FinishNav63
+2:32:24 Tab1 StartNav64 #renderer-user #link
+2:32:24 Tab1 FinishNav64
+2:32:26 Tab1 StartNav65 #renderer-user #link
+2:32:26 Tab1 FinishNav65
+2:32:26 Tab1 PageLoad
+2:32:27 Microsoft.Autofill.Password.SignIn.NoAutofillSuggestions
+2:32:28 Tab1 StartNav66 #renderer-user #link
+2:32:28 Tab1 FinishNav66
+2:32:30 Widget Closed: PopupBaseView
+2:32:31 Tab1 StartNav67 #renderer-user #link
+2:32:31 Tab1 FinishNav67
+2:32:31 Autofill_ShowedProfileSuggestions
+2:32:31 Microsoft.Autofill.Password.SignIn.NoAutofillSuggestions
+2:32:33 Autofill_ShowedProfileSuggestions
+2:32:33 Widget Closed: PopupBaseView
+2:32:36 Autofill_OnWillSubmitForm
+2:32:36 Tab1 StartNav68 #renderer-user #link
+2:32:36 Tab1 FinishNav68
+2:32:36 PasswordManager_LoginPassed
+2:58:43 Microsoft.UnloadController.IsUnclosableApp_IsNotWebApp
